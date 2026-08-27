@@ -1,0 +1,137 @@
+{
+  "skill_name": "concentration-analysis",
+  "evals": [
+    {
+      "id": "concentratio-001",
+      "category": "explicit-positive",
+      "prompt": "Run concentration analysis on ABC.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-002",
+      "category": "implicit-positive",
+      "prompt": "Where are we too concentrated?",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-003",
+      "category": "contextual-positive",
+      "prompt": "For ABC, what concentrations jump out?",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-004",
+      "category": "negative",
+      "prompt": "What is Microsoft's market cap?",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate concentration-analysis for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "concentratio-005",
+      "category": "missing-data",
+      "prompt": "Analyze concentration with missing sector mapping.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-006",
+      "category": "stale-data",
+      "prompt": "Analyze concentration using stale benchmark thresholds.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-007",
+      "category": "ambiguous",
+      "prompt": "Is my portfolio concentrated?",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-008",
+      "category": "derivatives",
+      "prompt": "Include derivative-equivalent concentration.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-009",
+      "category": "tool-failure",
+      "prompt": "Analyze concentration when classification service fails.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-010",
+      "category": "regression",
+      "prompt": "Do not ignore correlated index or derivative exposures.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+framework_version: 1
+skills_root: ./skills
+profile: asset-management
+
+evaluation:
+  provider: nvidia-skillevaluator
+  baseline_required_for_certification: true
+  pr_attempts: 1
+  certification_attempts: 3
+
+similarity:
+  catalog: ./catalogs/skill-catalog.json
+
+reporting:
+  formats:
+    - json
+    - markdown
+    - html
+  output_dir: ./reports
+
+certification:
+  policy_file: ./policies/certification.yaml
+  profile: analytical-standard

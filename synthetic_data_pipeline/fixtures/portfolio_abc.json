@@ -1,0 +1,48 @@
+{
+  "portfolios": {
+    "ABC": {
+      "as_of": "2026-08-25",
+      "benchmark": "SPX",
+      "return": 0.0042,
+      "benchmark_return": 0.0063,
+      "positions": [
+        {
+          "id": "AAPL",
+          "weight": 0.12,
+          "sector": "Technology",
+          "currency": "USD"
+        },
+        {
+          "id": "MSFT",
+          "weight": 0.1,
+          "sector": "Technology",
+          "currency": "USD"
+        },
+        {
+          "id": "JPM",
+          "weight": 0.08,
+          "sector": "Financials",
+          "currency": "USD"
+        },
+        {
+          "id": "ES_FUT",
+          "weight": -0.05,
+          "sector": "Index Hedge",
+          "currency": "USD",
+          "type": "future"
+        }
+      ],
+      "attribution": {
+        "Technology": -0.0012,
+        "Financials": -0.0005,
+        "FX": -0.0003,
+        "Other": -0.0001
+      },
+      "factor_exposure": {
+        "Technology": 0.18,
+        "Market": 0.82,
+        "Value": -0.04
+      }
+    }
+  }
+}

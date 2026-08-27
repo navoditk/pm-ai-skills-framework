@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PM AI Normalized Skill Evaluation Result",
+  "type": "object",
+  "required": [
+    "skill",
+    "benchmark_context",
+    "generic_metrics",
+    "domain_metrics",
+    "certification"
+  ],
+  "properties": {
+    "skill": {
+      "type": "object"
+    },
+    "benchmark_context": {
+      "type": "object"
+    },
+    "generic_metrics": {
+      "type": "object"
+    },
+    "skill_lift": {
+      "type": "object"
+    },
+    "reliability": {
+      "type": "object"
+    },
+    "domain_metrics": {
+      "type": "object"
+    },
+    "findings": {
+      "type": "array"
+    },
+    "certification": {
+      "type": "object"
+    }
+  }
+}

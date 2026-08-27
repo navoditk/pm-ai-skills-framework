@@ -1,0 +1,137 @@
+{
+  "skill_name": "portfolio-change-analysis",
+  "evals": [
+    {
+      "id": "portfolio-ch-001",
+      "category": "explicit-positive",
+      "prompt": "Compare ABC on 2026-08-25 with the prior snapshot.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-002",
+      "category": "implicit-positive",
+      "prompt": "What changed in ABC since yesterday?",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-003",
+      "category": "contextual-positive",
+      "prompt": "For ABC, what's different since the last snapshot?",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-004",
+      "category": "negative",
+      "prompt": "How did SPX perform today?",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate portfolio-change-analysis for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "portfolio-ch-005",
+      "category": "missing-data",
+      "prompt": "Compare changes with one snapshot missing factor data.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-006",
+      "category": "stale-data",
+      "prompt": "Compare positions from 2026-08-25 against market values from 2026-08-22.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-007",
+      "category": "ambiguous",
+      "prompt": "What's changed in my portfolio?",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-008",
+      "category": "derivatives",
+      "prompt": "Include changes in futures hedge exposure.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-009",
+      "category": "tool-failure",
+      "prompt": "Compare snapshots when history service fails.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-010",
+      "category": "regression",
+      "prompt": "Separate trades from price-driven changes.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    }
+  ]
+}

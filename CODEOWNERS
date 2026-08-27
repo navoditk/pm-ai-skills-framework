@@ -1,0 +1,5 @@
+# Replace placeholders with organization teams.
+/framework/ @pm-ai-platform
+/graders/ @pm-ai-platform
+/policies/ @pm-ai-platform
+/skills/ @pm-ai-platform

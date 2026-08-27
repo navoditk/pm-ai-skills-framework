@@ -1,0 +1,74 @@
+name: Skills Quality
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "framework/**"
+      - "graders/**"
+      - "policies/**"
+
+jobs:
+  schema-and-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install local test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest jsonschema pyyaml
+
+      - name: Unit tests
+        run: pytest -q
+
+  # Blueprint: pin an approved SkillEvaluator version before production use.
+  tier1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SkillEvaluator
+        run: |
+          echo "Pin and install the organization-approved NVIDIA SkillEvaluator version here"
+
+      - name: Validate changed skills
+        run: |
+          echo "Run: skillevaluator validate <changed-skill>"
+
+  similarity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Candidate vs approved catalog
+        run: |
+          echo "Run candidate skills against catalogs/skill-catalog.json"
+          echo "High similarity should follow policies/similarity.yaml"
+
+  tier3-fast:
+    # Start advisory; make blocking after the eval environment is stable.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Live agent evaluation
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          echo "Run fast Tier 3 subset with Docker/Harbor"
+          echo "Do not store agent credentials in evals/config.yml"
+
+  domain-graders:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PM domain graders
+        run: |
+          echo "Execute deterministic PM graders against normalized trajectory/result fixtures"

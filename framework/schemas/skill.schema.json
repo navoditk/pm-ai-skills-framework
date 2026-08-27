@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PM AI Skill Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "skill",
+    "ownership",
+    "classification",
+    "dependencies",
+    "evaluation",
+    "certification"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "skill": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9.-]+$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "required": [
+        "business",
+        "engineering",
+        "domain_reviewer"
+      ],
+      "properties": {
+        "business": {
+          "type": "string"
+        },
+        "engineering": {
+          "type": "string"
+        },
+        "domain_reviewer": {
+          "type": "string"
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": [
+        "domain",
+        "risk_level"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "risk_level": {
+          "enum": [
+            "informational",
+            "analytical",
+            "decision-support",
+            "action"
+          ]
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object"
+    },
+    "evaluation": {
+      "type": "object"
+    },
+    "certification": {
+      "type": "object"
+    }
+  }
+}

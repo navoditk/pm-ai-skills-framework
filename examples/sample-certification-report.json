@@ -1,0 +1,40 @@
+{
+  "skill": {
+    "id": "pm.performance.attribution",
+    "name": "Performance Attribution",
+    "version": "1.4.0"
+  },
+  "benchmark_context": {
+    "agent": "codex",
+    "model": "approved-model",
+    "dataset": "performance-attribution-evals-v1",
+    "attempts": 3,
+    "baseline_retained": true
+  },
+  "generic_metrics": {
+    "security": 1.0,
+    "correctness": 0.97,
+    "discoverability": 0.95,
+    "effectiveness": 0.96,
+    "efficiency": 0.88
+  },
+  "skill_lift": {
+    "overall": 0.22
+  },
+  "reliability": {
+    "pass_at_1": 0.92,
+    "pass_at_3": 0.98
+  },
+  "domain_metrics": {
+    "financial_accuracy": 0.99,
+    "reconciliation": 0.998,
+    "temporal_consistency": 0.992,
+    "benchmark_consistency": 1.0,
+    "data_provenance": 1.0
+  },
+  "findings": [],
+  "certification": {
+    "status": "PASS",
+    "profile": "analytical-standard"
+  }
+}

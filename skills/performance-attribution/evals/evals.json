@@ -1,0 +1,140 @@
+{
+  "skill_name": "performance-attribution",
+  "evals": [
+    {
+      "id": "performance--001",
+      "category": "explicit-positive",
+      "prompt": "Use performance attribution to explain ABC's relative return on 2026-08-25.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability.",
+        "Reconcile attribution components to total relative return."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--002",
+      "category": "implicit-positive",
+      "prompt": "Why did ABC underperform yesterday?",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability.",
+        "Reconcile attribution components to total relative return."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--003",
+      "category": "contextual-positive",
+      "prompt": "We're discussing ABC. What drove yesterday's relative return?",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--004",
+      "category": "negative",
+      "prompt": "What is AAPL's current price?",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate performance-attribution for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "performance--005",
+      "category": "missing-data",
+      "prompt": "Explain ABC performance when one sector contribution is missing.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--006",
+      "category": "stale-data",
+      "prompt": "Explain ABC using portfolio return from 2026-08-25 and attribution from 2026-08-22.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--007",
+      "category": "ambiguous",
+      "prompt": "Why did 'my portfolio' underperform yesterday?",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--008",
+      "category": "derivatives",
+      "prompt": "Explain attribution including derivatives or hedge effects when present.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--009",
+      "category": "tool-failure",
+      "prompt": "Explain ABC attribution when the attribution service returns an error.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability."
+      ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--010",
+      "category": "regression",
+      "prompt": "Explain ABC and ensure contributions reconcile to the -21bp relative return.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate performance-attribution when it is the appropriate capability.",
+        "Reconcile attribution components to total relative return."
+      ],
+      "expected_skill": "performance-attribution"
+    }
+  ]
+}

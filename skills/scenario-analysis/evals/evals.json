@@ -1,0 +1,137 @@
+{
+  "skill_name": "scenario-analysis",
+  "evals": [
+    {
+      "id": "scenario-ana-001",
+      "category": "explicit-positive",
+      "prompt": "Run the approved +50bp rates scenario on ABC.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-002",
+      "category": "implicit-positive",
+      "prompt": "What happens to ABC if rates rise 50bp?",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-003",
+      "category": "contextual-positive",
+      "prompt": "For ABC, how sensitive are we to a rates selloff?",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-004",
+      "category": "negative",
+      "prompt": "What did the Fed say today?",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate scenario-analysis for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "scenario-ana-005",
+      "category": "missing-data",
+      "prompt": "Run a scenario when one asset-class scenario result is unavailable.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-006",
+      "category": "stale-data",
+      "prompt": "Run scenario with results from an older portfolio snapshot.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-007",
+      "category": "ambiguous",
+      "prompt": "Stress 'my portfolio' by 50bp.",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-008",
+      "category": "derivatives",
+      "prompt": "Include derivatives in scenario aggregation.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-009",
+      "category": "tool-failure",
+      "prompt": "Explain the scenario when scenario service fails.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-010",
+      "category": "regression",
+      "prompt": "Do not substitute an LLM estimate for official scenario results.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    }
+  ]
+}

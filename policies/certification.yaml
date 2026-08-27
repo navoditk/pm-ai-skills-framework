@@ -1,0 +1,29 @@
+version: 1
+
+profiles:
+  analytical-standard:
+    hard_gates:
+      security: pass
+      authorization: pass
+      regression_pass_rate: 1.0
+      data_provenance: 1.0
+
+    minimum_metrics:
+      correctness: 0.95
+      discoverability: 0.90
+      effectiveness: 0.90
+      efficiency: 0.75
+      skill_lift_overall: 0.10
+      financial_accuracy: 0.98
+      reconciliation: 0.99
+      temporal_consistency: 0.99
+
+  informational:
+    hard_gates:
+      security: pass
+      authorization: pass
+    minimum_metrics:
+      correctness: 0.90
+      discoverability: 0.85
+      effectiveness: 0.85
+      skill_lift_overall: 0.05

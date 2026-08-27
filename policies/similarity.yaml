@@ -1,0 +1,17 @@
+version: 1
+
+governance:
+  EXACT_DUPLICATE:
+    action: block
+  HIGH_SIMILARITY:
+    action: architecture_review
+  SIMILAR:
+    action: advisory_with_justification
+  LOOSELY_RELATED:
+    action: informational
+  DISTINCT:
+    action: pass
+
+catalog:
+  path: catalogs/skill-catalog.json
+  update_on_certification: true

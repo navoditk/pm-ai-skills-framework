@@ -1,0 +1,137 @@
+{
+  "skill_name": "pm-commentary-generation",
+  "evals": [
+    {
+      "id": "pm-commentar-001",
+      "category": "explicit-positive",
+      "prompt": "Generate PM commentary for ABC from approved data.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-002",
+      "category": "implicit-positive",
+      "prompt": "Draft the morning portfolio commentary.",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-003",
+      "category": "contextual-positive",
+      "prompt": "For ABC, summarize what matters for the PM meeting.",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-004",
+      "category": "negative",
+      "prompt": "Write a generic definition of tracking error.",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate pm-commentary-generation for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "pm-commentar-005",
+      "category": "missing-data",
+      "prompt": "Generate commentary when attribution detail is unavailable.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-006",
+      "category": "stale-data",
+      "prompt": "Generate commentary from data with mismatched dates.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-007",
+      "category": "ambiguous",
+      "prompt": "Draft commentary for 'the portfolio'.",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-008",
+      "category": "derivatives",
+      "prompt": "Include material derivative hedge effects.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-009",
+      "category": "tool-failure",
+      "prompt": "Generate commentary when one data tool fails.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-010",
+      "category": "regression",
+      "prompt": "Every numeric claim must be grounded in approved tool output.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    }
+  ]
+}

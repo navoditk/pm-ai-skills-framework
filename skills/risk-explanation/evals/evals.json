@@ -1,0 +1,137 @@
+{
+  "skill_name": "risk-explanation",
+  "evals": [
+    {
+      "id": "risk-explana-001",
+      "category": "explicit-positive",
+      "prompt": "Use risk explanation for ABC as of 2026-08-25.",
+      "expected_output": "Explicitly request the skill by capability name.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-002",
+      "category": "implicit-positive",
+      "prompt": "What's driving risk in ABC?",
+      "expected_output": "Use natural PM language without naming the skill.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-003",
+      "category": "contextual-positive",
+      "prompt": "We're on ABC. What are the biggest risks here?",
+      "expected_output": "Use prior portfolio context and a short follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-004",
+      "category": "negative",
+      "prompt": "What is the VIX level?",
+      "expected_output": "Ask an unrelated market lookup question.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Do not activate risk-explanation for this unrelated request."
+      ],
+      "expected_skill": null
+    },
+    {
+      "id": "risk-explana-005",
+      "category": "missing-data",
+      "prompt": "Explain ABC risk when factor exposure is unavailable.",
+      "expected_output": "Request analysis where one expected input is unavailable.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-006",
+      "category": "stale-data",
+      "prompt": "Explain risk when positions are current but risk is three days stale.",
+      "expected_output": "Provide a stale or mismatched snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability.",
+        "Detect or disclose date inconsistency."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-007",
+      "category": "ambiguous",
+      "prompt": "What's driving risk in the portfolio?",
+      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-008",
+      "category": "derivatives",
+      "prompt": "Explain ABC risk including ES futures hedge exposure.",
+      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-009",
+      "category": "tool-failure",
+      "prompt": "Explain risk when the risk service fails.",
+      "expected_output": "Simulate one approved tool failing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-010",
+      "category": "regression",
+      "prompt": "Explain net equity risk without ignoring index futures.",
+      "expected_output": "Exercise a known high-risk edge case.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    }
+  ]
+}
