@@ -212,20 +212,36 @@ This run also surfaced a second, unrelated issue: 9 of 25 with-skill trials
 and 3 of 25 baseline trials failed with `"Judge response was not a valid JSON
 object"` on the `accuracy`/`goal_accuracy` dimensions specifically (an
 LLM-judge call, distinct from the deterministic execution/efficiency
-verifier). Because this run used `n_attempts: 1`, a single failed judge call
-per case left that case unscored, and the aggregator refused to compute an
-overall score below full 25/25 coverage. This looks like ordinary judge-call
-flakiness rather than an agent-compatibility problem, and is exactly what the
-skill's configured `n_attempts: 3` exists to absorb — three independent judge
-calls per case make a total-failure case unlikely. Log this as a distinct,
-generic evaluator-robustness note (not Codex- or Claude-Code-specific) rather
-than folding it into the execution-heuristic finding.
+verifier).
 
-**Full certification-grade matrix.** Started 2026-08-28 with the skill's
-configured `n_attempts: 3` (25 cases x 3 attempts x 2 arms = 150 trials),
-`--results-dir reports/m4/performance-attribution-tier3-claude-code-final`.
-Result pending — this document will be updated with the completed Skill Lift
-table, pass-threshold count, and certification verdict once it finishes.
+**This second issue turned out not to be self-healing at `n_attempts: 3` as
+first hoped.** A full 150-trial certification-grade run
+(`reports/m4/performance-attribution-tier3-claude-code-final/`) still failed
+on both arms (`execution_status: "failed"`, `overall_score: null`), with 19 of
+75 with-skill attempts and 18 of 75 baseline attempts hitting the same judge
+error — including two cases (`performance--008`, `performance--014`) that lost
+**all 3** attempts. Root cause, confirmed by reading the pinned evaluator's
+source: `judge_accuracy` and `_judge_goal_accuracy_custom`
+(`skillevaluator/tier3/harbor/templates/eval.py`) call the judge LLM with the
+library default `max_tokens=1024` and no retry. A substantive financial
+answer's 5-criterion judge reasoning routinely exceeds 1024 tokens before the
+closing JSON brace, truncating the response. This is not random: the
+evaluator's own `judge_behavior_check`, in the same file, already had this
+exact failure mode fixed (`BEHAVIOR_JUDGE_MAX_TOKENS = 4096` plus a retry,
+with a code comment describing the identical truncation symptom) — the fix
+was simply never extended to the other two judges, which is why cases with
+longer expected judge reasoning failed consistently rather than randomly.
+
+**Fix applied:** `patches/skillevaluator-0.2.1-judge-max-tokens.patch` raises
+both judges to the same `max_tokens=4096` budget and adds the same one-retry
+pattern already proven for `judge_behavior_check`. Verified to apply cleanly
+and reproduce the live fix exactly. See `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`
+§13.6 for the full writeup and upstream-fix tracking; `docs/MILESTONE_1_SETUP.md`
+now includes the patch step as part of the reproducible install.
+
+**Full certification-grade matrix, rerun with the patch applied.** Result
+pending — this document will be updated with the completed Skill Lift table,
+pass-threshold count, and certification verdict once it finishes.
 
 **Items 1-3 of "Recommended next-session work" above (patching the pinned
 evaluator's execution-action allowlist) are no longer necessary** — the

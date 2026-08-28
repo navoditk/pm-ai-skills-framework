@@ -21,7 +21,13 @@ uv pip install --python .venv/bin/python \
 uv pip install --python .venv/bin/python \
   'git+https://github.com/NVIDIA/SkillSpector.git@29b0dc8c39424e8e31ca055fa027adf8ba8f9650'
 brew install gitleaks
+patch -p1 -d .venv/lib/python3.13/site-packages < patches/skillevaluator-0.2.1-judge-max-tokens.patch
 ```
+
+The final `patch` step applies a tracked local fix for a judge-truncation bug
+in the pinned evaluator (see `patches/README.md` and
+`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6). It must be reapplied any
+time `.venv/` is rebuilt, since the vendored package itself is not committed.
 
 ## Milestone commands
 
