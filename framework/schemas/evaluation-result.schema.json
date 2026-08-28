@@ -3,6 +3,8 @@
   "title": "PM AI Normalized Skill Evaluation Result",
   "type": "object",
   "required": [
+    "framework_version",
+    "source",
     "skill",
     "benchmark_context",
     "generic_metrics",
@@ -10,6 +12,20 @@
     "certification"
   ],
   "properties": {
+    "framework_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "source": {
+      "type": "object",
+      "required": ["provider", "evaluator_version"],
+      "properties": {
+        "provider": {"type": "string"},
+        "evaluator_version": {"type": "string"},
+        "report_type": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
     "skill": {
       "type": "object"
     },
@@ -34,5 +50,6 @@
     "certification": {
       "type": "object"
     }
-  }
+  },
+  "additionalProperties": false
 }

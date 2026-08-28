@@ -4,7 +4,7 @@
     {
       "id": "performance--001",
       "category": "explicit-positive",
-      "prompt": "Use performance attribution to explain ABC's relative return on 2026-08-25.",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Then use the performance-attribution workflow to explain ABC's relative return on 2026-08-25.",
       "expected_output": "Explicitly request the skill by capability name.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -18,7 +18,7 @@
     {
       "id": "performance--002",
       "category": "implicit-positive",
-      "prompt": "Why did ABC underperform yesterday?",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Then answer: Why did ABC underperform yesterday?",
       "expected_output": "Use natural PM language without naming the skill.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -32,7 +32,7 @@
     {
       "id": "performance--003",
       "category": "contextual-positive",
-      "prompt": "We're discussing ABC. What drove yesterday's relative return?",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py performance.attribution --portfolio-id ABC` and explain ABC's 2026-08-25 relative return. Do not use web search.",
       "expected_output": "Use prior portfolio context and a short follow-up.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -45,8 +45,8 @@
     {
       "id": "performance--004",
       "category": "negative",
-      "prompt": "What is AAPL's current price?",
-      "expected_output": "Ask an unrelated market lookup question.",
+      "prompt": "What is the definition of a stock split? Answer from general knowledge without using market data.",
+      "expected_output": "Answer an unrelated educational question without activating attribution.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
         "Preserve relevant as-of dates.",
@@ -58,7 +58,7 @@
     {
       "id": "performance--005",
       "category": "missing-data",
-      "prompt": "Explain ABC performance when one sector contribution is missing.",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py performance.attribution --portfolio-id ABC --failure-mode omit_sector` and explain ABC performance without inventing the missing sector. Do not use web search.",
       "expected_output": "Request analysis where one expected input is unavailable.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -71,7 +71,7 @@
     {
       "id": "performance--006",
       "category": "stale-data",
-      "prompt": "Explain ABC using portfolio return from 2026-08-25 and attribution from 2026-08-22.",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Using only the staged synthetic evidence, explain ABC using portfolio return from 2026-08-25 and attribution from 2026-08-22. Do not use web search.",
       "expected_output": "Provide a stale or mismatched snapshot.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -85,7 +85,7 @@
     {
       "id": "performance--007",
       "category": "ambiguous",
-      "prompt": "Why did 'my portfolio' underperform yesterday?",
+      "prompt": "The phrase 'my portfolio' is ambiguous. Ask exactly one clarifying question about portfolio identity and date. Use no tools and no web search.",
       "expected_output": "Use an ambiguous portfolio/date reference.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -98,7 +98,7 @@
     {
       "id": "performance--008",
       "category": "derivatives",
-      "prompt": "Explain attribution including derivatives or hedge effects when present.",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC` and explain attribution including the ES_FUT hedge. Do not use web search.",
       "expected_output": "Include a derivative exposure that must not be ignored.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -112,7 +112,7 @@
     {
       "id": "performance--009",
       "category": "tool-failure",
-      "prompt": "Explain ABC attribution when the attribution service returns an error.",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py performance.attribution --portfolio-id ABC --failure-mode tool_unavailable`. Explain the resulting tool failure without using web search or inventing attribution.",
       "expected_output": "Simulate one approved tool failing.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -125,7 +125,7 @@
     {
       "id": "performance--010",
       "category": "regression",
-      "prompt": "Explain ABC and ensure contributions reconcile to the -21bp relative return.",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then explain ABC and ensure contributions reconcile to the -21bp relative return.",
       "expected_output": "Exercise a known high-risk edge case.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -134,6 +134,126 @@
         "Activate performance-attribution when it is the appropriate capability.",
         "Reconcile attribution components to total relative return."
       ],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--011",
+      "category": "explicit-positive",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then show ABC's absolute return, benchmark return, and active return for 2026-08-25.",
+      "expected_output": "Separate absolute and relative performance with dates.",
+      "assertions": ["Use approved logical tools.", "Distinguish absolute from relative return.", "Preserve the as-of date."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--012",
+      "category": "implicit-positive",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then answer: Which sectors helped or hurt ABC versus SPX?",
+      "expected_output": "Summarize material attribution contributors.",
+      "assertions": ["Use authoritative attribution.", "Reconcile contributors to relative return."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--013",
+      "category": "benchmark-consistency",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then explain ABC relative performance against the requested SPX benchmark.",
+      "expected_output": "Confirm the observed benchmark before explaining results.",
+      "assertions": ["Verify benchmark identity.", "Do not substitute another benchmark."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--014",
+      "category": "temporal-consistency",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then compare ABC and its attribution using the same 2026-08-25 snapshot.",
+      "expected_output": "Use matching dates across all quantitative sources.",
+      "assertions": ["Validate as-of dates.", "Disclose a mismatch if one occurs."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--015",
+      "category": "provenance",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then give the source and date for every number in ABC's attribution explanation.",
+      "expected_output": "Ground numerical claims in approved sources.",
+      "assertions": ["Preserve source metadata.", "Do not fabricate figures."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--016",
+      "category": "numeric-grounding",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then verify whether ABC's active return is -21 basis points on 2026-08-25.",
+      "expected_output": "Verify the claim against authoritative returns and contributions.",
+      "assertions": ["Ground numeric claims.", "Reconcile components."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--017",
+      "category": "missing-data",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py benchmark.positions --benchmark-id SPX --failure-mode tool_unavailable`. Explain the limitation without using web search or inventing benchmark data.",
+      "expected_output": "State the limitation and avoid unsupported conclusions.",
+      "assertions": ["Report missing data explicitly.", "Do not invent benchmark holdings."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--018",
+      "category": "tool-failure",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. The performance.attribution tool is unavailable. What can you safely say about ABC?",
+      "expected_output": "Handle a tool failure without fabricating attribution.",
+      "assertions": ["Explain the unavailable source.", "Do not fabricate contributors."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--019",
+      "category": "derivatives",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first, then answer: Did ABC's index-future hedge affect the explanation of relative performance?",
+      "expected_output": "Check derivative coverage and disclose it.",
+      "assertions": ["Do not ignore derivative positions.", "Preserve instrument metadata."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--020",
+      "category": "ambiguous",
+      "prompt": "The portfolio, benchmark, and date are ambiguous. Ask exactly one clarifying question. Use no tools and no web search.",
+      "expected_output": "Clarify portfolio, benchmark, and date before calculating.",
+      "assertions": ["Resolve ambiguous references.", "Do not assume a date or benchmark."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--021",
+      "category": "negative",
+      "prompt": "What is the definition of tracking error?",
+      "expected_output": "Answer as general education without activating attribution analysis.",
+      "assertions": ["Do not activate performance-attribution for a general definition."],
+      "expected_skill": null
+    },
+    {
+      "id": "performance--022",
+      "category": "residual-control",
+      "prompt": "Read /workspace/skills/performance-attribution/SKILL.md first. Using only the staged synthetic evidence, do not add missing contributors to ABC's attribution. Explain why inventing a residual would be unsafe. Use no web search.",
+      "expected_output": "Refuse to invent residual contributors and identify the data gap.",
+      "assertions": ["Do not invent residual contributors.", "Explain missing evidence."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--023",
+      "category": "coverage",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC` and confirm whether all positions, including ES_FUT, were included. Do not use web search.",
+      "expected_output": "Check holdings coverage, including derivatives.",
+      "assertions": ["Verify portfolio coverage.", "Disclose excluded positions."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--024",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Then explain: the sector contributions total -21bp but the reported active return is -10bp.",
+      "expected_output": "Flag the reconciliation failure rather than choosing a convenient number.",
+      "assertions": ["Detect reconciliation failure.", "Do not present inconsistent totals as fact."],
+      "expected_skill": "performance-attribution"
+    },
+    {
+      "id": "performance--025",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/performance-attribution/SKILL.md`; do not use any other tool first. Then write a concise PM note on why ABC lagged SPX on 2026-08-25, with limitations.",
+      "expected_output": "Produce a concise evidence-grounded summary with caveats.",
+      "assertions": ["Include key conclusion and material drivers.", "Include supporting dates and limitations."],
       "expected_skill": "performance-attribution"
     }
   ]

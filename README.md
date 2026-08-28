@@ -21,6 +21,76 @@ This repository defines a repeatable answer:
 
 **Skill specification -> validation -> deduplication -> live evaluation -> domain grading -> certification -> benchmark evidence -> registry -> production feedback -> regression tests.**
 
+## Purpose and usage at a glance
+
+This repository is the central framework for governing an enterprise library of
+AI skills. It provides the shared standards, evaluation machinery, reports, and
+certification controls that a team needs before publishing a skill for
+production use.
+
+It is designed to be consumed by other skill repositories. A consuming team
+keeps its own skills and domain content, then adds a small configuration file
+and the reusable CI workflow:
+
+```text
+my-domain-skills/
+├── skills/
+│   ├── skill-a/
+│   └── skill-b/
+├── pmai-skills.yaml
+└── .github/workflows/skills-quality.yml
+```
+
+The central framework provides:
+
+- the common skill package and metadata standard;
+- NVIDIA SkillEvaluator integration through a provider adapter;
+- Tier 1 quality/security checks, Tier 2 similarity governance, and Tier 3
+  live-agent evaluation;
+- normalized reports, benchmark evidence, and certification policy;
+- reusable finance graders and CI/CD workflows;
+- a central approved-skill similarity catalog.
+
+The consuming repository provides:
+
+- its `SKILL.md` files and `skill.yaml` metadata;
+- business owners, domain reviewers, and risk classification;
+- positive, negative, adversarial, and regression evaluation cases;
+- local fixtures and logical-tool dependencies;
+- optional specialist graders for its domain.
+
+Typical usage is:
+
+```bash
+pmai-skills validate ./skills
+pmai-skills similarity ./skills/my-new-skill
+pmai-skills evaluate ./skills/my-new-skill --profile pr
+pmai-skills certify ./skills/my-new-skill --profile release
+```
+
+The consuming repository should depend on a pinned framework version. It should
+not copy the framework implementation, duplicate certification logic, or parse
+raw NVIDIA reports. Provider-specific behavior remains behind the framework
+adapter, while skills depend on stable logical tool contracts.
+
+Live evaluations still require the consuming environment to provide the
+appropriate agent credentials, sandbox, logical tools, and test fixtures. The
+framework governs and measures those evaluations; it does not replace the
+agent runtime, authorization layer, or enterprise data pipeline.
+
+The repository's local, reproducible example of those logical tools is documented in
+[`docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`](docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md).
+
+The Performance Attribution vertical-slice evidence is documented in
+[`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md).
+
+For the detailed adoption path, see
+[`docs/06_ADOPTION_GUIDE.md`](docs/06_ADOPTION_GUIDE.md) and
+[`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md).
+
+For the complete workflow from a new skill to certification, see
+[`docs/12_END_TO_END_SKILL_WORKFLOW.md`](docs/12_END_TO_END_SKILL_WORKFLOW.md).
+
 
 ## The purpose in one sentence
 
@@ -106,6 +176,8 @@ Read these documents in order:
 9. `docs/09_REFERENCES_AND_RESOURCES.md`
 10. `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
 11. `docs/11_QUICKSTART_FOR_CONSUMERS.md`
+12. `docs/12_END_TO_END_SKILL_WORKFLOW.md`
+13. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
 
 ## Repository layout
 

@@ -1,6 +1,8 @@
 ---
 name: portfolio-overview
 description: Summarize portfolio composition, benchmark context, major exposures, and material changes.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Portfolio Overview

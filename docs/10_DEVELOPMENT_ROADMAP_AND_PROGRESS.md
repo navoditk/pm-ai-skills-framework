@@ -39,86 +39,117 @@ Exit criteria:
 
 ## Milestone 1 — Development Environment & NVIDIA Smoke Test
 
-Status: `NOT STARTED`
+Status: `DONE`
 
 Tasks:
-- [ ] Pin an NVIDIA SkillEvaluator version.
-- [ ] Document supported Python version.
-- [ ] Install SkillEvaluator locally.
-- [ ] Install required Tier 1 scanners.
-- [ ] Validate Docker availability.
-- [ ] Validate Harbor setup.
-- [ ] Configure one supported Tier 3 agent.
-- [ ] Run Tier 1 against one reference skill.
-- [ ] Run Tier 3 smoke test.
-- [ ] Capture actual raw NVIDIA report structure.
-- [ ] Update `framework/adapters/nvidia_skillevaluator.py` to match pinned CLI exactly.
+- [x] Pin an NVIDIA SkillEvaluator version: 0.2.1 at commit `009aa300be7925c7ba75760592baeb941cc29ba8`.
+- [x] Document supported Python version: 3.13 (SkillEvaluator requires `>=3.12,<3.14`).
+- [x] Install SkillEvaluator locally with the `all` extra in `.venv/`.
+- [x] Install required Tier 1 scanners: SkillSpector 2.9.6 and Gitleaks 8.30.1.
+- [x] Validate Docker availability — Docker CLI 29.6.2 and Docker daemon are ready.
+- [x] Validate Harbor setup: Harbor 0.13.2 is installed and the Codex agent is recognized.
+- [x] Configure one supported Tier 3 agent: Codex CLI 0.150.0.
+- [x] Run Tier 1 against `skills/portfolio-overview` — 11/11 checks passed.
+- [x] Run Tier 3 smoke test — one controlled with-skill/baseline evaluation completed in Docker with Codex.
+- [x] Capture actual raw NVIDIA report structure in `reports/m1/tier1-v296/`.
+- [x] Update `framework/adapters/nvidia_skillevaluator.py` to match pinned CLI exactly.
 
 Exit criteria:
 - one skill passes an actual NVIDIA Tier 1 run;
 - one controlled Tier 3 evaluation completes in sandbox.
 
 Evidence:
-- `reports/m1/`
-- issue/PR link
-- exact evaluator version.
+- `reports/m1/tier1-v296/`
+- `docs/MILESTONE_1_SETUP.md`
+- exact evaluator version: `0.2.1` / commit `009aa300be7925c7ba75760592baeb941cc29ba8`
+
+Current evidence and blockers (2026-08-26):
+
+- `.venv/bin/skillevaluator validate skills/portfolio-overview --no-dedup -r json,markdown,html -o reports/m1/tier1-v296` exits `0`; all 11 Tier 1 checks pass.
+- `.venv/bin/skillevaluator tier3 validate skills/portfolio-overview --json` exits `0` after adding the required `schema_version: 1` to the reference eval config.
+- `.venv/bin/skillevaluator doctor --agents codex --env-mode docker` passes the OpenAI provider, Codex agent, and Docker checks when credentials are loaded transiently from `/Users/navoditkaushik/GitHub/credentials/keys.rtf` and `OPENAI_BASE_URL=https://api.openai.com/v1` is set.
+- The Tier 3 run entered `agent-runtime-preflight` and completed successfully, then entered the real Codex with-skill/baseline execution for 10 cases. It remained there for more than six minutes without a result and was stopped.
+- Root cause diagnosis: the retained Codex trace shows it searched for the required `portfolio.summary`/`portfolio.positions` interface and found only the skill metadata; `codex mcp list` reported no configured servers. The sandbox has no Agentic Data Pipeline implementation or fixtures yet, so the first portfolio task cannot complete its required data/tool calls. This is a missing logical-tool access/fixture issue, not an evaluator credential issue.
+- The dedicated tool-free smoke evaluation completed in sandbox under `reports/m1/tier3-smoke/m1-tier3-smoke/20260827_045941_96225_9034b0be87e5/`, including with-skill and baseline reports.
+- Smoke report caveat: the run completed but returned overall with-skill score `0.6667` and exit `1` against the configured `0.80` threshold. The exact response and goal were correct; SkillEvaluator reported weak skill-execution/efficiency evidence because Codex read the skill with `sed`, which the evaluator did not recognize as skill-use evidence, and the fixture prohibited external tools. This is a smoke-fixture/evaluator-observability issue, not an access failure.
+- Milestone 1 exit criteria are satisfied: the reference skill passed Tier 1 and a controlled Tier 3 evaluation completed in a sandbox. Milestone 2 remains untouched.
 
 ---
 
 ## Milestone 2 — Normalized Framework Contracts
 
-Status: `NOT STARTED`
+Status: `DONE`
 
 Tasks:
-- [ ] Finalize `skill.schema.json`.
-- [ ] Validate all 12 `skill.yaml` files.
-- [ ] Finalize normalized evaluation-result schema.
-- [ ] Implement NVIDIA output parser.
-- [ ] Implement benchmark identity/fingerprint.
-- [ ] Implement provider abstraction tests.
-- [ ] Add framework version field to output.
+- [x] Finalize `skill.schema.json` with explicit framework manifest requirements and supported risk levels.
+- [x] Validate all 12 reference `skill.yaml` files (plus the Milestone 1 smoke manifest).
+- [x] Finalize normalized evaluation-result schema with framework/source identity and stable result sections.
+- [x] Implement NVIDIA Tier 1/Tier 3 output parser in `framework/adapters/nvidia_skillevaluator.py`.
+- [x] Implement benchmark identity/fingerprint in `framework/benchmark/identity.py`.
+- [x] Implement provider abstraction tests for exact pinned CLI invocations and normalized output.
+- [x] Add framework version field to adapter and normalized output: `0.1.0`.
 
 Exit criteria:
 - downstream certification code consumes normalized PM AI results only;
 - no downstream code parses NVIDIA raw schema directly.
 
+Evidence (2026-08-26):
+
+- `tests/test_contracts.py` validates all skill manifests, benchmark fingerprint behavior, and normalized-result schema compliance.
+- `tests/test_nvidia_skillevaluator.py` validates the provider commands and Tier 3 report normalization.
+- Test suite: `9 passed`; changed-file Ruff checks and `git diff --check` pass.
+- The NVIDIA parser accepts the actual Tier 1 report captured in `reports/m1/tier1-v296/` and Tier 3 report captured in `reports/m1/tier3-smoke/`.
+- Milestone 3 is complete; see the evidence below.
+
 ---
 
 ## Milestone 3 — Synthetic Agentic Data Pipeline
 
-Status: `NOT STARTED`
+Status: `DONE`
 
 Tasks:
-- [ ] Define logical tool interfaces.
-- [ ] Add deterministic portfolio fixtures.
-- [ ] Add benchmark fixture.
-- [ ] Add attribution fixture.
-- [ ] Add factor-risk fixture.
-- [ ] Add scenario fixture.
-- [ ] Add market-data fixture.
-- [ ] Add controlled failure modes.
-- [ ] Add stale/mismatched-date fixtures.
-- [ ] Add derivative position fixture.
+- [x] Define logical tool interfaces.
+- [x] Add deterministic portfolio fixtures.
+- [x] Add benchmark fixture.
+- [x] Add attribution fixture.
+- [x] Add factor-risk fixture.
+- [x] Add scenario fixture.
+- [x] Add market-data fixture.
+- [x] Add controlled failure modes.
+- [x] Add stale/mismatched-date fixtures.
+- [x] Add derivative position fixture.
 
 Exit criteria:
 - all reference skill evaluations can run without production systems.
+
+Evidence (2026-08-26):
+
+- `tests/test_synthetic_pipeline.py` proves the eight stable logical tools, cross-source date consistency, attribution
+  reconciliation, scenario and market lookups, and machine-readable failure cases.
+- `.venv/bin/python -m pytest -q tests/test_synthetic_pipeline.py` passes `8` tests; the full suite passes `17` tests.
+- `synthetic_data_pipeline/fixtures/` contains deterministic portfolio, SPX benchmark, scenario, and market-history
+  data, including the `ES_FUT` derivative position.
+- `docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md` provides the reproducible setup, expected output, and evidence map.
+- Exit criterion is satisfied: the data/tool layer is local and deterministic, so reference skill evaluations no longer
+  require production systems for their data calls.
+- Milestone 4 is not started.
 
 ---
 
 ## Milestone 4 — First Vertical Slice: Performance Attribution
 
-Status: `NOT STARTED`
+Status: `IN PROGRESS`
 
 Tasks:
-- [ ] Refine SKILL.md.
-- [ ] Validate with NVIDIA Tier 1.
-- [ ] Create/update Tier 2 catalog.
-- [ ] Run candidate similarity.
-- [ ] Complete 10 initial eval cases.
-- [ ] Expand to >=25 cases.
-- [ ] Implement attribution reconciliation grader.
-- [ ] Implement benchmark consistency grader.
-- [ ] Implement temporal consistency grader.
+- [x] Refine SKILL.md.
+- [x] Validate with NVIDIA Tier 1.
+- [x] Create/update Tier 2 catalog.
+- [x] Run candidate similarity.
+- [x] Complete 10 initial eval cases.
+- [x] Expand to >=25 cases.
+- [x] Implement attribution reconciliation grader.
+- [x] Implement benchmark consistency grader.
+- [x] Implement temporal consistency grader.
 - [ ] Run with-skill baseline.
 - [ ] Run without-skill baseline.
 - [ ] Measure Skill Lift.
@@ -129,6 +160,35 @@ Tasks:
 
 Exit criteria:
 - one complete skill flows from source -> eval -> certification -> benchmark report.
+
+Evidence (2026-08-27):
+
+- `skills/performance-attribution/` contains the refined package and 25 cases.
+- Tier 1 passes 11/11 checks; Tier 2 passes 3 checks.
+- `graders/finance/performance_attribution.py` provides six deterministic domain
+  checks, with unit coverage in `tests/test_graders.py`.
+- The staged CLI adapter now exposes the synthetic pipeline to Harbor, so the
+  full 25-case with-skill/baseline Tier 3 matrix completes with Docker and
+  credentials validated. Evidence is retained under
+  `reports/m4/performance-attribution-tier3-normal-timeout/`.
+- The live result is diagnostic rather than certifying: overall lift is +0.0103,
+  goal-accuracy lift is +0.0340, but skill efficiency is 0.08 and only 2/25
+  with-skill cases pass the 0.80 case threshold. Milestone 4 remains
+  `IN PROGRESS`; repeated runs, normalized reporting, `BENCHMARK.md`, and
+  certification are not yet complete.
+- Explicit skill injection via `--include-skills`, group workspace mode, and
+  the with-skill-only `/workspace/AGENTS.md` bootstrap were verified end to
+  end. Detailed trajectory evidence shows the required skill read and
+  logical-tool workflow; the remaining mismatch is evaluator recognition of
+  Codex's bare `exec` action.
+- The with-skill-only bootstrap now produces detailed trajectory evidence of
+  the required skill read and logical-tool workflow. The pinned evaluator still
+  scores execution/efficiency as if no skill was used because its heuristic does
+  not recognize Codex's bare `exec` tool wrapper. Milestone 4 remains
+  `IN PROGRESS` pending a compatibility shim or upstream evaluator fix, followed
+  by a fresh repeated certification run.
+- See `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md` for reproduction commands,
+  expected results, and the exact unblock requirement.
 
 ---
 
@@ -310,16 +370,16 @@ Exit criteria:
 
 ```text
 Blueprint / Design                DONE
-NVIDIA live integration           NOT STARTED
-Normalized adapter                SCAFFOLDED
-Synthetic data pipeline           SCAFFOLDED
+NVIDIA live integration           DONE (Tier 1 and controlled Tier 3 complete)
+Normalized adapter                DONE (Milestone 2)
+Synthetic data pipeline           DONE (Milestone 3)
 12 skill definitions              SCAFFOLDED
 120 starter eval cases            DONE / STARTER QUALITY
 Finance graders                   SCAFFOLDED
 CI workflow                       SCAFFOLDED
-Real Tier 1 benchmark             NOT STARTED
+Real Tier 1 benchmark             DONE (portfolio-overview; 11/11 checks)
 Real Tier 2 catalog               NOT STARTED
-Real Tier 3 Skill Lift            NOT STARTED
+Real Tier 3 Skill Lift            IN PROGRESS (Performance Attribution tool injection required)
 Cross-repo demonstration          NOT STARTED
 ```
 
@@ -350,20 +410,14 @@ Recommended commit/PR labels:
 
 # Suggested next three PRs
 
-## PR 1 — Pin and integrate real SkillEvaluator
-- pin version;
-- run Tier 1;
-- capture raw reports;
-- make adapter real.
-
-## PR 2 — Performance Attribution vertical slice
+## PR 1 — Performance Attribution vertical slice
 - synthetic data;
 - graders;
 - Tier 3;
 - Skill Lift;
 - BENCHMARK.
 
-## PR 3 — Risk + Portfolio Overview
+## PR 2 — Risk + Portfolio Overview
 - prove reuse;
 - introduce deliberate defects;
 - demonstrate remediation.
