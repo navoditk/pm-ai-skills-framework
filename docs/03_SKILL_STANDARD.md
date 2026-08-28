@@ -108,4 +108,11 @@ Every skill must have:
 - domain reviewer;
 - risk class.
 
-No owner -> no certification.
+No owner -> no certification. **This is enforced as an automated pre-Tier-1
+CI check on `skill.yaml`, not a review convention** — a manifest containing a
+placeholder value (for example the literal string
+`domain-owner-required`) fails validation before any evaluation cost is
+spent. See `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`, "Suggested next
+three PRs," for the current status of this check: it is documented here but
+not yet implemented, and all 12 reference skills currently ship with the
+placeholder value pending real ownership assignment.

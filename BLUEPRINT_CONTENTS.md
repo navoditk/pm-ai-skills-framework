@@ -5,7 +5,7 @@ Generated reference scaffold contains:
 - **12 PM skills**
 - **120 starter evaluation cases**
 - **6 finance grader implementations**
-- **11 detailed architecture/implementation/adoption/reference/progress documents**
+- **13 detailed architecture/implementation/adoption/reference/progress documents**, plus milestone-specific evidence docs
 - normalized evaluation result schema
 - skill manifest schema
 - certification policy

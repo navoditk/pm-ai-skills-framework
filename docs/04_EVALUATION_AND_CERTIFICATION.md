@@ -57,6 +57,45 @@ Authorization Compliance
 Numeric Grounding
 ```
 
+## 4.2a Risk-tiered certification rigor
+
+Not every skill should cost the same to certify. Certification rigor scales
+with the `classification.risk_level` value already required in
+`skill.yaml` / `framework/schemas/skill.schema.json`
+(`informational`, `low`, `analytical`, `decision-support`, `action`):
+
+| risk_level | Tier 1 / Tier 2 | Tier 3 | Tier 4 finance graders |
+|---|---|---|---|
+| informational | required, blocking | 1 attempt, reduced case set | optional |
+| low | required, blocking | 1 attempt, full case set | recommended |
+| analytical | required, blocking | 1-3 attempts, full case set | required |
+| decision-support | required, blocking | 3 attempts, full case set | required, hard gate |
+| action | required, blocking | 3+ attempts, full case set, trajectory reviewed by a human | required, hard gate |
+
+Tier 1 and Tier 2 stay blocking at every risk level — construction/security
+quality and catalog deduplication are cheap to run and their value does not
+scale with a skill's downstream risk. What scales is Tier 3 attempt count and
+case coverage, and whether Tier 4 finance grading is a hard gate or merely
+recommended.
+
+This is also a cost-control mechanism: a growing skill library cannot afford
+to run the most expensive Tier 3 matrix (multiple attempts, full case set,
+live-agent sandbox) against every new skill by default. Most new PM skills
+(a summary or commentary skill, for example) belong at `informational` or
+`low` and should never trigger the same evaluation cost as
+`performance-attribution`.
+
+## 4.2b Deduplication as the first-line governance mechanism
+
+Before any Tier 3/4 cost is spent, Tier 2 similarity against the central
+approved-skill catalog (`catalogs/skill-catalog.json`) is the cheapest and
+highest-leverage control against the duplication problem this framework
+exists to solve (`docs/01_PROPOSAL.md` §1.1). `EXACT_DUPLICATE` and
+`HIGH_SIMILARITY` findings should block merge before a candidate skill
+consumes any live-agent evaluation budget at all — catching a near-duplicate
+at PR time is far cheaper than discovering it after both skills reach
+production.
+
 ## 4.3 Hard gates versus weighted metrics
 
 Hard gates:

@@ -4,6 +4,20 @@ This document is the working execution plan for building the reference implement
 
 Update this file in every material pull request.
 
+## Scope decision (2026-08-27)
+
+This framework leverages **NVIDIA SkillEvaluator as the evaluation engine**
+and stays scoped to **PM/asset-management skill governance** — it is not
+being built as a generic, domain-agnostic skills platform. The near-term
+priority is therefore governance controls over the growing PM skill library
+(deduplication, ownership enforcement, risk-tiered certification cost) ahead
+of breadth (more skills) or generality (more domains). See
+`docs/01_PROPOSAL.md` §1.5 for the corresponding non-goal and
+`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` for how the framework stays
+insulated from the one external dependency this scope decision leans on
+most heavily. This reprioritizes the "Suggested next three PRs" section at
+the bottom of this document; milestone numbering below is unchanged.
+
 Statuses:
 - `NOT STARTED`
 - `IN PROGRESS`
@@ -410,14 +424,43 @@ Recommended commit/PR labels:
 
 # Suggested next three PRs
 
-## PR 1 — Performance Attribution vertical slice
-- synthetic data;
-- graders;
-- Tier 3;
-- Skill Lift;
-- BENCHMARK.
+Reprioritized per the governance-first scope decision above. These are
+deliberately cheaper and less dependent on the open Milestone 4 Tier 3
+blocker than continuing to chase certification on Performance Attribution
+alone — they deliver real duplication/ownership control immediately, and
+don't require the NVIDIA execution-heuristic gap to be resolved first.
 
-## PR 2 — Risk + Portfolio Overview
-- prove reuse;
-- introduce deliberate defects;
-- demonstrate remediation.
+## PR 1 — Central catalog and blocking Tier 2 gate
+- create one org-wide `catalogs/skill-catalog.json` (the current
+  `catalogs/performance-attribution-catalog.json` is skill-scoped, not
+  central);
+- wire the `similarity` job in `.github/workflows/skills-quality.yml` to run
+  for real instead of the current `echo` placeholder;
+- make `EXACT_DUPLICATE` and `HIGH_SIMILARITY` (`policies/similarity.yaml`)
+  actually block merge;
+- assign an owner and SLA for the `architecture_review` action on
+  `HIGH_SIMILARITY` findings.
+
+## PR 2 — Ownership gate and risk-tiered certification profiles
+- add a Tier 1 / schema check that fails CI on the literal placeholder
+  `domain_reviewer: domain-owner-required` (present today in all 12
+  reference `skill.yaml` files — this rule is already documented in
+  `docs/03_SKILL_STANDARD.md` §3.8 but not enforced);
+- add certification profiles for each `risk_level` per
+  `docs/04_EVALUATION_AND_CERTIFICATION.md` §4.2a, instead of the single flat
+  `analytical-standard` profile every skill currently points at.
+
+## PR 3 — Performance Attribution vertical slice (unblocked)
+- file the Codex `exec` execution-heuristic gap upstream with NVIDIA
+  (`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6);
+- keep Tier 3 advisory-only in CI until resolved;
+- once resolved (or upstream-acknowledged with a workaround), rerun the full
+  25-case matrix, measure Skill Lift, generate `BENCHMARK.md`, and apply the
+  new risk-tiered certification profile from PR 2.
+
+## Following PR — Lightweight registry
+- generate a simple index (skill id, owner, risk_level, certification state,
+  last benchmark date) from `catalogs/skill-catalog.json` and certification
+  results, regenerated on every merge — pulled forward from Milestone 12
+  because it is the artifact that actually prevents duplicate skill-building,
+  not just detects it after the fact.

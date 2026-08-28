@@ -70,6 +70,14 @@ NVIDIA solves a large portion of the generic problem:
 
 The organization should **use NVIDIA as an engine but not expose NVIDIA as the enterprise contract**.
 
+This creates a real dependency risk: an upstream NVIDIA release can change
+evaluation behavior in ways that silently affect what "certified" means (a
+concrete instance already occurred — see
+`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6). The adapter boundary
+described in `docs/02_TARGET_ARCHITECTURE.md` §2.4 and the staged upgrade
+process in `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` are the accepted
+mitigation for this risk — not a reason to avoid depending on NVIDIA.
+
 ## 1.4 Expected organizational benefits
 
 ### Consistency
@@ -105,7 +113,15 @@ The framework does not:
 - require every tool to use MCP;
 - require one model provider;
 - make NVIDIA a mandatory permanent runtime dependency;
-- allow LLM graders to override deterministic financial truth.
+- allow LLM graders to override deterministic financial truth;
+- **become a generic, domain-agnostic skills platform for arbitrary use cases
+  outside asset management.** The framework is deliberately scoped to PM/
+  asset-management skill governance. Its value — a single approved-skill
+  catalog, one shared certification vocabulary, and reusable finance graders
+  — depends on staying scoped to this organization's skill library rather
+  than generalizing across domains. A different domain adopting similar
+  discipline should stand up its own instance rather than push this
+  repository toward domain-neutral abstraction.
 
 ## 1.6 Deliverables
 

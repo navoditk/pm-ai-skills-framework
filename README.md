@@ -1,8 +1,24 @@
 # PM AI Skills Quality & Certification Framework
 
-Reference blueprint for building, testing, evaluating, certifying, and governing an enterprise AI skills library for portfolio management and broader asset-management use cases.
+Reference blueprint for building, testing, evaluating, certifying, and governing a growing library of AI skills for portfolio management and broader asset-management use cases.
 
-The design uses **NVIDIA SkillEvaluator as a pluggable generic evaluation engine** and layers asset-management-specific contracts, deterministic finance graders, certification rules, reporting, CI/CD, and portability on top.
+The design uses **NVIDIA SkillEvaluator as the evaluation engine** and layers a thin, PM-specific governance model on top: ownership enforcement, catalog-based duplicate detection, deterministic finance grading, risk-tiered certification rigor, and benchmark evidence. This is deliberately **not** a generic, domain-agnostic agent framework — see [Scope](#scope) below.
+
+## Goals, upfront
+
+This repository exists because a PM organization's skill library grows faster than any one team can review by hand. The concrete goals, in priority order:
+
+1. **Stop duplicate/near-duplicate skills from entering the library.** Every new skill is checked against a central catalog before merge (Tier 2 semantic similarity), so two teams don't independently build "explain portfolio performance" under different names.
+2. **Make skill quality measurable and comparable**, using NVIDIA SkillEvaluator's Tier 1 (construction/security) and Tier 3 (live-agent, with-skill vs. without-skill) evaluation, rather than relying on demos or subjective review.
+3. **Catch financially wrong answers that generic evaluation can't see** — reconciliation errors, stale/mismatched dates, missing derivatives coverage — via deterministic PM domain graders (Tier 4).
+4. **Scale certification rigor to actual risk**, so an informational skill and a decision-support skill aren't held to the same (or held to an insufficiently strict) bar.
+5. **Enforce ownership before evaluation**, so every skill has a named business owner and domain reviewer prior to certification — no owner, no certification.
+6. **Insulate PM certification logic from NVIDIA's release cadence**, so upgrading the underlying evaluator doesn't silently change what "certified" means (see [NVIDIA upgrade policy](#nvidia-skillevaluator-upgrade-policy)).
+7. **Produce auditable benchmark evidence** — a `BENCHMARK.md` and normalized JSON record tied to an exact skill version, dataset, agent, model, and evaluator version — before a skill is trusted in production.
+
+## Scope
+
+This framework governs **PM/asset-management skills specifically**. It is not intended to become a catch-all, multi-domain skills platform. The value it provides — a central duplicate-detection catalog, a shared certification vocabulary, and reusable finance graders — depends on staying scoped to one organization's skill library rather than generalizing to arbitrary domains. See `docs/01_PROPOSAL.md` §1.5 for explicit non-goals.
 
 ## Why this repository exists
 
@@ -59,7 +75,8 @@ The consuming repository provides:
 - local fixtures and logical-tool dependencies;
 - optional specialist graders for its domain.
 
-Typical usage is:
+Target usage — the intended day-to-day interface once `framework/cli/` is
+implemented as a thin wrapper around the pinned `skillevaluator` CLI — is:
 
 ```bash
 pmai-skills validate ./skills
@@ -67,6 +84,14 @@ pmai-skills similarity ./skills/my-new-skill
 pmai-skills evaluate ./skills/my-new-skill --profile pr
 pmai-skills certify ./skills/my-new-skill --profile release
 ```
+
+**Current status:** this CLI does not exist yet. All Milestone 1 and Milestone 4
+work was run directly against the pinned `skillevaluator` binary
+(`.venv/bin/skillevaluator ...`); see `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
+for exactly what is implemented versus planned. `pmai-skills` is intentionally
+scoped to stay a thin pass-through — it should add PM manifest/ownership
+checks, normalize output, and apply certification policy, and nothing more.
+It should not reimplement flags or behavior NVIDIA already provides.
 
 The consuming repository should depend on a pinned framework version. It should
 not copy the framework implementation, duplicate certification logic, or parse
@@ -132,6 +157,62 @@ The curated source list for NVIDIA, Anthropic/Agent Skills, OpenAI, Microsoft, O
 `docs/09_REFERENCES_AND_RESOURCES.md`
 
 
+## Architecture at a glance
+
+```text
+PM / Research experience  ->  Agent / Orchestrator  ->  Skill Runtime + Policy Layer
+                                                              |
+                                                              v
+                                            Agentic Data Pipeline (logical tool contracts)
+                                                              |
+====================  skills engineering plane runs alongside, not inline  ====================
+                                                              |
+                                                              v
+        Skill source  ->  NVIDIA SkillEvaluator (Tier 1/2/3)  ->  PM domain graders (Tier 4)
+                                     |                                     |
+                                     v                                     v
+                          normalized adapter output  ---->  certification engine  ->  registry
+```
+
+Two boundaries matter most:
+
+- **The Agentic Data Pipeline boundary** — skills call stable logical capabilities
+  (`portfolio.positions`, `performance.attribution`), never a physical database or
+  vendor API directly. This is what lets a skill's certification evidence stay
+  valid across infrastructure changes.
+- **The NVIDIA adapter boundary** — nothing outside `framework/adapters/`
+  parses NVIDIA's raw report format. Everything downstream (certification,
+  reporting, registry) consumes a normalized PM AI result schema instead. This
+  is what makes NVIDIA version upgrades a contained, testable event instead of
+  a library-wide breaking change — see
+  [NVIDIA SkillEvaluator upgrade policy](#nvidia-skillevaluator-upgrade-policy).
+
+For the full architecture — every layer's responsibility, the evaluation
+provider abstraction, and benchmark identity rules — see
+[`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md).
+
+## NVIDIA SkillEvaluator upgrade policy
+
+The framework depends on one external evaluation engine, pinned to an exact
+version and commit (currently `0.2.1` /
+`009aa300be7925c7ba75760592baeb941cc29ba8` — see
+`docs/MILESTONE_1_SETUP.md`). Upgrading that dependency is a governed event,
+not a routine `pip install --upgrade`:
+
+- version bumps run through a staged compatibility test (adapter tests, a
+  Tier 1 reference run, and a full Tier 3 matrix compared against the last
+  certified benchmark) before becoming the new pin;
+- the normalized result schema is expected to stay stable across evaluator
+  versions; only `framework/adapters/nvidia_skillevaluator.py` should need to
+  change;
+- known evaluator-compatibility gaps (for example, the Tier 3 execution
+  heuristic not recognizing Codex's `exec` action — see
+  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`) are logged and tracked
+  upstream rather than patched around locally.
+
+Full process, triggers, rollback plan, and the compatibility-issue log live in
+[`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md).
+
 ## Core architectural terms
 
 - **Agentic Data Pipeline** — governed logical access layer exposing portfolio, risk, benchmark, market, research, and analytical capabilities to agents through stable tool contracts.
@@ -177,7 +258,8 @@ Read these documents in order:
 10. `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
 11. `docs/11_QUICKSTART_FOR_CONSUMERS.md`
 12. `docs/12_END_TO_END_SKILL_WORKFLOW.md`
-13. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
+13. `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`
+14. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
 
 ## Repository layout
 
