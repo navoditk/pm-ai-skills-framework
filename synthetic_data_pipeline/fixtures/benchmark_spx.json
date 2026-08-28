@@ -1,0 +1,13 @@
+{
+  "benchmarks": {
+    "SPX": {
+      "as_of": "2026-08-25",
+      "currency": "USD",
+      "positions": [
+        {"id": "AAPL", "weight": 0.07},
+        {"id": "MSFT", "weight": 0.06},
+        {"id": "JPM", "weight": 0.012}
+      ]
+    }
+  }
+}

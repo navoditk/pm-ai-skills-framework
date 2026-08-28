@@ -1,0 +1,12 @@
+{
+  "scenarios": {
+    "rates-up-100bp": {
+      "description": "Interest rates rise by 100 basis points",
+      "impact": -0.012
+    },
+    "equity-down-10pct": {
+      "description": "Broad equity markets fall by 10 percent",
+      "impact": -0.082
+    }
+  }
+}

@@ -1,13 +1,13 @@
 schema_version: 1
 
 harbor:
-  n_attempts: 3
+  n_attempts: 1
   pass_threshold: 0.80
-  n_concurrent: 4
+  n_concurrent: 1
   agent_runtime_preflight: true
 
 skill_workspace:
   mode: isolated
 
 grading:
-  mode: default_plus_custom
+  mode: default

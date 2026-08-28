@@ -1,0 +1,30 @@
+{
+  "securities": {
+    "AAPL": {
+      "name": "Apple Inc.",
+      "asset_class": "equity",
+      "currency": "USD",
+      "prices": {"2026-08-22": 225.10, "2026-08-25": 227.40}
+    },
+    "MSFT": {
+      "name": "Microsoft Corp.",
+      "asset_class": "equity",
+      "currency": "USD",
+      "prices": {"2026-08-22": 510.20, "2026-08-25": 512.80}
+    },
+    "JPM": {
+      "name": "JPMorgan Chase & Co.",
+      "asset_class": "equity",
+      "currency": "USD",
+      "prices": {"2026-08-22": 298.70, "2026-08-25": 301.10}
+    },
+    "ES_FUT": {
+      "name": "E-mini S&P 500 Future",
+      "asset_class": "derivative",
+      "derivative_type": "future",
+      "underlying": "SPX",
+      "currency": "USD",
+      "prices": {"2026-08-22": 6460.00, "2026-08-25": 6492.25}
+    }
+  }
+}

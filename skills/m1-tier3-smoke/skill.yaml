@@ -1,0 +1,24 @@
+schema_version: 1
+skill:
+  id: pm.m1.tier3-smoke
+  name: Milestone 1 Tier 3 Smoke Test
+  version: 0.1.0
+
+ownership:
+  business: pm-ai
+  engineering: pm-ai
+  domain_reviewer: pm-ai
+
+classification:
+  domain: framework
+  risk_level: low
+
+dependencies:
+  tools: []
+
+evaluation:
+  dataset: evals/evals.json
+  require_baseline_for_certification: true
+
+certification:
+  policy_profile: analytical-standard

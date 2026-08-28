@@ -17,6 +17,9 @@ dependencies:
   tools:
     - portfolio.summary@v1
     - portfolio.positions@v1
+    - benchmark.positions@v1
+    - performance.attribution@v1
+    - market.security_context@v1
 
 evaluation:
   dataset: evals/evals.json

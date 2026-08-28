@@ -69,6 +69,7 @@
         "risk_level": {
           "enum": [
             "informational",
+            "low",
             "analytical",
             "decision-support",
             "action"

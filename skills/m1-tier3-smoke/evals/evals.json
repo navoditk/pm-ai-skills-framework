@@ -1,0 +1,16 @@
+{
+  "skill_name": "m1-tier3-smoke",
+  "evals": [
+    {
+      "id": "m1-smoke-001",
+      "category": "explicit-positive",
+      "prompt": "Perform the Milestone 1 smoke check.",
+      "expected_output": "Return the exact smoke-test acknowledgement from the skill.",
+      "assertions": [
+        "Return exactly: M1 smoke: skill loaded successfully.",
+        "Do not call external tools or invent data."
+      ],
+      "expected_skill": "m1-tier3-smoke"
+    }
+  ]
+}
