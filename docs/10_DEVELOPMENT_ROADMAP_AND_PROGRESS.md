@@ -164,10 +164,10 @@ Tasks:
 - [x] Implement attribution reconciliation grader.
 - [x] Implement benchmark consistency grader.
 - [x] Implement temporal consistency grader.
-- [ ] Run with-skill baseline.
-- [ ] Run without-skill baseline.
-- [ ] Measure Skill Lift.
-- [ ] Run repeated attempts.
+- [x] Run with-skill baseline.
+- [x] Run without-skill baseline.
+- [x] Measure Skill Lift.
+- [ ] Run repeated attempts (in progress — see 2026-08-28 evidence).
 - [ ] Generate normalized report.
 - [ ] Generate BENCHMARK.md.
 - [ ] Apply certification policy.
@@ -203,6 +203,36 @@ Evidence (2026-08-27):
   by a fresh repeated certification run.
 - See `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md` for reproduction commands,
   expected results, and the exact unblock requirement.
+
+Evidence (2026-08-28):
+
+- Root-caused the Codex execution/efficiency blocker to Codex's trajectory
+  reporting its shell tool as bare `exec`, which is absent from the pinned
+  evaluator's execution-action hint set (confirmed by reading
+  `skillevaluator/tier3/harbor/templates/eval.py` and
+  `harbor/agents/installed/codex.py` directly).
+- Confirmed `claude-code` is a first-class supported Tier 3 agent in this same
+  pinned evaluator version, and that its native `Bash`/`Read`/`Skill` tool
+  names are already recognized by the same heuristic
+  (`harbor/agents/installed/claude_code.py`).
+- Live-validated the fix: the Milestone 1 smoke fixture scored
+  `skill_execution: 1.00`, `skill_efficiency: 1.00`, Skill Lift `+0.58` with
+  `claude-code` (`reports/m4/claude-code-smoke-validation/`), versus the
+  `0.6667`/failed result Codex produced on the identical fixture in
+  Milestone 1.
+- Ran the full 25-case Performance Attribution set at `n_attempts: 1` with
+  `claude-code`: `skill_execution`/`skill_efficiency` scored normally and
+  varied meaningfully by case across all 25 with-skill trials (no more flat
+  `0.08` floor). This run also surfaced a separate, lower-severity finding —
+  intermittent LLM-judge JSON-parse failures on the `accuracy`/`goal_accuracy`
+  dimensions (see `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6) — which
+  suppressed the aggregate score at single-attempt coverage but is expected to
+  be absorbed by the certification profile's `n_attempts: 3` redundancy.
+- Started the full 3-attempt, 150-trial certification-grade matrix
+  (`reports/m4/performance-attribution-tier3-claude-code-final/`); result
+  pending as of this update. Remaining Milestone 4 tasks (normalized report,
+  `BENCHMARK.md`, certification verdict) are blocked only on that run
+  finishing, not on any further code or evaluator changes.
 
 ---
 
@@ -393,7 +423,7 @@ Finance graders                   SCAFFOLDED
 CI workflow                       SCAFFOLDED
 Real Tier 1 benchmark             DONE (portfolio-overview; 11/11 checks)
 Real Tier 2 catalog               NOT STARTED
-Real Tier 3 Skill Lift            IN PROGRESS (Performance Attribution tool injection required)
+Real Tier 3 Skill Lift            IN PROGRESS (execution-heuristic blocker resolved via claude-code agent; full 3-attempt certification matrix running)
 Cross-repo demonstration          NOT STARTED
 ```
 

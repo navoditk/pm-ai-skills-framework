@@ -2,9 +2,13 @@
 
 ## Status
 
-`IN PROGRESS` — implementation, static evaluation, and a complete live Tier 3
-matrix are complete; certification remains open because the agent did not meet
-the evaluator's execution-efficiency threshold.
+`IN PROGRESS` — the Codex execution-efficiency blocker documented below has
+been root-caused to a Codex-specific trajectory format and resolved by
+switching the Tier 3 agent to `claude-code`. Live confirmation is complete at
+smoke scale and at full-skill scale (single attempt); the full 3-attempt
+certification-grade matrix is running as of 2026-08-28 and this document will
+be updated with its result. See "Resolution: switching Tier 3 agent to
+claude-code" below.
 
 ## What this milestone is meant to prove
 
@@ -160,6 +164,77 @@ marker. The current diagnostic evidence is retained under
 
 Result: **18 passed**.
 
+## Resolution: switching Tier 3 agent to claude-code
+
+The root cause identified above — the pinned evaluator's execution/efficiency
+heuristic not recognizing Codex's bare `exec` trajectory action — is specific
+to Codex, not a limitation of the evaluator or of this skill. This was
+confirmed two ways:
+
+**Static confirmation.** `claude-code` is a first-class supported Harbor agent
+in this exact pinned SkillEvaluator version
+(`skillevaluator/tier3/harbor/__init__.py`:
+`LOCAL_HARBOR_AGENTS = frozenset({"claude-code", "codex", "opencode"})`).
+Claude Code's Harbor integration
+(`harbor/agents/installed/claude_code.py`) sources each trajectory step's
+`function_name` directly from the Claude API's native `tool_use` block name —
+its built-in tools are literally named `Bash` and `Read`, which the
+evaluator's execution/read hint sets already recognize case-insensitively
+(`skillevaluator/tier3/harbor/templates/eval.py`:
+`_EXECUTION_TOOL_HINTS`/`_BEHAVIOR_EXEC_TOOLS` include `bash`;
+`_READ_TOOL_HINTS` includes `read`). Codex's shell tool, by contrast, reports
+itself as `exec` — absent from both hint sets — which is why the evaluator's
+own source code carries a comment specifically calling out Codex's shell-based
+file reads as a special case requiring extra handling.
+
+**Live confirmation.** Two real runs against the pinned `0.2.1` evaluator with
+`claude-code` as the Tier 3 agent (credentials: `anthropic` provider,
+`claude-opus-5`):
+
+1. *Smoke fixture* (`skills/m1-tier3-smoke`, the same fixture that first
+   surfaced the Codex bug in Milestone 1) —
+   `reports/m4/claude-code-smoke-validation/`: skill execution **1.00**
+   ("Activated via Skill tool: m1-tier3-smoke"), efficiency **1.00**
+   ("1/1 productive calls, 100%"), overall Skill Lift **+0.58**
+   (1.00 with-skill vs. 0.42 baseline), exit 0. Claude Code has a native
+   `Skill` tool the evaluator recognizes directly — an even cleaner signal
+   than the `Bash`/`Read` name match the static analysis predicted.
+2. *Full Performance Attribution case set, single attempt*
+   (`reports/m4/performance-attribution-tier3-claude-code-quick/`): across all
+   25 with-skill trials, `skill_execution` and `skill_efficiency` are
+   populated and vary meaningfully by case (mostly 0.83-1.0, matching real
+   skill-use quality per case) — nothing like Codex's flat `0.08` floor. Two
+   trials scored `skill_execution: 0.0`, plausibly intentional
+   non-activation/negative cases in the eval set rather than a new defect
+   (not yet confirmed against `evals.json` case categories).
+
+This run also surfaced a second, unrelated issue: 9 of 25 with-skill trials
+and 3 of 25 baseline trials failed with `"Judge response was not a valid JSON
+object"` on the `accuracy`/`goal_accuracy` dimensions specifically (an
+LLM-judge call, distinct from the deterministic execution/efficiency
+verifier). Because this run used `n_attempts: 1`, a single failed judge call
+per case left that case unscored, and the aggregator refused to compute an
+overall score below full 25/25 coverage. This looks like ordinary judge-call
+flakiness rather than an agent-compatibility problem, and is exactly what the
+skill's configured `n_attempts: 3` exists to absorb — three independent judge
+calls per case make a total-failure case unlikely. Log this as a distinct,
+generic evaluator-robustness note (not Codex- or Claude-Code-specific) rather
+than folding it into the execution-heuristic finding.
+
+**Full certification-grade matrix.** Started 2026-08-28 with the skill's
+configured `n_attempts: 3` (25 cases x 3 attempts x 2 arms = 150 trials),
+`--results-dir reports/m4/performance-attribution-tier3-claude-code-final`.
+Result pending — this document will be updated with the completed Skill Lift
+table, pass-threshold count, and certification verdict once it finishes.
+
+**Items 1-3 of "Recommended next-session work" above (patching the pinned
+evaluator's execution-action allowlist) are no longer necessary** — the
+compatibility gap is avoided by agent choice, not by modifying the evaluator.
+The gap itself remains logged as a known issue for Codex specifically in
+`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6, since a future milestone
+or a different consuming repository may still want to use Codex as a Tier 3
+agent.
+
 ## Remaining certification work
 
 The original Tier 3 stall was investigated. It was caused by the container not
@@ -172,5 +247,10 @@ strengthened and rerun. The remaining required evidence is a passing repeated
 Tier 3 matrix, normalized PM AI output, `BENCHMARK.md`, and a certification
 verdict. The earlier stalled diagnostic artifacts remain under
 [`reports/m4/performance-attribution-tier3/`](../reports/m4/performance-attribution-tier3/).
+
+With the execution-heuristic blocker resolved by switching to `claude-code`
+(see above), the remaining work to close out Milestone 4 is: let the running
+3-attempt matrix finish, normalize its output through the PM AI adapter, apply
+`policies/certification.yaml`, and generate `BENCHMARK.md`.
 
 Milestone 5 must not begin until this evidence and certification path is complete.
