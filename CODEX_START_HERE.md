@@ -14,6 +14,7 @@ Before changing code, read these files in order:
 6. `docs/05_IMPLEMENTATION_PLAN.md`
 7. `docs/09_REFERENCES_AND_RESOURCES.md`
 8. `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
+9. `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`
 
 The development tracker in `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
 is the authoritative source for implementation order and current status.
@@ -129,3 +130,7 @@ The desired output is one clean pull-request-sized Milestone 1 implementation.
 - Avoid provider lock-in.
 - Keep skill instructions separate from authorization logic.
 - Convert reviewed production defects into regression cases.
+- Never change the pinned NVIDIA SkillEvaluator version outside the process
+  in `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`.
+- Do not add domain-agnostic abstractions in the name of future portability;
+  this framework is scoped to PM/asset-management (`docs/01_PROPOSAL.md` §1.5).
