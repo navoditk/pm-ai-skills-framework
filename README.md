@@ -259,7 +259,10 @@ Read these documents in order:
 11. `docs/11_QUICKSTART_FOR_CONSUMERS.md`
 12. `docs/12_END_TO_END_SKILL_WORKFLOW.md`
 13. `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`
-14. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
+14. `docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` — a standalone, cold-read
+    summary covering goals, architecture, milestone status, and an honest
+    pros/cons assessment
+15. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
 
 ## Repository layout
 
