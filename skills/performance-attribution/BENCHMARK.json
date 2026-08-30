@@ -1,0 +1,1557 @@
+{
+  "framework_version": "0.1.0",
+  "source": {
+    "provider": "nvidia-skillevaluator",
+    "evaluator_version": "0.2.1",
+    "report_type": "tier3"
+  },
+  "skill": {
+    "id": "pm.performance.attribution",
+    "name": "Performance Attribution",
+    "version": "0.1.0"
+  },
+  "benchmark_context": {
+    "agent": "claude-code",
+    "model": "claude-sonnet-5",
+    "dataset": "sha256:11fd0cb90a7ea90f476866934f7a9fbd77657b5fc30fb5d8426e7ab48e3dffa3",
+    "evaluator_version": "0.2.1",
+    "environment": {
+      "value": "docker",
+      "source": "CLI"
+    },
+    "fingerprint": "313b651235a10ab182a91263bb4a08a834934ec101621f827a47089fb3d5ba32"
+  },
+  "generic_metrics": {
+    "security": 1.0,
+    "correctness": 0.992,
+    "discoverability": 0.8862,
+    "effectiveness": 0.9342,
+    "efficiency": 0.8704
+  },
+  "skill_lift": {
+    "with_skill": 0.9362,
+    "without_skill": 0.8109,
+    "delta": 0.1253
+  },
+  "reliability": {
+    "with_skill": {
+      "k": 3,
+      "pass_threshold": 0.8,
+      "stop_on_pass": false,
+      "passed_cases": 23,
+      "failed_cases": 2,
+      "total_cases": 25,
+      "rate": 0.92,
+      "rate_interval": {
+        "method": "wilson_score",
+        "confidence_level": 0.95,
+        "lower": 0.7503389104960468,
+        "upper": 0.9777795987151524
+      },
+      "attempts_used": 75,
+      "max_attempts_possible": 75,
+      "avg_attempts_used": 3.0,
+      "extra_cases": [],
+      "cases": {
+        "performance--001": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9604,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--001__62dRysR",
+              "score": 0.822,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--001__nByKHts",
+              "score": 0.9604,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--001__mjsbyV6",
+              "score": 0.8428,
+              "passed": true
+            }
+          ]
+        },
+        "performance--002": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8688,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--002__5YC7ZaW",
+              "score": 0.8688,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--002__CyVBAgw",
+              "score": 0.8595,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--002__fFebpAZ",
+              "score": 0.8417,
+              "passed": true
+            }
+          ]
+        },
+        "performance--003": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--003__czik7bg",
+              "score": 0.8563,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--003__y9kJn8C",
+              "score": 0.9813,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--003__9ukkxhY",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "performance--004": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--004__AkoHfJx",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--004__TQ98YSe",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--004__78bVThR",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--005": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--005__SnEXe9w",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--005__d4EZnYr",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--005__v2JKrro",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--006": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9866,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--006__xuNj4KT",
+              "score": 0.9777,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--006__fiWDRYz",
+              "score": 0.9866,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--006__DBcLKxE",
+              "score": 0.9783,
+              "passed": true
+            }
+          ]
+        },
+        "performance--007": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--007__jbpToB5",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--007__8amRnCN",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--007__vy9Cqfe",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "performance--008": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9375,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--008__wvYiLRd",
+              "score": 0.9375,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--008__HjQpA6g",
+              "score": 0.8972,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--008__jFG4abh",
+              "score": 0.905,
+              "passed": true
+            }
+          ]
+        },
+        "performance--009": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--009__WyBnuRW",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--009__yVrtKFm",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--009__FFdjWje",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--010": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9756,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--010__SdSFYRk",
+              "score": 0.9756,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--010__6JZN8UL",
+              "score": 0.8903,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--010__CTLyo2V",
+              "score": 0.9756,
+              "passed": true
+            }
+          ]
+        },
+        "performance--011": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9819,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--011__ViusbNQ",
+              "score": 0.9792,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--011__fGwjnHE",
+              "score": 0.9819,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--011__gpXE7Tv",
+              "score": 0.9741,
+              "passed": true
+            }
+          ]
+        },
+        "performance--012": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9819,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--012__yaczPwH",
+              "score": 0.9819,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--012__vETbfTb",
+              "score": 0.8688,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--012__xHH6Smg",
+              "score": 0.8061,
+              "passed": true
+            }
+          ]
+        },
+        "performance--013": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9831,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--013__g3LcHRR",
+              "score": 0.9824,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--013__eVyXTwg",
+              "score": 0.9831,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--013__UJfQCzG",
+              "score": 0.9789,
+              "passed": true
+            }
+          ]
+        },
+        "performance--014": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9854,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--014__M4EL2AR",
+              "score": 0.9854,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--014__xeSSKhB",
+              "score": 0.9741,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--014__MsjDzJL",
+              "score": 0.9819,
+              "passed": true
+            }
+          ]
+        },
+        "performance--015": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9833,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--015__e6ay4J5",
+              "score": 0.9819,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--015__iK8p9yp",
+              "score": 0.9833,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--015__9APneKJ",
+              "score": 0.9819,
+              "passed": true
+            }
+          ]
+        },
+        "performance--016": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9778,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--016__CVNmRfw",
+              "score": 0.9778,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--016__kFbZi6y",
+              "score": 0.9778,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--016__6eect9T",
+              "score": 0.9778,
+              "passed": true
+            }
+          ]
+        },
+        "performance--017": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--017__8SnFpQF",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--017__iRP3LaV",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--017__LdYrYRv",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--018": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9861,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--018__vHyhiUK",
+              "score": 0.9861,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--018__npmx7uF",
+              "score": 0.9667,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--018__k8Ghtgs",
+              "score": 0.9792,
+              "passed": true
+            }
+          ]
+        },
+        "performance--019": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9854,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--019__d2S2yui",
+              "score": 0.9736,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--019__Ugrzmt5",
+              "score": 0.9854,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--019__dCC9Q6F",
+              "score": 0.9736,
+              "passed": true
+            }
+          ]
+        },
+        "performance--020": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--020__vuyqtpZ",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--020__vZK2oZG",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--020__T9hA2Ne",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "performance--021": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--021__PowJfZP",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--021__wTvowA2",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--021__rsC98sh",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--022": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9798,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--022__CbT4tWG",
+              "score": 0.9798,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--022__3Si3yQe",
+              "score": 0.9631,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--022__ReMhe6S",
+              "score": 0.9,
+              "passed": true
+            }
+          ]
+        },
+        "performance--023": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--023__PHf4H2z",
+              "score": 0.9062,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--023__hDhUMpy",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--023__SzWKMzo",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "performance--024": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.975,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--024__QBsQVM9",
+              "score": 0.9672,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--024__NxJwTMd",
+              "score": 0.9735,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--024__79fCoK7",
+              "score": 0.975,
+              "passed": true
+            }
+          ]
+        },
+        "performance--025": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9735,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--025__yiTVkfC",
+              "score": 0.9735,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--025__VW2utvP",
+              "score": 0.8553,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--025__EznBmuD",
+              "score": 0.97,
+              "passed": true
+            }
+          ]
+        }
+      }
+    },
+    "without_skill": {
+      "k": 3,
+      "pass_threshold": 0.8,
+      "stop_on_pass": false,
+      "passed_cases": 18,
+      "failed_cases": 7,
+      "total_cases": 25,
+      "rate": 0.72,
+      "rate_interval": {
+        "method": "wilson_score",
+        "confidence_level": 0.95,
+        "lower": 0.5242339480963842,
+        "upper": 0.8571614614904344
+      },
+      "attempts_used": 75,
+      "max_attempts_possible": 75,
+      "avg_attempts_used": 3.0,
+      "extra_cases": [],
+      "cases": {
+        "performance--001": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7199,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--001__xPRWgji",
+              "score": 0.7199,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--001__hwDYvdF",
+              "score": 0.6792,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--001__LhE2cxf",
+              "score": 0.7125,
+              "passed": false
+            }
+          ]
+        },
+        "performance--002": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--002__mpyrZCh",
+              "score": 0.7229,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--002__eJAhSi8",
+              "score": 0.7396,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--002__kNySmdj",
+              "score": 0.7896,
+              "passed": false
+            }
+          ]
+        },
+        "performance--003": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9417,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--003__8TbECNe",
+              "score": 0.9208,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--003__zPz6vT5",
+              "score": 0.7458,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--003__eWpwoc2",
+              "score": 0.9417,
+              "passed": true
+            }
+          ]
+        },
+        "performance--004": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--004__PqmATLV",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--004__NznhsP7",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--004__FWvnVvx",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--005": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.95,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--005__ftaMQSg",
+              "score": 0.95,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--005__rdKQanu",
+              "score": 0.9417,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--005__WcTQDia",
+              "score": 0.9042,
+              "passed": true
+            }
+          ]
+        },
+        "performance--006": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--006__xv3FcDF",
+              "score": 0.8917,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--006__mic5ENG",
+              "score": 0.775,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--006__6gx6DN6",
+              "score": 0.625,
+              "passed": false
+            }
+          ]
+        },
+        "performance--007": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--007__tWR5Ga7",
+              "score": 0.5833,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--007__xdYttEC",
+              "score": 0.625,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--007__867rP7E",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "performance--008": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9167,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--008__jg6GjgM",
+              "score": 0.9083,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--008__w2fiLmb",
+              "score": 0.8229,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--008__cDXEM4F",
+              "score": 0.9167,
+              "passed": true
+            }
+          ]
+        },
+        "performance--009": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9083,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--009__Sj2UcVG",
+              "score": 0.9083,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--009__CBdM5n7",
+              "score": 0.875,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--009__bEwwdA9",
+              "score": 0.7583,
+              "passed": false
+            }
+          ]
+        },
+        "performance--010": {
+          "passed": true,
+          "first_pass_attempt": 2,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--010__NCX2Y7X",
+              "score": 0.6833,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--010__3frRkHD",
+              "score": 0.8,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--010__78GE9Ge",
+              "score": 0.7396,
+              "passed": false
+            }
+          ]
+        },
+        "performance--011": {
+          "passed": true,
+          "first_pass_attempt": 2,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--011__dRhyVha",
+              "score": 0.5222,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--011__PKJAyrk",
+              "score": 0.8,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--011__gMrWrJ5",
+              "score": 0.6056,
+              "passed": false
+            }
+          ]
+        },
+        "performance--012": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--012__TEF46dG",
+              "score": 0.8917,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--012__HV6iGbi",
+              "score": 0.5,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--012__wqU2JjV",
+              "score": 0.5333,
+              "passed": false
+            }
+          ]
+        },
+        "performance--013": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7625,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--013__aTe9nEp",
+              "score": 0.7229,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--013__fPAqHXj",
+              "score": 0.7625,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--013__HML3wug",
+              "score": 0.7583,
+              "passed": false
+            }
+          ]
+        },
+        "performance--014": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7396,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--014__BAAievE",
+              "score": 0.5667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--014__UNwevFQ",
+              "score": 0.7167,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--014__FMPjtTj",
+              "score": 0.7396,
+              "passed": false
+            }
+          ]
+        },
+        "performance--015": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8479,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--015__oXCckGR",
+              "score": 0.8479,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--015__6Nyno9a",
+              "score": 0.8042,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--015__bdduW4D",
+              "score": 0.75,
+              "passed": false
+            }
+          ]
+        },
+        "performance--016": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.95,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--016__3mNzmTo",
+              "score": 0.95,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--016__7PPDQSJ",
+              "score": 0.875,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--016__BRuh5tG",
+              "score": 0.9083,
+              "passed": true
+            }
+          ]
+        },
+        "performance--017": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--017__jcD7Vyb",
+              "score": 0.9875,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--017__Upt2sbD",
+              "score": 0.9083,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--017__KumCMuP",
+              "score": 0.9917,
+              "passed": true
+            }
+          ]
+        },
+        "performance--018": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--018__JLpxxhY",
+              "score": 0.9083,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--018__Q4tk3gT",
+              "score": 0.9917,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--018__aZChu2o",
+              "score": 0.9813,
+              "passed": true
+            }
+          ]
+        },
+        "performance--019": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7167,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--019__vFeRCAr",
+              "score": 0.7167,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--019__2KZKLFP",
+              "score": 0.7083,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--019__UERp6y6",
+              "score": 0.6833,
+              "passed": false
+            }
+          ]
+        },
+        "performance--020": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--020__khFxDwZ",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--020__cUEou36",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--020__bM4mNiy",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "performance--021": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--021__kkWhgv2",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--021__HWt9Ey4",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--021__87b8YCc",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "performance--022": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.95,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--022__TJngD8r",
+              "score": 0.95,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--022__kRaFULF",
+              "score": 0.8667,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--022__sh4QbRD",
+              "score": 0.85,
+              "passed": true
+            }
+          ]
+        },
+        "performance--023": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9708,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--023__U4S6DXb",
+              "score": 0.9708,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--023__HCAqjGa",
+              "score": 0.8729,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--023__Fkf7V58",
+              "score": 0.9375,
+              "passed": true
+            }
+          ]
+        },
+        "performance--024": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9792,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--024__DUUBZSE",
+              "score": 0.8063,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--024__hXLhWJs",
+              "score": 0.9792,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--024__LhAA4KB",
+              "score": 0.7542,
+              "passed": false
+            }
+          ]
+        },
+        "performance--025": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8875,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "performance--025__6VGMRtt",
+              "score": 0.8875,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "performance--025__QEEfaeH",
+              "score": 0.825,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "performance--025__rmfDh6u",
+              "score": 0.6396,
+              "passed": false
+            }
+          ]
+        }
+      }
+    },
+    "lift": {
+      "with_skill": 0.92,
+      "without_skill": 0.72,
+      "delta": 0.2,
+      "count_derived_delta": 0.2,
+      "passed_cases_delta": 5,
+      "paired_comparison": {
+        "pairing_status": "complete",
+        "paired_cases": 25,
+        "with_skill_unpaired_case_count": 0,
+        "without_skill_unpaired_case_count": 0,
+        "with_skill_unpaired_case_ids": [],
+        "without_skill_unpaired_case_ids": [],
+        "with_skill_unpaired_case_ids_truncated": false,
+        "without_skill_unpaired_case_ids_truncated": false,
+        "with_skill_unidentified_cases": 0,
+        "without_skill_unidentified_cases": 0,
+        "both_pass": 18,
+        "with_skill_only_pass": 5,
+        "without_skill_only_pass": 0,
+        "neither_pass": 2,
+        "discordant_cases": 5,
+        "paired_rate_delta": 0.2,
+        "mcnemar_exact": {
+          "method": "two_sided_exact_binomial",
+          "null_hypothesis": "equal marginal pass probabilities",
+          "p_value": 0.0625,
+          "p_value_text": "0.0625",
+          "p_value_exact": "1/16",
+          "p_value_exact_omitted": false,
+          "p_value_numeric_underflow": false,
+          "minimum_attainable_p_value": 0.0625,
+          "minimum_attainable_p_value_text": "0.0625",
+          "minimum_attainable_p_value_exact": "1/16",
+          "minimum_attainable_p_value_exact_omitted": false,
+          "minimum_attainable_p_value_numeric_underflow": false,
+          "resolution_limited_at_alpha_0_05": true
+        }
+      }
+    }
+  },
+  "domain_metrics": {
+    "financial_accuracy": 1.0,
+    "reconciliation": 1.0,
+    "benchmark_consistency": 1.0,
+    "temporal_consistency": 1.0,
+    "data_provenance": 1.0,
+    "portfolio_coverage": 1.0,
+    "numeric_claim_grounding": 1.0,
+    "regression_pass_rate": 1.0
+  },
+  "findings": [
+    "Discoverability (skill_execution) averages 0.8862 across all 75 with-skill trials, narrowly missing the 0.90 floor. This is fully explained by 2 of 25 cases (performance--007, performance--020, the 'ambiguous' category) which explicitly instruct the agent to use no tools and ask a clarifying question instead -- correct behavior per their own assertions, but structurally unable to score above 0 on a generic 'was the skill activated via a tool call' metric. Excluding just those 2 cases (6 of 75 trials), discoverability averages 0.9632, comfortably above the floor. This is a metric-scoping limitation for tool-free ambiguous-case testing, not an observed skill discoverability defect.",
+    "Tier 4 domain grading covered 41 of 42 expected trials across 14 gradable cases (performance--001, performance--002, performance--003, performance--008, performance--010, performance--011, performance--012, performance--013, performance--014, performance--015, performance--016, performance--019, performance--024, performance--025); 1 trial(s) skipped as genuinely not gradable (see aggregate_tier4.py output for reasons), not counted as failures. All gradable trials scored a clean 1.0 across all six deterministic checks.",
+    "Authorization checked all 150 trials across both arms (not just the gradable subset): zero permission denials found.",
+    "Regression cases (performance--010, performance--024, performance--025): 3/3 passed all attempts. This measures the numeric/reconciliation dimension of these cases specifically; it does not yet verify narrative-disclosure assertions some regression cases also carry."
+  ],
+  "certification": {
+    "status": "FAIL",
+    "profile": "analytical-standard",
+    "failures": [
+      "discoverability: 0.8862 < 0.9"
+    ],
+    "metrics_evaluated": {
+      "security": "pass",
+      "authorization": "pass",
+      "regression_pass_rate": 1.0,
+      "data_provenance": 1.0,
+      "correctness": 0.992,
+      "discoverability": 0.8862,
+      "effectiveness": 0.9342,
+      "efficiency": 0.8704,
+      "skill_lift_overall": 0.1253,
+      "financial_accuracy": 1.0,
+      "reconciliation": 1.0,
+      "temporal_consistency": 1.0
+    }
+  }
+}

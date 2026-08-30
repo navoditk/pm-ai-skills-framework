@@ -3,44 +3,57 @@
 This bridges live-agent Tier 3 evidence (trajectory.json, produced by
 `skillevaluator tier3 evaluate`) into the deterministic Tier 4 domain grader
 in `graders/finance/performance_attribution.py`. It parses the actual
-`performance.attribution` and `portfolio.positions` logical-tool JSON
-responses the agent received during the trial, and compares them against the
-authoritative ground truth from `synthetic_data_pipeline.tools` -- not
-against re-typed constants, so the comparison stays honest if a fixture
-changes.
+`performance.attribution` / `portfolio.positions` / `risk.factor_exposure`
+logical-tool JSON responses the agent received during the trial, and
+compares them against authoritative ground truth fetched live from
+`synthetic_data_pipeline.tools` -- not re-typed constants, so the
+comparison stays honest if a fixture changes.
 
-Scope: this handles the `explicit-positive` case shape, where the agent is
-expected to call the attribution/positions tools and produce a reconciled
-answer. It does not (yet) generalize to the other eval categories in
-evals.json (ambiguous-input, tool-failure, missing-data, etc.), which have
-different expected behaviors -- for example, correctly declining to answer is
-the *right* outcome for a tool-failure case, and this extractor would need
-different ground truth per category to grade those correctly. Extending this
-to the full 25-case set is tracked as follow-up work, not done here.
+Scope, grounded in the actual eval case content (skills/performance-attribution/evals/evals.json),
+not a guessed heuristic:
 
-Known finding from the first real run (2026-08-30): validated clean (score
-1.0, all 6 checks pass) against all 3 attempts of `performance--001`, which
-asks about the ES_FUT derivative hedge and so legitimately requires
-position-level detail. Running it against `performance--011` (the other
-explicit-positive case, which asks only for absolute/benchmark/active
-return with no position-level question) scored `portfolio_coverage: 0.0` on
-all 3 attempts -- correctly, because the agent had no reason to call
-`portfolio.positions` and did not. This is not an extractor bug; it is a
-real boundary in `graders/finance/performance_attribution.py`'s composite
-grader: it currently assumes every case needs full position enumeration,
-when in fact only case-specific expected evidence should decide which of
-the 6 component checks apply. Fixing that composite-grader assumption is
-tracked as a follow-up, not addressed here.
+- GRADABLE_CASES (14 of 25): cases whose prompt asks for a normal reconciled
+  attribution answer, where this financial-accuracy grader's checks apply.
+  Requires an actual `performance.attribution` tool call in the trajectory;
+  `grade_trial` raises a clear, distinguishable error if that call is
+  missing rather than guessing or silently scoring 0.
+- Of those, POSITION_REQUIRED_CASES (2: performance--008, --019) are the
+  ones whose prompt/assertions actually ask about positions or derivatives.
+  The other 12 gradable cases ask only about return/attribution/benchmark/
+  date/provenance and never mention positions, so `expected_position_ids`
+  is left empty for them -- `portfolio_coverage` then scores as
+  not-applicable (1.0) rather than penalizing an agent for not enumerating
+  positions nobody asked about. This was a real bug found on 2026-08-30:
+  with expected_position_ids always populated, performance--011 (asks only
+  for absolute/benchmark/active return) scored `portfolio_coverage: 0.0` on
+  all 3 attempts even though the agent behaved correctly.
+- performance--023 ("coverage" category) was initially included in
+  GRADABLE_CASES but removed after checking its real trajectories: its
+  prompt only asks the agent to run `portfolio.positions` and confirm
+  coverage, and all 3 real attempts consistently and correctly never called
+  `performance.attribution` at all -- there is no relative-return/
+  contribution evidence to reconcile for this case. It needs a
+  positions-only evidence shape this grader does not model, and is treated
+  as not gradable here rather than force-fit or silently miscounted as a
+  failure.
+- The remaining 11 cases (performance--004, --005, --006, --007, --009,
+  --017, --018, --020, --021, --022, --023) test refusal, disclosure, or
+  handling of deliberately broken/ambiguous/missing data, or (for --023) use
+  a positions-only evidence shape this grader does not model. Correct
+  behavior for the refusal/disclosure cases is often to decline, ask a
+  clarifying question, or flag a problem rather than produce a full
+  reconciled answer -- this grader is not designed to judge that behavior
+  and does not attempt to.
 
 Usage:
     python skills/performance-attribution/evals/tier3_trial_extractor.py <trial_dir>
 
 <trial_dir> is a with-skill trial directory under a Tier 3 run's
 `_harbor-jobs/<skill>-<agent>-with/<case>__<hash>/` path, containing
-`agent/trajectory.json`.
+`agent/trajectory.json` and `config.json` (for `trial_name`, used to
+recover the case id).
 """
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -50,7 +63,22 @@ sys.path.insert(0, str(REPO_ROOT))
 from graders.finance.performance_attribution import grade  # noqa: E402
 from synthetic_data_pipeline.tools import call_tool  # noqa: E402
 
-_JSON_OBJECT_RE = re.compile(r"\{.*\}")
+GRADABLE_CASES = {
+    "performance--001", "performance--002", "performance--003",
+    "performance--008", "performance--010", "performance--011",
+    "performance--012", "performance--013", "performance--014",
+    "performance--015", "performance--016", "performance--019",
+    "performance--024", "performance--025",
+}
+
+POSITION_REQUIRED_CASES = {"performance--008", "performance--019"}
+
+NOT_GRADABLE_CASES = {
+    "performance--004", "performance--005", "performance--006",
+    "performance--007", "performance--009", "performance--017",
+    "performance--018", "performance--020", "performance--021",
+    "performance--022", "performance--023",
+}
 
 
 def _extract_json_blobs(text: str) -> list[dict]:
@@ -90,7 +118,7 @@ def extract_observed_tool_outputs(trajectory: dict) -> dict:
     }
 
 
-def build_evidence(trajectory: dict, requested_as_of: str) -> dict:
+def build_evidence(trajectory: dict, case_id: str, requested_as_of: str) -> dict:
     """Build the Tier 4 grader's evidence dict from one real trial."""
     observed = extract_observed_tool_outputs(trajectory)
     attribution = observed["attribution"]
@@ -136,6 +164,16 @@ def build_evidence(trajectory: dict, requested_as_of: str) -> dict:
         *authoritative_contributions,
     ]
 
+    # Only require position-level enumeration for cases whose own prompt
+    # actually asks about positions/derivatives/coverage. See module
+    # docstring: POSITION_REQUIRED_CASES is grounded in evals.json content,
+    # not inferred.
+    expected_position_ids = (
+        [p["id"] for p in authoritative_positions.get("positions", [])]
+        if case_id in POSITION_REQUIRED_CASES
+        else []
+    )
+
     return {
         "relative_return": attribution.get("relative_return"),
         "contributions": observed_contributions,
@@ -145,12 +183,47 @@ def build_evidence(trajectory: dict, requested_as_of: str) -> dict:
         "observed_as_of_values": [v for v in observed_as_of if v is not None],
         "allowed_sources": [s for s in allowed_sources if s is not None],
         "observed_sources": [s for s in observed_sources if s is not None],
-        "expected_position_ids": [
-            p["id"] for p in authoritative_positions.get("positions", [])
-        ],
+        "expected_position_ids": expected_position_ids,
         "observed_position_ids": observed_position_ids,
         "claims": [c for c in claims if c is not None],
         "authoritative_values": [v for v in authoritative_values if v is not None],
+    }
+
+
+def grade_trial(trial_dir: Path) -> dict:
+    """Extract evidence and grade one trial directory. Raises on non-gradable cases."""
+    trajectory_path = trial_dir / "agent" / "trajectory.json"
+    config_path = trial_dir / "config.json"
+    if not trajectory_path.exists():
+        raise FileNotFoundError(f"No trajectory.json found at {trajectory_path}")
+
+    config = json.loads(config_path.read_text()) if config_path.exists() else {}
+    trial_name = config.get("trial_name", trial_dir.name)
+    case_id = trial_name.split("__")[0]
+
+    if case_id in NOT_GRADABLE_CASES:
+        raise ValueError(
+            f"{case_id} is not gradable by this financial-accuracy grader "
+            "(it tests refusal/disclosure behavior, not a reconciled "
+            "attribution answer) -- see module docstring."
+        )
+    if case_id not in GRADABLE_CASES:
+        raise ValueError(f"{case_id} is not in the known GRADABLE_CASES set.")
+
+    # All 25 eval cases reference the single ABC/SPX fixture snapshot dated
+    # 2026-08-25 (synthetic_data_pipeline/fixtures/portfolio_abc.json);
+    # evals.json does not carry a separate structured date field per case.
+    requested_as_of = "2026-08-25"
+
+    trajectory = json.loads(trajectory_path.read_text())
+    evidence = build_evidence(trajectory, case_id, requested_as_of)
+    result = grade(evidence)
+    return {
+        "trial_dir": str(trial_dir),
+        "case_id": case_id,
+        "trial_name": trial_name,
+        "evidence": evidence,
+        "result": result,
     }
 
 
@@ -159,27 +232,9 @@ def main() -> int:
         print(f"Usage: {sys.argv[0]} <trial_dir>", file=sys.stderr)
         return 2
     trial_dir = Path(sys.argv[1])
-    trajectory_path = trial_dir / "agent" / "trajectory.json"
-    if not trajectory_path.exists():
-        print(f"No trajectory.json found at {trajectory_path}", file=sys.stderr)
-        return 2
-
-    trajectory = json.loads(trajectory_path.read_text())
-
-    config_path = trial_dir / "config.json"
-    requested_as_of = "2026-08-25"
-    if config_path.exists():
-        config = json.loads(config_path.read_text())
-        prompt = str(config.get("prompt") or config.get("instruction") or "")
-        match = re.search(r"\d{4}-\d{2}-\d{2}", prompt)
-        if match:
-            requested_as_of = match.group(0)
-
-    evidence = build_evidence(trajectory, requested_as_of)
-    result = grade(evidence)
-
-    print(json.dumps({"trial_dir": str(trial_dir), "evidence": evidence, "result": result}, indent=2))
-    return 0 if result["passed"] else 1
+    output = grade_trial(trial_dir)
+    print(json.dumps(output, indent=2))
+    return 0 if output["result"]["passed"] else 1
 
 
 if __name__ == "__main__":

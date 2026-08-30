@@ -247,17 +247,26 @@ point for the framework's own "model portability" goal.
 both arms with `execution_status: "succeeded"` — **Overall Skill Lift:
 +0.1253** (0.9362 with-skill vs. 0.8109 baseline), clearing the required
 0.10 minimum with real margin. Run through the project's own certification
-engine against real policy, the verdict is **FAIL** — not because the skill
-doesn't work, but because discoverability (0.8862) narrowly misses its 0.90
-floor and six required Tier 4/hard-gate metrics were never computed (Tier 3
-alone can't produce them). A first real Tier 4 pass, built specifically to
-close that gap
-(`skills/performance-attribution/evals/tier3_trial_extractor.py`), scored a
-clean 1.0 on the derivative-hedge case and immediately surfaced a genuine,
-previously-unknown grader boundary on a different case shape — exactly the
-kind of finding this framework exists to produce. Full numbers, the
-certification breakdown, and the itemized remaining work are in
-`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`.
+engine against real policy, the first verdict was **FAIL** on seven counts:
+discoverability narrowly missing its floor, plus six Tier 4/hard-gate
+metrics Tier 3 alone can't produce. Closing that gap — done entirely by
+mining the already-completed run's data on disk, at an explicit instruction
+to spend no further API budget after today's repeated credit exhaustion —
+extended Tier 4 domain grading from one hand-checked case to 14 of 25
+(41 of 42 expected trials, a clean 1.0 on all six deterministic checks
+everywhere it applied), computed all three missing hard gates from data
+already collected (`regression_pass_rate: 1.0`, `authorization: pass` with
+zero permission denials across all 150 trials, `data_provenance: 1.0`), and
+precisely diagnosed the one remaining failure: discoverability's 0.8862
+average is fully explained by two "ambiguous-input" cases whose *correct*
+behavior is to use no tools at all — excluding just those, discoverability
+is 0.9632, comfortably above the floor. **Final verdict: FAIL for exactly
+one well-evidenced, well-understood reason**, not seven under-evidenced
+ones — with a real, generated `skills/performance-attribution/BENCHMARK.md`
+as the artifact of record, and the one open question (fix the metric, or
+accept and document the exception) deliberately left to a human reviewer
+rather than resolved by an agent mid-session. Full numbers and the complete
+resolution trail are in `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`.
 
 ---
 
@@ -295,14 +304,19 @@ certification breakdown, and the itemized remaining work are in
   certification matrix exhausted a prepaid API balance mid-run, twice, in one
   day. At Milestone 7 scale (12 skills, 300+ cases), this needs an explicit
   budget model, not ad hoc top-ups.
-- **A domain grader can look complete while quietly assuming a uniform case
-  shape.** The Tier 4 wiring done in Milestone 4 passed cleanly on one case
-  and then immediately failed on a structurally different one for a reason
-  that had nothing to do with the skill's correctness — the composite grader
-  assumed every case needs full position enumeration. This is exactly the
-  kind of gap the framework exists to catch, but it is also a reminder that
-  "the grader ran and returned a score" is not the same as "the grader is
-  scoping itself correctly."
+- **Evidence-extraction code can look complete while quietly assuming a
+  uniform case shape.** The Tier 4 wiring done in Milestone 4 passed cleanly
+  on one case and then immediately failed on a structurally different one
+  for a reason that had nothing to do with the skill's correctness — the
+  trajectory-to-evidence extractor was unconditionally populating
+  "expected positions" regardless of whether a case's own prompt asked
+  about positions at all (the underlying grader's own logic was already
+  correct; the bug was one layer up, in what evidence was handed to it).
+  Root-caused and fixed by grounding a per-case classification directly in
+  the eval cases' own text rather than a guessed heuristic, with a
+  regression test added. This is exactly the kind of gap the framework
+  exists to catch, and it is a reminder that "the grader ran and returned a
+  score" is not the same as "the evidence it graded was scoped correctly."
 - **The governance mechanisms are still mostly specified, not built.** As of
   this writing: the central duplicate-detection catalog referenced in
   `pmai-skills.yaml` doesn't exist yet (only a skill-specific catalog does);

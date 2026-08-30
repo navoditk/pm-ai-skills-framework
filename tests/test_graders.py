@@ -35,3 +35,29 @@ def test_performance_attribution_domain_grader_passes_authoritative_evidence():
     )
     assert result["score"] == 1.0
     assert all(value == 1.0 for value in result["metrics"].values())
+
+
+def test_performance_attribution_domain_grader_treats_no_positions_expected_as_not_applicable():
+    """Regression test for a real bug found 2026-08-30: a case whose prompt
+    never asks about positions (e.g. "show ABC's absolute return, benchmark
+    return, and active return") should not be penalized on portfolio_coverage
+    just because the agent correctly never enumerated positions either.
+    """
+    result = attribution_grade(
+        {
+            "relative_return": -0.0021,
+            "contributions": [-0.0012, -0.0005, -0.0003, -0.0001],
+            "expected_benchmark": "SPX",
+            "observed_benchmark": "SPX",
+            "requested_as_of": "2026-08-25",
+            "observed_as_of_values": ["2026-08-25"],
+            "allowed_sources": ["synthetic.attribution"],
+            "observed_sources": ["synthetic.attribution"],
+            "expected_position_ids": [],
+            "observed_position_ids": [],
+            "claims": [-0.0021, -0.0012],
+            "authoritative_values": [-0.0021, -0.0012],
+        }
+    )
+    assert result["metrics"]["portfolio_coverage"] == 1.0
+    assert result["score"] == 1.0

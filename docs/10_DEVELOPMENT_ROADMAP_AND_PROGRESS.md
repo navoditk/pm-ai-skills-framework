@@ -169,8 +169,8 @@ Tasks:
 - [x] Measure Skill Lift.
 - [x] Run repeated attempts (3-attempt matrix, 75/75 scored on both arms — see 2026-08-30 evidence).
 - [x] Generate normalized report (via `framework/adapters/nvidia_skillevaluator.py`, first real-data run).
-- [ ] Generate BENCHMARK.md (blocked on closing the certification gaps below).
-- [x] Apply certification policy (verdict: FAIL, two documented reasons — see 2026-08-30 evidence).
+- [x] Generate BENCHMARK.md (`skills/performance-attribution/BENCHMARK.md`, real, generated 2026-08-30).
+- [x] Apply certification policy (verdict: FAIL, one documented reason remaining — see 2026-08-30 evidence).
 
 Exit criteria:
 - one complete skill flows from source -> eval -> certification -> benchmark report.
@@ -284,6 +284,50 @@ Evidence (2026-08-30):
   then `BENCHMARK.md`) is itemized in
   `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, "Remaining work to close
   Milestone 4."
+
+Evidence (2026-08-30, continued — closing the certification gap):
+
+- Per an explicit instruction to optimize model usage after today's repeated
+  API credit exhaustion, all of the following was done by mining the
+  already-completed Sonnet-agent run's data on disk — zero additional live
+  agent or judge calls.
+- Fixed the real root cause of the `performance--011` false failure: the
+  bug was in `tier3_trial_extractor.py` unconditionally populating
+  `expected_position_ids`, not in the shared composite grader (its
+  empty-set shortcut already handled "not applicable" correctly). Fixed by
+  grounding a per-case classification directly in `evals.json`'s real
+  prompt/assertion text: 14 gradable cases, 2 position-required cases, 11
+  not-gradable cases (refusal/disclosure cases this grader isn't designed
+  to judge, plus `performance--023` which needs an unmodeled
+  positions-only evidence shape). Added a regression test.
+- New `skills/performance-attribution/evals/aggregate_tier4.py` batch-runs
+  Tier 4 grading across all 14 gradable cases in the completed run: 41/42
+  expected trials graded (1 legitimate, documented skip), every graded
+  trial scoring a clean 1.0 across all six deterministic checks.
+- Computed the three previously-missing hard gates from the same run's
+  data: `regression_pass_rate: 1.0` (3/3 regression cases), `authorization:
+  pass` (zero permission denials across all 150 trials, both arms),
+  `data_provenance: 1.0`.
+- Diagnosed the discoverability gap precisely without a rerun: the overall
+  0.8862 average is fully explained by 2 of 25 cases (the "ambiguous"
+  category, which correctly uses no tools at all) — excluding just those 6
+  of 75 trials, discoverability is 0.9632, comfortably above the 0.90
+  floor. Documented as a metric-scoping limitation for tool-free
+  ambiguous-input testing, not an observed skill defect.
+- Extended `framework/reporting/normalized_report.py`'s `write_markdown()`
+  to render Skill Lift, pass@k, and certification-gate failures (it was
+  missing all three). New
+  `skills/performance-attribution/evals/generate_benchmark.py` ties
+  everything together and writes the real
+  `skills/performance-attribution/BENCHMARK.md`/`.json`.
+- **Final certification verdict: FAIL, for exactly one reason** —
+  `discoverability: 0.8862 < 0.9`. Every other hard gate and minimum
+  metric passes, including Skill Lift (+0.1253) and all seven
+  domain/hard-gate metrics that were previously uncomputed. The
+  discoverability decision (fix the metric vs. accept and document the
+  exception) is deliberately left open for a human reviewer — see
+  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, "The one remaining
+  decision."
 
 ---
 
@@ -475,7 +519,10 @@ CI workflow                       SCAFFOLDED
 Real Tier 1 benchmark             DONE (portfolio-overview; 11/11 checks)
 Real Tier 2 catalog               NOT STARTED
 Real Tier 3 Skill Lift            DONE (real +0.1253 lift, 150/150 trials scored, claude-sonnet-5 agent)
-Real Tier 4 domain grading         IN PROGRESS (first live-data pass on performance--001; certification FAIL pending remaining coverage)
+Real Tier 4 domain grading         DONE (14/25 cases, 41/42 trials, all six checks 1.0; BENCHMARK.md real)
+Milestone 4 certification          FAIL — one reason only (discoverability 0.8862 vs 0.90, diagnosed as
+                                   metric-scoping limitation, not a skill defect); decision left to a
+                                   human reviewer, see docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md
 Cross-repo demonstration          NOT STARTED
 ```
 

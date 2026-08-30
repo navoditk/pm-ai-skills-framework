@@ -2,13 +2,16 @@
 
 ## Status
 
-`IN PROGRESS` — a complete, uncontaminated 150-trial Tier 3 matrix now exists
-with real Skill Lift (+0.1253) and a first real Tier 4 domain-grader result.
-Certification verdict against `policies/certification.yaml` is **FAIL**, for
-two well-understood, documented reasons (one narrow generic-metric miss, and
-six required metrics not yet computed) — not because the skill doesn't work.
-See "Final Tier 3 result" and "Remaining work to close Milestone 4" below for
-the complete picture and exact next steps.
+`IN PROGRESS` — all six previously-missing certification metrics
+(`financial_accuracy`, `reconciliation`, `temporal_consistency`,
+`data_provenance`, `regression_pass_rate`, `authorization`) are now computed
+from real evidence and pass their thresholds. Exactly one gate remains
+unmet: `discoverability` (0.8862 vs. 0.90), and it has been fully diagnosed
+and documented as a metric-scoping limitation for tool-free ambiguous-input
+cases, not an observed skill defect. `skills/performance-attribution/BENCHMARK.md`
+is generated and real. See "Closing the certification gap" below for the
+complete evidence and the one remaining decision this milestone needs from a
+human reviewer.
 
 ## What this milestone is meant to prove
 
@@ -359,21 +362,95 @@ which expect the agent to *decline* to answer, or handle deliberately broken
 data) is real additional engineering and is explicitly out of scope for this
 session -- see the extractor's docstring for the exact boundary.
 
-## Remaining work to close Milestone 4
+## Closing the certification gap (2026-08-30)
 
-1. Fix the composite grader's implicit "every case needs positions"
-   assumption (surfaced above), or scope `portfolio_coverage` per case.
-2. Extend `tier3_trial_extractor.py` (or build case-specific equivalents) to
-   cover enough of the remaining 24 cases to produce real
-   `financial_accuracy`/`reconciliation`/`temporal_consistency` scores at the
-   skill level, not just one case.
-3. Define and compute `data_provenance`, `regression_pass_rate`, and
-   `authorization` as skill-level hard gates (today only demonstrated
-   per-trial).
-4. Either close the discoverability gap (0.8862 vs. 0.90) or make a
-   documented, deliberate call that the current result is close enough to
-   warrant a threshold review -- do not silently lower the threshold to pass.
-5. Rerun certification once 1-4 are addressed and generate `BENCHMARK.md`.
+All work was done by mining the already-completed Sonnet-agent run's
+trajectories on disk -- zero additional live agent or judge calls, per an
+explicit instruction to optimize model usage after today's repeated API
+credit exhaustion.
+
+**1. Fixed the extractor's position-evidence over-claiming.** The real bug
+(found while validating against `performance--011`) was not in the shared
+composite grader -- `portfolio_coverage`'s own empty-set shortcut already
+handles "not applicable" correctly. The bug was in
+`tier3_trial_extractor.py` unconditionally populating `expected_position_ids`
+from the full authoritative fetch regardless of whether a case's own prompt
+asked about positions. Fixed by grounding a per-case classification directly
+in `evals.json`'s real prompt/assertion text (not a guessed heuristic):
+`GRADABLE_CASES` (14 of 25 -- cases asking for a normal reconciled
+attribution answer), `POSITION_REQUIRED_CASES` (2: performance--008, --019
+-- the only cases whose prompt actually asks about positions/derivatives),
+and `NOT_GRADABLE_CASES` (11: refusal/disclosure/ambiguous-input cases this
+financial-accuracy grader isn't designed to judge, plus performance--023
+which needs a positions-only evidence shape not modeled here). Added a
+regression test (`tests/test_graders.py`) covering the exact scenario.
+Documented fully in the extractor's module docstring.
+
+**2. Extended Tier 4 coverage from 1 case to 14.** New
+`skills/performance-attribution/evals/aggregate_tier4.py` batch-runs the
+fixed extractor across every with-skill trial in the completed run for all
+14 gradable cases. Result: **41 of 42 expected trials graded** (the one skip
+is genuine, documented per-attempt variance, not a bug); **every graded
+trial scored a clean 1.0 across all six deterministic checks** --
+`financial_accuracy: 1.0`, `reconciliation: 1.0`, `benchmark_consistency: 1.0`,
+`temporal_consistency: 1.0`, `data_provenance: 1.0`,
+`numeric_claim_grounding: 1.0`.
+
+**3. Computed the three previously-missing hard gates.**
+`regression_pass_rate`: the skill's 3 regression-category cases
+(performance--010, --024, --025) all passed all attempts -- **1.0**.
+`authorization`: scanned `permission_denials` in every one of all 150
+trials' raw agent output across both arms (not just the gradable subset,
+since this is a generic safety signal) -- zero denials found, **pass**.
+`data_provenance`: **1.0**, from the same Tier 4 batch as above.
+
+**4. Diagnosed the discoverability gap precisely, without a rerun.** Broke
+down the with-skill discoverability (`skill_execution`) scores per case
+using data already on disk. Overall average across all 75 trials: 0.8862,
+matching the failing number exactly. Excluding just `performance--007` and
+`performance--020` (6 of 75 trials, the "ambiguous" category, whose prompts
+explicitly instruct "use no tools" and require a clarifying question
+instead): **0.9632**, comfortably above the 0.90 floor. The evaluator's own
+stated reason for both is `"No tool calls in trajectory"` -- these two cases
+are structurally unable to score above 0 on a generic "was the skill
+activated via a tool call" metric, regardless of how correctly the agent
+behaves, since correct behavior for them is to use no tools at all. This is
+a real, evidenced metric-scoping limitation for tool-free ambiguous-input
+testing -- not an observed discoverability defect in the skill itself.
+
+**5. Regenerated the real certification verdict and `BENCHMARK.md`.**
+Extended `framework/reporting/normalized_report.py`'s `write_markdown()`
+(it was missing Skill Lift and pass@k rendering, and hard-gate failure
+output -- a real gap surfaced while building this, fixed inline). New
+`skills/performance-attribution/evals/generate_benchmark.py` ties together
+the normalized Tier 3 adapter output, the Tier 4 aggregate, and the real
+certification engine, and writes
+`skills/performance-attribution/BENCHMARK.md` /`.json`.
+
+**Final verdict: FAIL, for exactly one reason:**
+`discoverability: 0.8862 < 0.9`. Every other hard gate and minimum metric
+passes, including Skill Lift (+0.1253, well above the 0.10 floor) and all
+seven domain/hard-gate metrics that were previously uncomputed.
+
+## The one remaining decision (needs a human reviewer, not automation)
+
+The discoverability shortfall is fully explained but not fixed. Two
+legitimate paths, deliberately not decided here:
+
+- **Fix the metric.** Exclude cases whose expected behavior is explicit
+  tool avoidance from the discoverability calculation (or score them via a
+  distinct "ambiguity handling" metric instead of blending them into
+  activation-based discoverability). This is the more defensible fix, but it
+  changes a certification policy computation and should get review, not be
+  silently patched by an agent mid-session.
+- **Accept the current result and document the exception.** Treat this as a
+  known, evidenced, bounded gap and grant a documented exception for this
+  skill version, rather than changing the generic metric.
+
+Per this project's own stated ethic (see the earlier "handoff blocker"
+sections in this document): do not silently lower the threshold or infer a
+pass from a marker. This decision is intentionally left open for a human to
+make.
 
 **Items 1-3 of "Recommended next-session work" above (patching the pinned
 evaluator's execution-action allowlist) are no longer necessary** — the
