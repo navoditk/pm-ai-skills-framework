@@ -4,20 +4,21 @@
     {
       "id": "risk-explana-001",
       "category": "explicit-positive",
-      "prompt": "Use risk explanation for ABC as of 2026-08-25.",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then use the risk-explanation workflow to explain ABC's risk as of 2026-08-25.",
       "expected_output": "Explicitly request the skill by capability name.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
         "Preserve relevant as-of dates.",
         "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability."
+        "Activate risk-explanation when it is the appropriate capability.",
+        "Identify the largest factor exposure as a material driver."
       ],
       "expected_skill": "risk-explanation"
     },
     {
       "id": "risk-explana-002",
       "category": "implicit-positive",
-      "prompt": "What's driving risk in ABC?",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then answer: What's driving risk in ABC?",
       "expected_output": "Use natural PM language without naming the skill.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -30,7 +31,7 @@
     {
       "id": "risk-explana-003",
       "category": "contextual-positive",
-      "prompt": "We're on ABC. What are the biggest risks here?",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. We're on ABC. What are the biggest risks here?",
       "expected_output": "Use prior portfolio context and a short follow-up.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -42,94 +43,254 @@
     },
     {
       "id": "risk-explana-004",
+      "category": "contextual-positive",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then answer: How exposed is ABC to a rate shock?",
+      "expected_output": "Use the rates-up-100bp scenario to answer the follow-up.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Use approved logical tools when analysis is required.",
+        "Activate risk-explanation when it is the appropriate capability."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-005",
       "category": "negative",
       "prompt": "What is the VIX level?",
       "expected_output": "Ask an unrelated market lookup question.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
         "Do not activate risk-explanation for this unrelated request."
       ],
       "expected_skill": null
     },
     {
-      "id": "risk-explana-005",
-      "category": "missing-data",
-      "prompt": "Explain ABC risk when factor exposure is unavailable.",
-      "expected_output": "Request analysis where one expected input is unavailable.",
-      "assertions": [
-        "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability."
-      ],
-      "expected_skill": "risk-explanation"
-    },
-    {
       "id": "risk-explana-006",
-      "category": "stale-data",
-      "prompt": "Explain risk when positions are current but risk is three days stale.",
-      "expected_output": "Provide a stale or mismatched snapshot.",
+      "category": "negative",
+      "prompt": "What is the definition of Value at Risk?",
+      "expected_output": "Answer a general definition question without portfolio data.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability.",
-        "Detect or disclose date inconsistency."
+        "Do not activate risk-explanation for a general definition."
       ],
-      "expected_skill": "risk-explanation"
+      "expected_skill": null
     },
     {
       "id": "risk-explana-007",
-      "category": "ambiguous",
-      "prompt": "What's driving risk in the portfolio?",
-      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "category": "missing-data",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py risk.scenario --portfolio-id ABC --scenario-id credit-spread-widening` and explain the impact. Do not use web search.",
+      "expected_output": "Report that the requested scenario was not found rather than inventing an impact.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability."
+        "Explicitly report that the scenario is not found/available.",
+        "Do not substitute a different scenario's impact."
       ],
       "expected_skill": "risk-explanation"
     },
     {
       "id": "risk-explana-008",
-      "category": "derivatives",
-      "prompt": "Explain ABC risk including ES futures hedge exposure.",
-      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "category": "missing-data",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py risk.factor_exposure --portfolio-id XYZ` and explain factor risk for XYZ. Do not use web search.",
+      "expected_output": "Report that the requested portfolio was not found rather than inventing data.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability.",
-        "Do not ignore derivative-equivalent exposure."
+        "Explicitly report that portfolio XYZ is not found/available."
       ],
       "expected_skill": "risk-explanation"
     },
     {
       "id": "risk-explana-009",
-      "category": "tool-failure",
-      "prompt": "Explain risk when the risk service fails.",
-      "expected_output": "Simulate one approved tool failing.",
+      "category": "stale-data",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py risk.factor_exposure --portfolio-id ABC --failure-mode stale_data` and explain ABC's risk as of 2026-08-25. Do not use web search.",
+      "expected_output": "Detect and disclose that the returned data is dated 2026-08-22, not the requested 2026-08-25.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
         "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability."
+        "Detect or disclose date inconsistency."
       ],
       "expected_skill": "risk-explanation"
     },
     {
       "id": "risk-explana-010",
-      "category": "regression",
-      "prompt": "Explain net equity risk without ignoring index futures.",
-      "expected_output": "Exercise a known high-risk edge case.",
+      "category": "ambiguous",
+      "prompt": "What's driving risk in the portfolio? Ask exactly one clarifying question about portfolio identity. Use no tools and no web search.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate risk-explanation when it is the appropriate capability."
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-011",
+      "category": "ambiguous",
+      "prompt": "The portfolio and date are both ambiguous. Ask exactly one clarifying question. Use no tools and no web search.",
+      "expected_output": "Ask a single clarifying question resolving both ambiguities.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Resolve ambiguous references rather than assuming a portfolio or date."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-012",
+      "category": "derivatives",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then explain ABC risk including ES futures hedge exposure.",
+      "expected_output": "Include the ES_FUT index-future hedge's effect on risk exposure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Identify the ES_FUT position as an index hedge."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-013",
+      "category": "derivatives",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then answer: Did ABC's index-future hedge affect the explanation of its risk exposure?",
+      "expected_output": "Confirm the hedge's presence and its effect on net exposure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Preserve instrument metadata."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-014",
+      "category": "tool-failure",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py risk.factor_exposure --portfolio-id ABC --failure-mode tool_unavailable`. Explain the resulting tool failure without using web search or inventing a factor result.",
+      "expected_output": "Explain the tool is unavailable without fabricating exposures.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Explain the unavailable source.",
+        "Do not invent a factor exposure value."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-015",
+      "category": "tool-failure",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. The risk.scenario tool is unavailable. What can you safely say about ABC's rate-shock sensitivity?",
+      "expected_output": "Explain the limitation without fabricating a scenario impact.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Explain the unavailable source.",
+        "Do not invent a scenario impact figure."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-016",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then explain net equity risk without ignoring the index-futures hedge.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect omitted the ES_FUT hedge from net exposure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Distinguish gross exposure from net exposure."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-017",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then confirm ABC's Market factor exposure is 0.82, not a different value.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect misreported the Market factor exposure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-018",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Then confirm the Value factor exposure for ABC is negative, not positive.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect reported the sign of a factor exposure incorrectly.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-019",
+      "category": "scenario",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then answer: What is ABC's estimated impact under a 100 basis point rate increase?",
+      "expected_output": "Report the rates-up-100bp scenario impact grounded in authoritative tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Ground numeric claims in authoritative tool output.",
+        "Preserve relevant as-of dates."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-020",
+      "category": "scenario",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then answer: What is ABC's estimated impact if broad equity markets fall 10 percent?",
+      "expected_output": "Report the equity-down-10pct scenario impact grounded in authoritative tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Ground numeric claims in authoritative tool output.",
+        "Preserve relevant as-of dates."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-021",
+      "category": "gross-net-exposure",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then explain the difference between ABC's gross exposure and its net exposure after the index-future hedge.",
+      "expected_output": "Distinguish gross exposure (sum of position weights) from net exposure (netted against the hedge).",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Distinguish gross exposure from net exposure.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-022",
+      "category": "provenance",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then give the source and as-of date for every risk figure in ABC's explanation.",
+      "expected_output": "Preserve source metadata for every quantitative claim.",
+      "assertions": [
+        "Preserve source metadata.",
+        "Do not fabricate figures."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-023",
+      "category": "numeric-grounding",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first, then verify whether ABC's Technology factor exposure is 0.18 as of 2026-08-25.",
+      "expected_output": "Ground the numeric claim against authoritative tool output.",
+      "assertions": [
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-024",
+      "category": "coverage",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/risk-explanation/SKILL.md`; do not use any other tool first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC` and confirm whether all positions, including ES_FUT, were considered in the risk assessment. Do not use web search.",
+      "expected_output": "Verify position coverage in the risk assessment and disclose any excluded positions.",
+      "assertions": [
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-025",
+      "category": "residual-control",
+      "prompt": "Read /workspace/skills/risk-explanation/SKILL.md first. Using only the staged synthetic evidence, do not invent a VaR figure that isn't returned by the tools. Explain why inventing one would be unsafe. Use no web search.",
+      "expected_output": "Refuse to invent a missing official VaR result and explain why.",
+      "assertions": [
+        "Never infer a missing official VaR or factor result.",
+        "Explain the risk of fabricating a risk statistic."
       ],
       "expected_skill": "risk-explanation"
     }

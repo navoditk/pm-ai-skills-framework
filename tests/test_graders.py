@@ -1,6 +1,8 @@
 from graders.finance.attribution_reconciliation import grade as recon
 from graders.finance.benchmark_consistency import grade as benchmark
 from graders.finance.performance_attribution import grade as attribution_grade
+from graders.finance.portfolio_overview import grade as portfolio_overview_grade
+from graders.finance.risk_explanation import grade as risk_explanation_grade
 from graders.finance.temporal_consistency import grade as temporal
 
 
@@ -61,3 +63,79 @@ def test_performance_attribution_domain_grader_treats_no_positions_expected_as_n
     )
     assert result["metrics"]["portfolio_coverage"] == 1.0
     assert result["score"] == 1.0
+
+
+def test_portfolio_overview_domain_grader_passes_authoritative_evidence():
+    """Proves benchmark_consistency/temporal_consistency/data_provenance/
+    portfolio_coverage/numeric_claim_grounding are genuinely reusable across
+    skills (Milestone 8 exit criterion), not bespoke to performance-attribution.
+    """
+    result = portfolio_overview_grade(
+        {
+            "expected_benchmark": "SPX",
+            "observed_benchmark": "SPX",
+            "requested_as_of": "2026-08-25",
+            "observed_as_of_values": ["2026-08-25", "2026-08-25"],
+            "allowed_sources": ["synthetic.portfolio"],
+            "observed_sources": ["synthetic.portfolio"],
+            "expected_position_ids": ["AAPL", "MSFT", "JPM", "ES_FUT"],
+            "observed_position_ids": ["AAPL", "MSFT", "JPM", "ES_FUT"],
+            "claims": [0.0042, 0.0063],
+            "authoritative_values": [0.0042, 0.0063],
+        }
+    )
+    assert result["score"] == 1.0
+    assert all(value == 1.0 for value in result["metrics"].values())
+
+
+def test_portfolio_overview_domain_grader_detects_missing_derivative_coverage():
+    result = portfolio_overview_grade(
+        {
+            "expected_benchmark": "SPX",
+            "observed_benchmark": "SPX",
+            "requested_as_of": "2026-08-25",
+            "observed_as_of_values": ["2026-08-25"],
+            "allowed_sources": ["synthetic.portfolio"],
+            "observed_sources": ["synthetic.portfolio"],
+            "expected_position_ids": ["AAPL", "MSFT", "JPM", "ES_FUT"],
+            "observed_position_ids": ["AAPL", "MSFT", "JPM"],
+            "claims": [0.0042],
+            "authoritative_values": [0.0042],
+        }
+    )
+    assert result["metrics"]["portfolio_coverage"] < 1.0
+    assert result["passed"] is False
+
+
+def test_risk_explanation_domain_grader_passes_authoritative_evidence():
+    result = risk_explanation_grade(
+        {
+            "requested_as_of": "2026-08-25",
+            "observed_as_of_values": ["2026-08-25"],
+            "allowed_sources": ["synthetic.factor_risk"],
+            "observed_sources": ["synthetic.factor_risk"],
+            "expected_position_ids": [],
+            "observed_position_ids": [],
+            "claims": [0.18, 0.82, -0.04],
+            "authoritative_values": [0.18, 0.82, -0.04],
+        }
+    )
+    assert result["score"] == 1.0
+    assert all(value == 1.0 for value in result["metrics"].values())
+
+
+def test_risk_explanation_domain_grader_detects_unauthorized_source():
+    result = risk_explanation_grade(
+        {
+            "requested_as_of": "2026-08-25",
+            "observed_as_of_values": ["2026-08-25"],
+            "allowed_sources": ["synthetic.factor_risk"],
+            "observed_sources": ["synthetic.factor_risk", "web_search"],
+            "expected_position_ids": [],
+            "observed_position_ids": [],
+            "claims": [0.18],
+            "authoritative_values": [0.18],
+        }
+    )
+    assert result["metrics"]["data_provenance"] == 0.0
+    assert result["passed"] is False

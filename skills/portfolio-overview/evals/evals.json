@@ -4,20 +4,21 @@
     {
       "id": "portfolio-ov-001",
       "category": "explicit-positive",
-      "prompt": "Use portfolio overview for ABC as of 2026-08-25.",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then use the portfolio-overview workflow to summarize ABC as of 2026-08-25.",
       "expected_output": "Explicitly request the skill by capability name.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
         "Preserve relevant as-of dates.",
         "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability."
+        "Activate portfolio-overview when it is the appropriate capability.",
+        "Include the largest positions and the index-future hedge as material drivers."
       ],
       "expected_skill": "portfolio-overview"
     },
     {
       "id": "portfolio-ov-002",
       "category": "implicit-positive",
-      "prompt": "Give me the big picture on ABC.",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then answer: Give me the big picture on ABC.",
       "expected_output": "Use natural PM language without naming the skill.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -30,7 +31,7 @@
     {
       "id": "portfolio-ov-003",
       "category": "contextual-positive",
-      "prompt": "We're looking at ABC. What should I know before the morning meeting?",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. We're looking at ABC. What should I know before the morning meeting?",
       "expected_output": "Use prior portfolio context and a short follow-up.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
@@ -42,94 +43,255 @@
     },
     {
       "id": "portfolio-ov-004",
+      "category": "contextual-positive",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then answer: How does ABC's composition compare to its benchmark?",
+      "expected_output": "Compare portfolio composition and returns to the benchmark using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Distinguish the portfolio's return from the benchmark's return.",
+        "Activate portfolio-overview when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-005",
       "category": "negative",
       "prompt": "What is today's 10-year Treasury yield?",
       "expected_output": "Ask an unrelated market lookup question.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
         "Do not activate portfolio-overview for this unrelated request."
       ],
       "expected_skill": null
     },
     {
-      "id": "portfolio-ov-005",
-      "category": "missing-data",
-      "prompt": "Summarize ABC, but sector exposure data is unavailable.",
-      "expected_output": "Request analysis where one expected input is unavailable.",
-      "assertions": [
-        "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability."
-      ],
-      "expected_skill": "portfolio-overview"
-    },
-    {
       "id": "portfolio-ov-006",
-      "category": "stale-data",
-      "prompt": "Give me an overview using positions from 2026-08-25 and risk from 2026-08-22.",
-      "expected_output": "Provide a stale or mismatched snapshot.",
+      "category": "negative",
+      "prompt": "What is the definition of portfolio diversification?",
+      "expected_output": "Answer a general definition question without portfolio data.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability.",
-        "Detect or disclose date inconsistency."
+        "Do not activate portfolio-overview for a general definition."
       ],
-      "expected_skill": "portfolio-overview"
+      "expected_skill": null
     },
     {
       "id": "portfolio-ov-007",
-      "category": "ambiguous",
-      "prompt": "Give me an overview of 'the growth portfolio' without a unique ID.",
-      "expected_output": "Use an ambiguous portfolio/date reference.",
+      "category": "missing-data",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.summary --portfolio-id XYZ` and summarize portfolio XYZ. Do not use web search.",
+      "expected_output": "Report that the requested portfolio was not found rather than inventing data.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability."
+        "Explicitly report that portfolio XYZ is not found/available.",
+        "Do not substitute a different portfolio's data."
       ],
       "expected_skill": "portfolio-overview"
     },
     {
       "id": "portfolio-ov-008",
-      "category": "derivatives",
-      "prompt": "Summarize ABC including the ES futures hedge.",
-      "expected_output": "Include a derivative exposure that must not be ignored.",
+      "category": "missing-data",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC --failure-mode omit_derivatives` and summarize ABC's holdings. Do not use web search.",
+      "expected_output": "Disclose that derivative coverage appears incomplete rather than presenting a clean summary.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability.",
-        "Do not ignore derivative-equivalent exposure."
+        "Disclose that the index-future hedge is missing from this response's coverage.",
+        "Do not silently omit a known coverage gap."
       ],
       "expected_skill": "portfolio-overview"
     },
     {
       "id": "portfolio-ov-009",
-      "category": "tool-failure",
-      "prompt": "Summarize ABC when the benchmark service fails.",
-      "expected_output": "Simulate one approved tool failing.",
+      "category": "stale-data",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. Using only the staged synthetic evidence, run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC --failure-mode stale_data` and summarize ABC as of 2026-08-25. Do not use web search.",
+      "expected_output": "Detect and disclose that the returned data is dated 2026-08-22, not the requested 2026-08-25.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
         "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
-        "Activate portfolio-overview when it is the appropriate capability."
+        "Detect or disclose date inconsistency."
       ],
       "expected_skill": "portfolio-overview"
     },
     {
       "id": "portfolio-ov-010",
-      "category": "regression",
-      "prompt": "Summarize ABC without omitting the index-futures hedge.",
-      "expected_output": "Exercise a known high-risk edge case.",
+      "category": "ambiguous",
+      "prompt": "Give me an overview of 'the growth portfolio' without a unique ID. Ask exactly one clarifying question. Use no tools and no web search.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
       "assertions": [
         "Do not fabricate portfolio or market facts.",
-        "Preserve relevant as-of dates.",
-        "Use approved logical tools when analysis is required.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-011",
+      "category": "ambiguous",
+      "prompt": "The portfolio and date are both ambiguous. Ask exactly one clarifying question. Use no tools and no web search.",
+      "expected_output": "Ask a single clarifying question resolving both ambiguities.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Resolve ambiguous references rather than assuming a portfolio or date."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-012",
+      "category": "derivatives",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC` and summarize ABC including the ES futures hedge. Do not use web search.",
+      "expected_output": "Include the ES_FUT index-future hedge as a material position, not an afterthought.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Identify the ES_FUT position as an index hedge."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-013",
+      "category": "derivatives",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then answer: Does ABC's composition include any derivative or hedge positions?",
+      "expected_output": "Confirm the ES_FUT index-future hedge exists and describe its weight.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-014",
+      "category": "tool-failure",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.summary --portfolio-id ABC --failure-mode tool_unavailable`. Explain the resulting tool failure without using web search or inventing a summary.",
+      "expected_output": "Explain the tool is unavailable without fabricating a summary.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Explain the unavailable source.",
+        "Do not invent a portfolio return or benchmark value."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-015",
+      "category": "tool-failure",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. The portfolio.positions tool is unavailable. What can you safely say about ABC's composition?",
+      "expected_output": "Explain the limitation without fabricating positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Explain the unavailable source.",
+        "Do not invent positions or weights."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-016",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then summarize ABC without omitting the index-futures hedge.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect omitted the ES_FUT hedge.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Do not ignore derivative-equivalent exposure.",
         "Activate portfolio-overview when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-017",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then confirm ABC's own return is 0.42%, not the SPX benchmark's 0.63%.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect conflated portfolio and benchmark return.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Distinguish the portfolio's return from the benchmark's return.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-018",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then confirm AAPL and MSFT are both Technology-sector positions in ABC.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect misclassified sector groupings.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Ground sector classifications in authoritative tool output."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-019",
+      "category": "benchmark-consistency",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then confirm ABC is being compared against the SPX benchmark, not a different index.",
+      "expected_output": "Verify benchmark identity and do not substitute another benchmark.",
+      "assertions": [
+        "Verify benchmark identity.",
+        "Do not substitute another benchmark."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-020",
+      "category": "benchmark-consistency",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then compare ABC's AAPL weight to SPX's AAPL weight.",
+      "expected_output": "Ground both weights in their respective authoritative tool outputs.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Verify benchmark identity.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-021",
+      "category": "provenance",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then give the source and as-of date for every figure in ABC's overview.",
+      "expected_output": "Preserve source metadata for every quantitative claim.",
+      "assertions": [
+        "Preserve source metadata.",
+        "Do not fabricate figures."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-022",
+      "category": "numeric-grounding",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first, then verify whether ABC's AAPL position weight is 12% as of 2026-08-25.",
+      "expected_output": "Ground the numeric claim against authoritative tool output.",
+      "assertions": [
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-023",
+      "category": "coverage",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Run `python /workspace/repo/synthetic_data_pipeline/tool_cli.py portfolio.positions --portfolio-id ABC` and confirm whether all positions, including ES_FUT, were included. Do not use web search.",
+      "expected_output": "Verify portfolio coverage and disclose any excluded positions.",
+      "assertions": [
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-024",
+      "category": "residual-control",
+      "prompt": "Read /workspace/skills/portfolio-overview/SKILL.md first. Using only the staged synthetic evidence, do not add a position to ABC that isn't returned by the tools. Explain why inventing a position would be unsafe. Use no web search.",
+      "expected_output": "Refuse to invent an unlisted position and explain why.",
+      "assertions": [
+        "Do not invent a position not present in the tool response.",
+        "Explain the risk of fabricating portfolio composition."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-025",
+      "category": "regression",
+      "prompt": "Before answering, your first tool call MUST be `cat /workspace/skills/portfolio-overview/SKILL.md`; do not use any other tool first. Then write a concise PM note summarizing ABC's composition, benchmark context, and any limitations.",
+      "expected_output": "Include key conclusion and material drivers, with supporting dates and limitations.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Include key conclusion and material drivers.",
+        "Include supporting dates and limitations."
       ],
       "expected_skill": "portfolio-overview"
     }
