@@ -1,6 +1,8 @@
 ---
 name: position-investigation
 description: Investigate a position using portfolio context, exposure changes, market context, and approved research/data sources.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Position Investigation
@@ -29,6 +31,19 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `portfolio.positions` for the position's weight and portfolio context,
+  and `market.security_context` for security-level facts; do not blend the
+  two into a single unlabeled claim.
+- Investigate exactly the position named in the request; do not substitute
+  a different position with a similar name or sector.
+- Never infer a missing security fact or research context; report it as
+  unavailable instead.
 
 ## Output
 
@@ -37,3 +52,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: position-investigation`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

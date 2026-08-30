@@ -15,7 +15,6 @@ classification:
 
 dependencies:
   tools:
-    - portfolio.summary@v1
     - portfolio.positions@v1
 
 evaluation:

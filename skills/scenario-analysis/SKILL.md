@@ -1,6 +1,8 @@
 ---
 name: scenario-analysis
 description: Explain portfolio behavior under approved deterministic market or risk scenarios.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Scenario Analysis
@@ -29,6 +31,17 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `risk.scenario` for the scenario impact and `portfolio.positions` when
+  the impact needs to be tied to specific holdings.
+- Only use scenarios explicitly approved for this evaluation; never invent
+  a scenario or extrapolate an unapproved one.
+- Never infer a missing scenario result; report it as unavailable instead.
 
 ## Output
 
@@ -37,3 +50,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: scenario-analysis`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.
