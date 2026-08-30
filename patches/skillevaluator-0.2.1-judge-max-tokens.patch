@@ -1,0 +1,70 @@
+--- a/skillevaluator/tier3/harbor/templates/eval.py
++++ b/skillevaluator/tier3/harbor/templates/eval.py
+@@ -3287,6 +3287,20 @@
+     )
+ 
+ 
++# PM AI local patch (2026-08-28, pending upstream fix -- see
++# docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md #13.6): judge_accuracy and
++# _judge_goal_accuracy_custom used the 1024-token call_public_llm default with
++# no retry, which silently truncates a 5-criterion reasoning response before
++# its closing JSON brace -- the exact failure mode already fixed for
++# judge_behavior_check below (see BEHAVIOR_JUDGE_MAX_TOKENS). This mirrors
++# that same fix (bigger budget + one retry) for these two judges.
++_ACCURACY_JUDGE_MAX_TOKENS = 4096
++_JUDGE_RETRY_REMINDER = (
++    "\n\nIMPORTANT: Your previous reply could not be parsed. Respond with ONLY "
++    "the minified JSON object on a single line -- no markdown fences, no prose."
++)
++
++
+ def judge_accuracy(question, ground_truth, agent_text):
+     if not ground_truth:
+         return {"score": 1.0, "reason": "No ground_truth -- skipped"}
+@@ -3315,12 +3329,19 @@
+ SELECTED EVIDENCE (final response + produced artifacts; low-relevance steps may be omitted):
+ {agent_text}"""
+ 
+-    content, error = call_public_llm(prompt)
++    content, error = call_public_llm(prompt, max_tokens=_ACCURACY_JUDGE_MAX_TOKENS)
+     if error:
+         return _judge_error(f"LLM judge error: {error}")
+     parsed = extract_json(content) if content else None
+     if not isinstance(parsed, dict):
+-        return _judge_error("Judge response was not a valid JSON object")
++        retry_content, retry_error = call_public_llm(
++            prompt + _JUDGE_RETRY_REMINDER, max_tokens=_ACCURACY_JUDGE_MAX_TOKENS
++        )
++        if retry_error:
++            return _judge_error(f"LLM judge retry error: {retry_error}")
++        parsed = extract_json(retry_content) if retry_content else None
++        if not isinstance(parsed, dict):
++            return _judge_error("Judge response was unparseable or invalid after retry")
+ 
+     criteria = parsed.get("criteria")
+     criteria_valid = _valid_accuracy_criteria(criteria)
+@@ -3442,12 +3463,22 @@
+ Respond with ONLY a JSON object:
+ {{"user_goal": "...", "end_state": "...", "achieved": true/false, "score": 1.0, "reason": "..."}}"""
+ 
+-    content, error, provenance = _call_public_llm_with_provenance(prompt)
++    content, error, provenance = _call_public_llm_with_provenance(
++        prompt, max_tokens=_ACCURACY_JUDGE_MAX_TOKENS
++    )
+     if error:
+         return _judge_error(f"LLM judge error: {error}", **provenance)
+     parsed = extract_json(content) if content else None
+     if not isinstance(parsed, dict):
+-        return _judge_error("Judge response was not a valid JSON object", **provenance)
++        retry_content, retry_error, retry_provenance = _call_public_llm_with_provenance(
++            prompt + _JUDGE_RETRY_REMINDER, max_tokens=_ACCURACY_JUDGE_MAX_TOKENS
++        )
++        if retry_error:
++            return _judge_error(f"LLM judge retry error: {retry_error}", **retry_provenance)
++        parsed = extract_json(retry_content) if retry_content else None
++        provenance = retry_provenance
++        if not isinstance(parsed, dict):
++            return _judge_error("Judge response was unparseable or invalid after retry", **provenance)
+ 
+     achieved = parsed.get("achieved")
+     if not isinstance(achieved, bool):

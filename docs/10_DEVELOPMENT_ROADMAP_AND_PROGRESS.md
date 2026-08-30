@@ -164,13 +164,13 @@ Tasks:
 - [x] Implement attribution reconciliation grader.
 - [x] Implement benchmark consistency grader.
 - [x] Implement temporal consistency grader.
-- [ ] Run with-skill baseline.
-- [ ] Run without-skill baseline.
-- [ ] Measure Skill Lift.
-- [ ] Run repeated attempts.
-- [ ] Generate normalized report.
-- [ ] Generate BENCHMARK.md.
-- [ ] Apply certification policy.
+- [x] Run with-skill baseline.
+- [x] Run without-skill baseline.
+- [x] Measure Skill Lift.
+- [x] Run repeated attempts (3-attempt matrix, 75/75 scored on both arms — see 2026-08-30 evidence).
+- [x] Generate normalized report (via `framework/adapters/nvidia_skillevaluator.py`, first real-data run).
+- [x] Generate BENCHMARK.md (`skills/performance-attribution/BENCHMARK.md`, real, generated 2026-08-30).
+- [x] Apply certification policy (verdict: FAIL, one documented reason remaining — see 2026-08-30 evidence).
 
 Exit criteria:
 - one complete skill flows from source -> eval -> certification -> benchmark report.
@@ -203,6 +203,131 @@ Evidence (2026-08-27):
   by a fresh repeated certification run.
 - See `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md` for reproduction commands,
   expected results, and the exact unblock requirement.
+
+Evidence (2026-08-28):
+
+- Root-caused the Codex execution/efficiency blocker to Codex's trajectory
+  reporting its shell tool as bare `exec`, which is absent from the pinned
+  evaluator's execution-action hint set (confirmed by reading
+  `skillevaluator/tier3/harbor/templates/eval.py` and
+  `harbor/agents/installed/codex.py` directly).
+- Confirmed `claude-code` is a first-class supported Tier 3 agent in this same
+  pinned evaluator version, and that its native `Bash`/`Read`/`Skill` tool
+  names are already recognized by the same heuristic
+  (`harbor/agents/installed/claude_code.py`).
+- Live-validated the fix: the Milestone 1 smoke fixture scored
+  `skill_execution: 1.00`, `skill_efficiency: 1.00`, Skill Lift `+0.58` with
+  `claude-code` (`reports/m4/claude-code-smoke-validation/`), versus the
+  `0.6667`/failed result Codex produced on the identical fixture in
+  Milestone 1.
+- Ran the full 25-case Performance Attribution set at `n_attempts: 1` with
+  `claude-code`: `skill_execution`/`skill_efficiency` scored normally and
+  varied meaningfully by case across all 25 with-skill trials (no more flat
+  `0.08` floor). This run also surfaced a separate, lower-severity finding —
+  intermittent LLM-judge JSON-parse failures on the `accuracy`/`goal_accuracy`
+  dimensions (see `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6) — which
+  suppressed the aggregate score at single-attempt coverage but is expected to
+  be absorbed by the certification profile's `n_attempts: 3` redundancy.
+- Started the full 3-attempt, 150-trial certification-grade matrix
+  (`reports/m4/performance-attribution-tier3-claude-code-final/`); result
+  pending as of this update. Remaining Milestone 4 tasks (normalized report,
+  `BENCHMARK.md`, certification verdict) are blocked only on that run
+  finishing, not on any further code or evaluator changes.
+
+Evidence (2026-08-30):
+
+- That 150-trial matrix, and two subsequent full reruns, surfaced two more
+  real issues before a clean result was achieved: a judge-truncation bug
+  (fixed via `patches/skillevaluator-0.2.1-judge-max-tokens.patch`, mirroring
+  an already-proven fix for a sibling judge function in the same vendored
+  file) and a missing `--copy-repo` flag (an operator error, not a code
+  defect) that left `/workspace/repo/` empty so the skill's own data-tool
+  reference was unreachable in ~80% of trials. Both fully documented in
+  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md` and
+  `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6.
+- The judge model was decoupled from the agent's model
+  (`SKILL_EVAL_JUDGE_MODEL=claude-sonnet-5`), since the judge task does not
+  need a top-tier model and was previously silently inheriting the agent's
+  model choice.
+- Ran out of Anthropic API credit mid-run twice (agent + up to 3 judge calls
+  per trial across repeated 150-trial matrices is expensive); after topping
+  up, switched the Tier 3 agent to `claude-sonnet-5`
+  (`--agent-model claude-code=claude-sonnet-5`), which reduced per-trial cost
+  enough to finally complete a full, clean matrix and doubles as the
+  project's first real model-portability data point.
+- **Final clean result:** 150/150 trials scored, `execution_status:
+  "succeeded"` on both arms. Overall Skill Lift **+0.1253** (0.9362 with-skill
+  vs. 0.8109 baseline), clearing the 0.10 minimum with real margin. pass@3:
+  23/25 cases (92%).
+- Ran this result through the project's own normalized adapter
+  (`framework/adapters/nvidia_skillevaluator.py`) and certification engine
+  (`framework/certification/engine.py`) against `policies/certification.yaml`
+  — first real-data exercise of both. **Verdict: FAIL** — discoverability
+  (0.8862) narrowly misses the 0.90 floor, and six required metrics
+  (`financial_accuracy`, `reconciliation`, `temporal_consistency`,
+  `data_provenance`, `regression_pass_rate`, `authorization`) were never
+  computed, since Tier 3 alone does not produce Tier 4 domain-grader or
+  hard-gate output.
+- Built `skills/performance-attribution/evals/tier3_trial_extractor.py`,
+  bridging real Tier 3 trajectories into the Tier 4 domain grader
+  (`graders/finance/performance_attribution.py`) for the first time against
+  live data rather than unit-test fixtures. Result: all 3 attempts of
+  `performance--001` (the ES_FUT derivative-hedge case) scored a clean 1.0
+  across all six checks. Testing against `performance--011` (a case with no
+  position-level question) surfaced a real, previously undiscovered grader
+  boundary — `portfolio_coverage` currently assumes every case needs full
+  position enumeration, which isn't true here — documented as a tracked
+  follow-up rather than silently patched around.
+- Milestone 4 remains `IN PROGRESS`. Remaining work (composite-grader
+  case-scoping, extending Tier 4 coverage across more cases, computing the
+  three missing hard gates, closing or reviewing the discoverability gap,
+  then `BENCHMARK.md`) is itemized in
+  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, "Remaining work to close
+  Milestone 4."
+
+Evidence (2026-08-30, continued — closing the certification gap):
+
+- Per an explicit instruction to optimize model usage after today's repeated
+  API credit exhaustion, all of the following was done by mining the
+  already-completed Sonnet-agent run's data on disk — zero additional live
+  agent or judge calls.
+- Fixed the real root cause of the `performance--011` false failure: the
+  bug was in `tier3_trial_extractor.py` unconditionally populating
+  `expected_position_ids`, not in the shared composite grader (its
+  empty-set shortcut already handled "not applicable" correctly). Fixed by
+  grounding a per-case classification directly in `evals.json`'s real
+  prompt/assertion text: 14 gradable cases, 2 position-required cases, 11
+  not-gradable cases (refusal/disclosure cases this grader isn't designed
+  to judge, plus `performance--023` which needs an unmodeled
+  positions-only evidence shape). Added a regression test.
+- New `skills/performance-attribution/evals/aggregate_tier4.py` batch-runs
+  Tier 4 grading across all 14 gradable cases in the completed run: 41/42
+  expected trials graded (1 legitimate, documented skip), every graded
+  trial scoring a clean 1.0 across all six deterministic checks.
+- Computed the three previously-missing hard gates from the same run's
+  data: `regression_pass_rate: 1.0` (3/3 regression cases), `authorization:
+  pass` (zero permission denials across all 150 trials, both arms),
+  `data_provenance: 1.0`.
+- Diagnosed the discoverability gap precisely without a rerun: the overall
+  0.8862 average is fully explained by 2 of 25 cases (the "ambiguous"
+  category, which correctly uses no tools at all) — excluding just those 6
+  of 75 trials, discoverability is 0.9632, comfortably above the 0.90
+  floor. Documented as a metric-scoping limitation for tool-free
+  ambiguous-input testing, not an observed skill defect.
+- Extended `framework/reporting/normalized_report.py`'s `write_markdown()`
+  to render Skill Lift, pass@k, and certification-gate failures (it was
+  missing all three). New
+  `skills/performance-attribution/evals/generate_benchmark.py` ties
+  everything together and writes the real
+  `skills/performance-attribution/BENCHMARK.md`/`.json`.
+- **Final certification verdict: FAIL, for exactly one reason** —
+  `discoverability: 0.8862 < 0.9`. Every other hard gate and minimum
+  metric passes, including Skill Lift (+0.1253) and all seven
+  domain/hard-gate metrics that were previously uncomputed. The
+  discoverability decision (fix the metric vs. accept and document the
+  exception) is deliberately left open for a human reviewer — see
+  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, "The one remaining
+  decision."
 
 ---
 
@@ -393,7 +518,11 @@ Finance graders                   SCAFFOLDED
 CI workflow                       SCAFFOLDED
 Real Tier 1 benchmark             DONE (portfolio-overview; 11/11 checks)
 Real Tier 2 catalog               NOT STARTED
-Real Tier 3 Skill Lift            IN PROGRESS (Performance Attribution tool injection required)
+Real Tier 3 Skill Lift            DONE (real +0.1253 lift, 150/150 trials scored, claude-sonnet-5 agent)
+Real Tier 4 domain grading         DONE (14/25 cases, 41/42 trials, all six checks 1.0; BENCHMARK.md real)
+Milestone 4 certification          FAIL — one reason only (discoverability 0.8862 vs 0.90, diagnosed as
+                                   metric-scoping limitation, not a skill defect); decision left to a
+                                   human reviewer, see docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md
 Cross-repo demonstration          NOT STARTED
 ```
 
