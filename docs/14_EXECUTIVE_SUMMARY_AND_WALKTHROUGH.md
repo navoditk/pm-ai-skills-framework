@@ -31,11 +31,17 @@ risk-proportional certification cost.
 As of this writing, the foundational architecture (Milestones 0-3) is built
 and evidenced. The first real skill taken through the full pipeline
 (Performance Attribution, Milestone 4) has been the proving ground for the
-framework, and in the process **three distinct, real bugs were found and
-fixed** — not in this project's own code, but in the third-party evaluator
-and in how it was being invoked. That debugging trail is itself the best
-evidence that the governance model works: it caught problems a demo would
-have hidden. See [Milestone 4](#milestone-4-the-proving-ground-with-three-real-bugs-found)
+framework, and in the process **four distinct, real bugs were found and
+fixed** — mostly not in this project's own code, but in the third-party
+evaluator and in how it was being invoked — before a complete, clean 150-trial
+result was achieved. That result shows a real, substantial Skill Lift
+(+0.1253) and, when run through the project's own certification engine
+against real policy, an honest **FAIL** verdict for two well-understood,
+documented reasons — not a vague or fabricated pass. That debugging-and-honest-failure
+trail is itself the best evidence that the governance model works: it caught
+problems a demo would have hidden, and it refused to call an incomplete
+result "certified." See
+[Milestone 4](#milestone-4-the-proving-ground-with-four-real-bugs-found)
 below for the full story, and `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
 for the live status.
 
@@ -176,7 +182,7 @@ Summarized here for a cold read:
   These are specified in detail (`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`)
   but no code exists yet.
 
-## Milestone 4: the proving ground, with three real bugs found
+## Milestone 4: the proving ground, with four real bugs found
 
 This is the part of the project that has actually been stress-tested against
 a live agent, a live judge model, and a real Docker sandbox — and it is worth
@@ -228,10 +234,30 @@ pipeline still depends on the human (or agent) operating it correctly, and
 that live-run evidence needs to be sanity-checked for environment confounds
 before being read as a verdict about the skill itself.
 
-**Status at the time of writing:** the corrected run (with `--copy-repo`) is
-either running or has just completed — see
-`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md` for the final Skill Lift table,
-pass-threshold count, and certification verdict once available.
+**Bug 4 — API credit exhaustion, mid-run, twice.** Live evaluation is
+expensive: each of 150 trials makes one agent call plus up to three judge
+calls, all against Claude models. Two subsequent full-matrix attempts died
+mid-run when the API key's prepaid balance ran out. After topping up, the
+Tier 3 agent was switched from `claude-opus-5` to `claude-sonnet-5`
+(alongside the judge, already decoupled onto Sonnet for cost reasons) —
+cheap enough to finally complete a full matrix, and a genuine first data
+point for the framework's own "model portability" goal.
+
+**The final, clean result:** a complete 150-trial matrix scored 75/75 on
+both arms with `execution_status: "succeeded"` — **Overall Skill Lift:
++0.1253** (0.9362 with-skill vs. 0.8109 baseline), clearing the required
+0.10 minimum with real margin. Run through the project's own certification
+engine against real policy, the verdict is **FAIL** — not because the skill
+doesn't work, but because discoverability (0.8862) narrowly misses its 0.90
+floor and six required Tier 4/hard-gate metrics were never computed (Tier 3
+alone can't produce them). A first real Tier 4 pass, built specifically to
+close that gap
+(`skills/performance-attribution/evals/tier3_trial_extractor.py`), scored a
+clean 1.0 on the derivative-hedge case and immediately surfaced a genuine,
+previously-unknown grader boundary on a different case shape — exactly the
+kind of finding this framework exists to produce. Full numbers, the
+certification breakdown, and the itemized remaining work are in
+`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`.
 
 ---
 
@@ -259,12 +285,24 @@ pass-threshold count, and certification verdict once available.
 
 ### Weaknesses and open risks
 
-- **Single-vendor dependency, now demonstrated twice.** Two of the three bugs
+- **Single-vendor dependency, now demonstrated twice.** Two of the four bugs
   found in Milestone 4 were in NVIDIA's evaluator itself, not in this
   project's code. The adapter boundary limits *blast radius* but does not
   eliminate the dependency risk — this project is still exposed to whatever
   NVIDIA ships next, and local patches are a stopgap, not a permanent
   posture.
+- **Live evaluation cost is real and was underestimated.** A single 150-trial
+  certification matrix exhausted a prepaid API balance mid-run, twice, in one
+  day. At Milestone 7 scale (12 skills, 300+ cases), this needs an explicit
+  budget model, not ad hoc top-ups.
+- **A domain grader can look complete while quietly assuming a uniform case
+  shape.** The Tier 4 wiring done in Milestone 4 passed cleanly on one case
+  and then immediately failed on a structurally different one for a reason
+  that had nothing to do with the skill's correctness — the composite grader
+  assumed every case needs full position enumeration. This is exactly the
+  kind of gap the framework exists to catch, but it is also a reminder that
+  "the grader ran and returned a score" is not the same as "the grader is
+  scoping itself correctly."
 - **The governance mechanisms are still mostly specified, not built.** As of
   this writing: the central duplicate-detection catalog referenced in
   `pmai-skills.yaml` doesn't exist yet (only a skill-specific catalog does);

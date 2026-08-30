@@ -2,13 +2,13 @@
 
 ## Status
 
-`IN PROGRESS` — the Codex execution-efficiency blocker documented below has
-been root-caused to a Codex-specific trajectory format and resolved by
-switching the Tier 3 agent to `claude-code`. Live confirmation is complete at
-smoke scale and at full-skill scale (single attempt); the full 3-attempt
-certification-grade matrix is running as of 2026-08-28 and this document will
-be updated with its result. See "Resolution: switching Tier 3 agent to
-claude-code" below.
+`IN PROGRESS` — a complete, uncontaminated 150-trial Tier 3 matrix now exists
+with real Skill Lift (+0.1253) and a first real Tier 4 domain-grader result.
+Certification verdict against `policies/certification.yaml` is **FAIL**, for
+two well-understood, documented reasons (one narrow generic-metric miss, and
+six required metrics not yet computed) — not because the skill doesn't work.
+See "Final Tier 3 result" and "Remaining work to close Milestone 4" below for
+the complete picture and exact next steps.
 
 ## What this milestone is meant to prove
 
@@ -239,9 +239,141 @@ and reproduce the live fix exactly. See `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY
 §13.6 for the full writeup and upstream-fix tracking; `docs/MILESTONE_1_SETUP.md`
 now includes the patch step as part of the reproducible install.
 
-**Full certification-grade matrix, rerun with the patch applied.** Result
-pending — this document will be updated with the completed Skill Lift table,
-pass-threshold count, and certification verdict once it finishes.
+**Full certification-grade matrix, rerun with the patch applied.** This
+uncovered a second, unrelated configuration issue: without the evaluator's
+`--copy-repo` flag, `/workspace/repo/` is staged empty, so `SKILL.md`'s
+reference to `synthetic_data_pipeline/tool_cli.py` was unreachable in ~80% of
+trials — the agent correctly refused to fabricate numbers rather than
+completing the task, which is good behavior but confounds the measurement.
+Fixed by adding `--copy-repo` to the evaluation command; this is an operator
+error in how the CLI was invoked, not a defect in the skill, the framework,
+or the evaluator.
+
+**Judge model decoupled from the agent's model.** The judge calls (`accuracy`,
+`goal_accuracy`, `behavior_check`) had been silently running on whichever
+model the agent under test uses (`claude-opus-5`, via the evaluator's "public
+provider default" fallback), since no judge model was explicitly configured.
+This is unnecessary: the judge task is a bounded classification/reasoning
+task, not a demonstration of the skill's own capability, and the evaluator's
+own vendored default (`DEFAULT_JUDGE_MODEL = "gpt-5.6-sol"`, a distinctly
+non-flagship model) suggests its original authors did not intend top-tier
+models for judging either. `SKILL_EVAL_JUDGE_MODEL=claude-sonnet-5` is now
+set explicitly, decoupling judge cost/model choice from the agent under test
+and reducing per-run cost, since a trial can issue up to 3 separate judge
+calls.
+
+**Bug 4 — API credit exhaustion, discovered mid-run, twice.** Two subsequent
+full-matrix attempts failed entirely on `billing_error` ("Your credit balance
+is too low") partway through -- the Anthropic Console API key backing all of
+today's live runs (agent calls plus up to 3 judge calls per trial) ran out of
+credit. Not a framework or evaluator defect, but worth recording as a real
+operating cost lesson: a single 150-trial certification matrix against
+`claude-opus-5` for both agent and judge roles is expensive enough to
+exhaust a modest prepaid balance mid-run, twice, in one day of iterative
+debugging.
+
+**Agent switched to `claude-sonnet-5`** (via `--agent-model
+claude-code=claude-sonnet-5`), alongside the already-decoupled
+`SKILL_EVAL_JUDGE_MODEL=claude-sonnet-5` judge. This reduced per-trial cost
+enough to finally complete a full, clean 150-trial matrix, and doubles as a
+first real data point for the framework's "model portability" goal
+(`docs/01_PROPOSAL.md` §1.4) -- this skill's certification evidence is no
+longer tied to one specific agent model.
+
+## Final Tier 3 result (2026-08-30)
+
+A complete, uncontaminated 150-trial matrix (25 cases x 3 attempts x 2 arms)
+finished with `execution_status: "succeeded"` on both arms and 75/75 scored
+attempts on each -- the first time this milestone has produced a fully
+covered result. Evidence retained under
+[`reports/m4/performance-attribution-tier3-sonnet-agent/`](../reports/m4/performance-attribution-tier3-sonnet-agent/).
+
+| Measure | With skill | Baseline | Lift |
+| --- | ---: | ---: | ---: |
+| Overall | 0.9362 | 0.8109 | +0.1253 |
+| Accuracy | 0.9920 | 0.6507 | +0.3413 |
+| Goal accuracy | 0.9057 | 0.6687 | +0.2370 |
+| Behavior check | 0.9627 | 0.8149 | +0.1478 |
+| Skill execution | 0.8862 | 0.8853 | +0.0009 |
+| Skill efficiency | 0.8704 | 0.8459 | +0.0245 |
+| Security | 1.0000 | 1.0000 | +0.0000 |
+
+pass@3: 23/25 cases passed the 0.80 per-case threshold (92%, Wilson 95% CI
+[0.75, 0.98]).
+
+This result was run through the project's own normalized adapter
+(`framework/adapters/nvidia_skillevaluator.py`) and certification engine
+(`framework/certification/engine.py`) against `policies/certification.yaml`'s
+`analytical-standard` profile -- the first time both have been exercised
+against real live data rather than unit-test fixtures.
+
+**Certification verdict: FAIL**, for two distinct reasons:
+
+1. **Discoverability (0.8862) narrowly misses the 0.90 floor.** This maps to
+   the Tier 3 `skill_execution` metric. Skill Lift itself clears its
+   threshold with real margin (+0.1253 against a 0.10 minimum), so the skill
+   demonstrably helps -- discoverability is the one generic metric closest to
+   passing outright.
+2. **Six required metrics were never computed**:
+   `financial_accuracy`, `reconciliation`, `temporal_consistency`,
+   `data_provenance` (hard gate), `regression_pass_rate` (hard gate), and
+   `authorization` (hard gate). These are Tier 4 domain-grader and
+   organizational hard-gate outputs that a Tier 3 live-agent run does not
+   produce on its own.
+
+This is not "the skill failed" -- it is "certification cannot be granted
+because required evidence is incomplete," which is the correct and intended
+behavior of a hard-gate certification policy (`docs/04_EVALUATION_AND_CERTIFICATION.md`
+§4.3: a high average score never overrides a missing/failed hard gate).
+
+## Tier 4 wiring: first real result
+
+`skills/performance-attribution/evals/tier3_trial_extractor.py` (new) bridges
+real Tier 3 trajectories into the deterministic Tier 4 grader
+(`graders/finance/performance_attribution.py`), extracting the agent's actual
+`performance.attribution`/`portfolio.positions`/`risk.factor_exposure` tool
+responses from `trajectory.json` and comparing them against authoritative
+ground truth fetched live from `synthetic_data_pipeline.tools` -- not
+re-typed constants, so the comparison stays honest if a fixture changes.
+
+Run against real trials from the Sonnet-agent matrix above:
+
+- **All 3 attempts of `performance--001`** (the ES_FUT derivative-hedge case)
+  scored a clean `1.0` across all six deterministic checks (reconciliation,
+  benchmark consistency, temporal consistency, data provenance, portfolio
+  coverage, numeric claim grounding) -- the first real evidence that a live
+  agent's actual financial claims reconcile against ground truth, not just a
+  unit-test fixture.
+- **`performance--011`** (a case that asks only for absolute/benchmark/active
+  return, with no position-level question) scored `portfolio_coverage: 0.0`
+  on all 3 attempts. This is not an extractor bug -- the agent correctly had
+  no reason to call `portfolio.positions` for this question. It surfaces a
+  real, previously undiscovered boundary in the composite grader: it
+  currently assumes every case needs full position enumeration, when only
+  case-specific expected evidence should decide which of its 6 checks apply.
+  Documented in the extractor's docstring; fixing the composite grader's
+  assumption is tracked as follow-up work, not done here.
+
+Extending this extractor to reliably cover all 25 eval categories (several of
+which expect the agent to *decline* to answer, or handle deliberately broken
+data) is real additional engineering and is explicitly out of scope for this
+session -- see the extractor's docstring for the exact boundary.
+
+## Remaining work to close Milestone 4
+
+1. Fix the composite grader's implicit "every case needs positions"
+   assumption (surfaced above), or scope `portfolio_coverage` per case.
+2. Extend `tier3_trial_extractor.py` (or build case-specific equivalents) to
+   cover enough of the remaining 24 cases to produce real
+   `financial_accuracy`/`reconciliation`/`temporal_consistency` scores at the
+   skill level, not just one case.
+3. Define and compute `data_provenance`, `regression_pass_rate`, and
+   `authorization` as skill-level hard gates (today only demonstrated
+   per-trial).
+4. Either close the discoverability gap (0.8862 vs. 0.90) or make a
+   documented, deliberate call that the current result is close enough to
+   warrant a threshold review -- do not silently lower the threshold to pass.
+5. Rerun certification once 1-4 are addressed and generate `BENCHMARK.md`.
 
 **Items 1-3 of "Recommended next-session work" above (patching the pinned
 evaluator's execution-action allowlist) are no longer necessary** — the

@@ -11,6 +11,12 @@
 - Codex CLI: 0.150.0
 - Docker CLI: 29.6.2; Docker Desktop daemon must be running for Tier 3
 - Provider preflight: OpenAI credential loaded transiently from `/Users/navoditkaushik/GitHub/credentials/keys.rtf`; use `OPENAI_BASE_URL=https://api.openai.com/v1`
+- Judge model: `SKILL_EVAL_JUDGE_MODEL=claude-sonnet-5`, set explicitly and
+  separately from the Tier 3 agent's model. Without this override, the judge
+  silently falls back to whichever model the agent uses (`claude-opus-5` in
+  Milestone 4's Claude Code runs) via the evaluator's "public provider
+  default" path — the two roles are unrelated and do not need the same model.
+  See the Milestone 4 doc for the reasoning.
 
 ## Installation
 
