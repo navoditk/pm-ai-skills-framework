@@ -435,13 +435,14 @@ Exit criteria:
 
 ## Milestone 6 — Deliberate Defect Demonstration
 
-Status: `IN PROGRESS` — see
+Status: `DONE` — closed 2026-08-31, see
 [`docs/MILESTONE_6_DELIBERATE_DEFECTS.md`](MILESTONE_6_DELIBERATE_DEFECTS.md)
 for full evidence. 5 of 6 defects caught and confirmed on 2026-08-30
 (vague description, duplicate skill — real HIGH_SIMILARITY score 0.9468,
 missing derivatives, mismatched dates, unauthorized source); weak/no-value
-skill caught via a Tier 1 proxy with live Skill Lift confirmation left
-open for a human reviewer.
+skill caught via a Tier 1 proxy (87.2→79.5) — a human reviewer accepted
+this proxy as sufficient on 2026-08-31 rather than spend a live Skill Lift
+confirmation run, documented as an accepted limitation.
 
 Scoped per the 2026-08-30 decision to run entirely on Tier 1/2 static
 checks against synthetic broken variants — no live-agent spend required,
@@ -718,12 +719,11 @@ practice established in Milestone 4.
    or formally waived. **Decision needed:** accept as a known measurement
    limitation (documented waiver), or rework the affected eval cases/config
    to remove the confound and re-measure.
-3. **Milestone 6's weak/no-value skill defect** is caught only via a Tier 1
-   quality-score proxy (87.2→79.5); a real live Skill Lift measurement was
-   not run (see `docs/MILESTONE_6_DELIBERATE_DEFECTS.md`). **Decision
-   needed:** spend a small live check (~$1-3, Haiku-tier) to confirm with
-   real Skill Lift evidence, or accept the Tier 1 proxy as sufficient and
-   close the milestone as-is.
+3. ~~**Milestone 6's weak/no-value skill defect** is caught only via a Tier 1
+   quality-score proxy (87.2→79.5).~~ **Resolved 2026-08-31**: a human
+   reviewer accepted the Tier 1 proxy as sufficient evidence rather than
+   spending a live confirmation run. Milestone 6 closed on that basis; see
+   `docs/MILESTONE_6_DELIBERATE_DEFECTS.md` for the decision note.
 
 ---
 

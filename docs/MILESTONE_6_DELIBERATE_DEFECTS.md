@@ -1,6 +1,6 @@
 # Milestone 6 — Deliberate Defect Demonstration
 
-Status: `IN PROGRESS`
+Status: `DONE`
 
 Per the [2026-08-30 scope decision](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md#scope-decision-2026-08-30),
 this milestone runs entirely on Tier 1 static checks, Tier 2 similarity
@@ -18,7 +18,7 @@ scratchpad and never merged into `skills/`.
 | 2 | Duplicate risk skill | Tier 2 `similarity-check` | **Caught** — HIGH_SIMILARITY, score 0.9468, would block merge |
 | 3 | Missing derivatives | `portfolio_coverage` grader unit test | **Caught** — existing test, confirmed passing |
 | 4 | Mismatched dates | `temporal_consistency` grader unit test | **Caught** — existing test, confirmed passing |
-| 5 | Weak/no-value skill | Tier 1 `quality-check` (proxy only) | **Partially caught** — quality dropped 87.2→79.5, but see caveat below: this is not a live Skill Lift measurement |
+| 5 | Weak/no-value skill | Tier 1 `quality-check` (proxy only) | **Caught, accepted 2026-08-31** — quality dropped 87.2→79.5; see caveat below: this is a proxy, not a live Skill Lift measurement, and was accepted as sufficient rather than confirmed live |
 | 6 | Unauthorized data source | `data_provenance` grader unit test | **Caught** — existing test, confirmed passing |
 
 ## 1. Vague skill description → discoverability degradation
@@ -133,13 +133,18 @@ it takes the live Tier 3 Skill Lift measurement to actually catch it. This
 is a real argument for why the certification pipeline keeps Tier 3 rather
 than relying on Tier 1 quality scoring alone.
 
-**Open decision for a human reviewer:** confirming this defect with a real
-live Skill Lift measurement would need a small live A/B run (with-skill vs
-baseline) against the weak variant — cheap if scoped to Haiku-tier and a
-handful of cases (similar to the earlier quick-pass runs, ~$1-3,
-~10-12 minutes), but still live API spend. Deferred pending a go/no-go
-decision, consistent with this project's practice of checking in before
-spending live budget.
+**Decision (2026-08-31):** a human reviewer chose to close this defect on
+the Tier 1 proxy evidence above rather than spend the ~$1-3 / ~10-12 minute
+live A/B run that would confirm it with a real Skill Lift number. The
+quality-score drop (87.2→79.5, driven by concrete Correctness and
+Reliability findings, not a vague heuristic) is accepted as sufficient
+evidence that the framework catches a structurally weak skill — with the
+explicit caveat, documented above, that Tier 1 alone would not have blocked
+this skill under Tier 1's own default `--min-score 70` gate. This is a
+known gap in this specific piece of evidence, not a claim that Tier 1 and
+Tier 3 are interchangeable in general — Milestones 4 and 5 both required a
+real live Tier 3 matrix precisely because a Tier 1 proxy is not equivalent
+to a live measurement.
 
 ## 6. Unauthorized data source → provenance failure
 
@@ -153,15 +158,14 @@ Already demonstrated by
 
 - framework catches all deliberately introduced defects: **5 of 6 caught
   directly** (vague description, duplicate skill, missing derivatives,
-  mismatched dates, unauthorized source); **1 partially caught via a Tier 1
-  proxy, live Skill Lift confirmation left open for a human reviewer**
-  (weak/no-value skill).
+  mismatched dates, unauthorized source); **1 caught via a Tier 1 proxy,
+  accepted 2026-08-31 rather than confirmed with a live Skill Lift
+  measurement** (weak/no-value skill — see the decision note above). MET.
 - reports clearly explain failure mode: yes for all six — each finding
-  above names the specific check, the metric it moved, and why.
+  above names the specific check, the metric it moved, and why. MET.
 
 ## Status
 
-`IN PROGRESS` — one open decision remains: whether to spend a small live
-Tier 3 check (~$1-3, ~10-12 minutes, Haiku-tier) to get a real Skill Lift
-number for the weak/no-value skill, or accept the Tier 1 proxy as
-sufficient evidence and close this milestone as-is.
+`DONE` — closed 2026-08-31 on the evidence above. The one item that stayed
+a proxy rather than a live measurement (weak/no-value skill's Skill Lift)
+is documented as an accepted limitation, not a gap silently dropped.
