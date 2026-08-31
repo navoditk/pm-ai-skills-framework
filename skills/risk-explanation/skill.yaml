@@ -15,8 +15,9 @@ classification:
 
 dependencies:
   tools:
-    - portfolio.summary@v1
     - portfolio.positions@v1
+    - risk.factor_exposure@v1
+    - risk.scenario@v1
 
 evaluation:
   dataset: evals/evals.json

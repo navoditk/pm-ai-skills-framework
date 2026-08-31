@@ -17,6 +17,8 @@ dependencies:
   tools:
     - portfolio.summary@v1
     - portfolio.positions@v1
+    # Called twice with two distinct as-of dates -- the two snapshots being
+    # differenced, not two separate tools.
 
 evaluation:
   dataset: evals/evals.json

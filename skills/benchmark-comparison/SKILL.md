@@ -1,6 +1,8 @@
 ---
 name: benchmark-comparison
 description: Compare portfolio positioning and exposures against the assigned benchmark.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Benchmark Comparison
@@ -29,6 +31,18 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `portfolio.positions` and `benchmark.positions` together; never compare
+  the portfolio against a benchmark other than the one assigned to it.
+- Report both absolute weights and the portfolio-minus-benchmark difference
+  for any position or sector called out as over/underweight.
+- Never infer a missing benchmark position or weight; report it as
+  unavailable instead.
 
 ## Output
 
@@ -37,3 +51,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: benchmark-comparison`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

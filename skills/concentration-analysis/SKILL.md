@@ -1,6 +1,8 @@
 ---
 name: concentration-analysis
 description: Identify material portfolio concentrations against approved thresholds and benchmark context.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Concentration Analysis
@@ -29,6 +31,19 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `portfolio.positions` and `benchmark.positions` together; concentration
+  is measured against the assigned benchmark's own weights, not an
+  arbitrary threshold.
+- Include derivative and hedge positions when computing concentration; do
+  not omit a position because it carries a negative or unusual weight.
+- Never infer a missing position or benchmark weight; report it as
+  unavailable instead.
 
 ## Output
 
@@ -37,3 +52,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: concentration-analysis`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

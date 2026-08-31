@@ -1,0 +1,1557 @@
+{
+  "framework_version": "0.1.0",
+  "source": {
+    "provider": "nvidia-skillevaluator",
+    "evaluator_version": "0.2.1",
+    "report_type": "tier3"
+  },
+  "skill": {
+    "id": "pm.portfolio.overview",
+    "name": "Portfolio Overview",
+    "version": "0.1.0"
+  },
+  "benchmark_context": {
+    "agent": "claude-code",
+    "model": "claude-sonnet-5",
+    "dataset": "sha256:dc7be15d52cca2ca61da0a125f676052e1f2f2fdb30710b8e43109354365c5bd",
+    "evaluator_version": "0.2.1",
+    "environment": {
+      "value": "docker",
+      "source": "CLI"
+    },
+    "fingerprint": "634bb2684af24ff058cc38b931f61deebf547a6ff99dc7b09fca9602c28f93b0"
+  },
+  "generic_metrics": {
+    "security": 1.0,
+    "correctness": 0.976,
+    "discoverability": 0.8942,
+    "effectiveness": 0.9653,
+    "efficiency": 0.858
+  },
+  "skill_lift": {
+    "with_skill": 0.9432,
+    "without_skill": 0.8115,
+    "delta": 0.1316
+  },
+  "reliability": {
+    "with_skill": {
+      "k": 3,
+      "pass_threshold": 0.8,
+      "stop_on_pass": false,
+      "passed_cases": 23,
+      "failed_cases": 2,
+      "total_cases": 25,
+      "rate": 0.92,
+      "rate_interval": {
+        "method": "wilson_score",
+        "confidence_level": 0.95,
+        "lower": 0.7503389104960468,
+        "upper": 0.9777795987151524
+      },
+      "attempts_used": 75,
+      "max_attempts_possible": 75,
+      "avg_attempts_used": 3.0,
+      "extra_cases": [],
+      "cases": {
+        "portfolio-ov-001": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9688,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-001__FxSTbxy",
+              "score": 0.9173,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-001__vBLEq8J",
+              "score": 0.9688,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-001__B7EMMEz",
+              "score": 0.9604,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-002": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9521,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-002__YzsUGDM",
+              "score": 0.8688,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-002__8xKjSom",
+              "score": 0.8688,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-002__m7fhpy5",
+              "score": 0.9521,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-003": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9833,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-003__Y2znDZg",
+              "score": 0.9389,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-003__tGmbKB7",
+              "score": 0.975,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-003__xbC833g",
+              "score": 0.9833,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-004": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9833,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-004__GYBY9Pz",
+              "score": 0.9792,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-004__RWebU3t",
+              "score": 0.975,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-004__WGbX8Z6",
+              "score": 0.9833,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-005": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-005__YGq5fZZ",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-005__s4J9CAq",
+              "score": 0.9667,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-005__T5RqpqL",
+              "score": 0.7833,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-006": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-006__J836waa",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-006__QdV2MpX",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-006__cVSpqkG",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-007": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-007__2sMmPAE",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-007__Wj7w5eC",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-007__siNNLa5",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-008": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-008__wDCGfnF",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-008__VSDdq2g",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-008__YsdkFtR",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-009": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-009__LLXsshg",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-009__vYjj7r9",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-009__CV7J83e",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-010": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6417,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-010__AzWYf2S",
+              "score": 0.525,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-010__ZMczaeE",
+              "score": 0.6417,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-010__5ZgJmM3",
+              "score": 0.5667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-011": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-011__7T9BrWg",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-011__2aMkB8s",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-011__TgyED86",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-012": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-012__jZVGySp",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-012__JoNYXHA",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-012__fwntjFv",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-013": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-013__XWuU8QW",
+              "score": 0.9583,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-013__nN2cdHt",
+              "score": 0.9722,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-013__WXzEBog",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-014": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-014__wKmxfQA",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-014__noG7a3K",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-014__GkKKgra",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-015": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-015__chePr3r",
+              "score": 0.9583,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-015__yt9XFNX",
+              "score": 0.9583,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-015__VSA5MS9",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-016": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-016__mcuWeoJ",
+              "score": 0.9688,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-016__fHkGKv5",
+              "score": 0.9688,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-016__Xid5NpJ",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-017": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9653,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-017__yJuj2Ym",
+              "score": 0.9653,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-017__zUn5J6W",
+              "score": 0.9618,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-017__juaPawD",
+              "score": 0.9625,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-018": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-018__HxQHVyM",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-018__CRY9sRc",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-018__Y7YJq58",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-019": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9722,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-019__6tiq2Nj",
+              "score": 0.9583,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-019__fmsMBCz",
+              "score": 0.9722,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-019__ndcyDse",
+              "score": 0.9583,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-020": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9833,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-020__vdKFSUg",
+              "score": 0.9833,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-020__RqfacSG",
+              "score": 0.9833,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-020__CLNY4nA",
+              "score": 0.9833,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-021": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-021__XmpmurR",
+              "score": 0.9792,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-021__dEF8Uoy",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-021__zAXXAsQ",
+              "score": 0.9861,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-022": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9792,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-022__gwp2eWU",
+              "score": 0.9792,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-022__FPmg2Mx",
+              "score": 0.9778,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-022__reiECfZ",
+              "score": 0.9792,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-023": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9729,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-023__RxBNuR3",
+              "score": 0.9062,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-023__NpGiBhg",
+              "score": 0.8063,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-023__Xfxw5pE",
+              "score": 0.9729,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-024": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9861,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-024__Ue3CwYJ",
+              "score": 0.9839,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-024__2xcpB63",
+              "score": 0.9861,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-024__3t69sW5",
+              "score": 0.9757,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-025": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9757,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-025__MNFJPNt",
+              "score": 0.9757,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-025__YAwFsSy",
+              "score": 0.9604,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-025__Qa53EUf",
+              "score": 0.9729,
+              "passed": true
+            }
+          ]
+        }
+      }
+    },
+    "without_skill": {
+      "k": 3,
+      "pass_threshold": 0.8,
+      "stop_on_pass": false,
+      "passed_cases": 18,
+      "failed_cases": 7,
+      "total_cases": 25,
+      "rate": 0.72,
+      "rate_interval": {
+        "method": "wilson_score",
+        "confidence_level": 0.95,
+        "lower": 0.5242339480963842,
+        "upper": 0.8571614614904344
+      },
+      "attempts_used": 75,
+      "max_attempts_possible": 75,
+      "avg_attempts_used": 3.0,
+      "extra_cases": [],
+      "cases": {
+        "portfolio-ov-001": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7562,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-001__DwgGFSv",
+              "score": 0.4,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-001__4YtEi4o",
+              "score": 0.6125,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-001__Pi9XcoK",
+              "score": 0.7562,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-002": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8208,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-002__GJafYJY",
+              "score": 0.8208,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-002__6pUpTTo",
+              "score": 0.6813,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-002__WCNZoRE",
+              "score": 0.7479,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-003": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8083,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-003__CTmetoY",
+              "score": 0.8083,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-003__kLDAy6v",
+              "score": 0.675,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-003__spFvHQa",
+              "score": 0.5667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-004": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-004__BKaLBc4",
+              "score": 0.525,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-004__qtCZJmA",
+              "score": 0.6417,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-004__NiukLct",
+              "score": 0.6917,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-005": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.7667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-005__qLkpBt8",
+              "score": 0.7167,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-005__wvrgMxF",
+              "score": 0.75,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-005__foVKuif",
+              "score": 0.7667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-006": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-006__dx4JREh",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-006__cAY4Qz7",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-006__9q88j77",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-007": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9881,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-007__PRNLhG4",
+              "score": 0.9583,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-007__wDdNM2j",
+              "score": 0.9881,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-007__v9Upz8K",
+              "score": 0.6778,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-008": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-008__bqq8cVo",
+              "score": 0.9667,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-008__fV8ZWLy",
+              "score": 0.95,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-008__Vhx8Q92",
+              "score": 0.95,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-009": {
+          "passed": true,
+          "first_pass_attempt": 2,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8908,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-009__WucA2DV",
+              "score": 0.5972,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-009__eSsm2Q2",
+              "score": 0.8833,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-009__NyT9tvu",
+              "score": 0.8908,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-010": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-010__vHzPQjM",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-010__q4XvDXt",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-010__W6eBi8Q",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-011": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-011__JRkewca",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-011__ckrWiw4",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-011__rQLnSYp",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-012": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9562,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-012__dHvP7bf",
+              "score": 0.9292,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-012__UvDyv57",
+              "score": 0.907,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-012__mVv77GB",
+              "score": 0.9562,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-013": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.6667,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-013__UzFj8Bi",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-013__QV5n8MD",
+              "score": 0.6667,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-013__uQhGMBv",
+              "score": 0.6667,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-014": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-014__tfsfxZr",
+              "score": 0.9917,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-014__SBttzmW",
+              "score": 1.0,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-014__ZUcX7YG",
+              "score": 0.9917,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-015": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9917,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-015__JikAg3Y",
+              "score": 0.9917,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-015__E66rKzG",
+              "score": 0.95,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-015__XHdspgU",
+              "score": 0.9917,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-016": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9646,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-016__jgcB6Po",
+              "score": 0.934,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-016__wdTnHAA",
+              "score": 0.6194,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-016__xMQFyPi",
+              "score": 0.9646,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-017": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-017__jw52eRC",
+              "score": 0.9896,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-017__RZqHSJ5",
+              "score": 0.9396,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-017__4DMYWME",
+              "score": 0.9792,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-018": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9896,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-018__wsAwvMq",
+              "score": 0.9542,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-018__LqwusYg",
+              "score": 0.9646,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-018__UXHeRHi",
+              "score": 0.9896,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-019": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.95,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-019__JLNwodn",
+              "score": 0.8,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-019__uy9wPNx",
+              "score": 0.9083,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-019__jMByXYs",
+              "score": 0.95,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-020": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9167,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-020__u92FTvn",
+              "score": 0.8361,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-020__ZgQd8fz",
+              "score": 0.7,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-020__McBiNY7",
+              "score": 0.9167,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-021": {
+          "passed": false,
+          "first_pass_attempt": null,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.75,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-021__grQxQCP",
+              "score": 0.75,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-021__WCfhnwy",
+              "score": 0.75,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-021__dfn894e",
+              "score": 0.7333,
+              "passed": false
+            }
+          ]
+        },
+        "portfolio-ov-022": {
+          "passed": true,
+          "first_pass_attempt": 3,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8333,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-022__Tgqk5LU",
+              "score": 0.4833,
+              "passed": false
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-022__UXjzKkS",
+              "score": 0.5167,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-022__CynZ6et",
+              "score": 0.8333,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-023": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.9479,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-023__pDjXNnd",
+              "score": 0.9479,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-023__kMB8uzh",
+              "score": 0.9292,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-023__ZWp3vwk",
+              "score": 0.9479,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-024": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 1.0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-024__5zt39qy",
+              "score": 0.9097,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-024__x9d8vSL",
+              "score": 0.8667,
+              "passed": true
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-024__yVfHJpB",
+              "score": 1.0,
+              "passed": true
+            }
+          ]
+        },
+        "portfolio-ov-025": {
+          "passed": true,
+          "first_pass_attempt": 1,
+          "attempts_used": 3,
+          "attempts_skipped": 0,
+          "attempts_missing": 0,
+          "best_score": 0.8236,
+          "attempts": [
+            {
+              "attempt": 1,
+              "trial": "portfolio-ov-025__SPJHZhw",
+              "score": 0.8236,
+              "passed": true
+            },
+            {
+              "attempt": 2,
+              "trial": "portfolio-ov-025__d53k4WH",
+              "score": 0.5951,
+              "passed": false
+            },
+            {
+              "attempt": 3,
+              "trial": "portfolio-ov-025__K237SER",
+              "score": 0.6014,
+              "passed": false
+            }
+          ]
+        }
+      }
+    },
+    "lift": {
+      "with_skill": 0.92,
+      "without_skill": 0.72,
+      "delta": 0.2,
+      "count_derived_delta": 0.2,
+      "passed_cases_delta": 5,
+      "paired_comparison": {
+        "pairing_status": "complete",
+        "paired_cases": 25,
+        "with_skill_unpaired_case_count": 0,
+        "without_skill_unpaired_case_count": 0,
+        "with_skill_unpaired_case_ids": [],
+        "without_skill_unpaired_case_ids": [],
+        "with_skill_unpaired_case_ids_truncated": false,
+        "without_skill_unpaired_case_ids_truncated": false,
+        "with_skill_unidentified_cases": 0,
+        "without_skill_unidentified_cases": 0,
+        "both_pass": 18,
+        "with_skill_only_pass": 5,
+        "without_skill_only_pass": 0,
+        "neither_pass": 2,
+        "discordant_cases": 5,
+        "paired_rate_delta": 0.2,
+        "mcnemar_exact": {
+          "method": "two_sided_exact_binomial",
+          "null_hypothesis": "equal marginal pass probabilities",
+          "p_value": 0.0625,
+          "p_value_text": "0.0625",
+          "p_value_exact": "1/16",
+          "p_value_exact_omitted": false,
+          "p_value_numeric_underflow": false,
+          "minimum_attainable_p_value": 0.0625,
+          "minimum_attainable_p_value_text": "0.0625",
+          "minimum_attainable_p_value_exact": "1/16",
+          "minimum_attainable_p_value_exact_omitted": false,
+          "minimum_attainable_p_value_numeric_underflow": false,
+          "resolution_limited_at_alpha_0_05": true
+        }
+      }
+    }
+  },
+  "domain_metrics": {
+    "financial_accuracy": 1.0,
+    "benchmark_consistency": 1.0,
+    "temporal_consistency": 1.0,
+    "data_provenance": 1.0,
+    "portfolio_coverage": 1.0,
+    "numeric_claim_grounding": 1.0,
+    "regression_pass_rate": 1.0
+  },
+  "findings": [
+    "Discoverability (skill_execution) averages 0.8942 across all 75 with-skill trials, narrowly missing the 0.90 floor -- the same single gate, and a very similar shortfall, as Performance Attribution's real certification result (0.8862 there vs 0.8942 here). This recurring pattern across two independently built skills is itself evidence: NVIDIA's own Tier 3 report for this run independently recommends 'Add copies of portfolio-ov-001 and portfolio-ov-025 without the forced cat SKILL.md preamble to measure genuine discoverability' -- corroborating the Milestone 4 diagnosis that this is a metric-scoping artifact from the pre_agent_setup bootstrap script forcing a SKILL.md read, not an observed skill discoverability defect.",
+    "Tier 4 domain grading covered 45 of 45 expected trials across 15 gradable cases (portfolio-ov-001, portfolio-ov-002, portfolio-ov-003, portfolio-ov-004, portfolio-ov-012, portfolio-ov-013, portfolio-ov-016, portfolio-ov-017, portfolio-ov-018, portfolio-ov-019, portfolio-ov-020, portfolio-ov-021, portfolio-ov-022, portfolio-ov-023, portfolio-ov-025); 0 trial(s) skipped as genuinely not gradable (see aggregate_tier4.py output for reasons), not counted as failures. All gradable trials scored a clean 1.0 across all five deterministic checks.",
+    "Authorization checked all 150 trials across both arms (not just the gradable subset): zero permission denials found.",
+    "Regression cases (portfolio-ov-016, portfolio-ov-017, portfolio-ov-018, portfolio-ov-025): 4/4 passed all attempts.",
+    "The analytical-standard profile's 'reconciliation: 0.99' minimum metric structurally cannot be met by this skill: reconciliation checks return-component math specific to Performance Attribution's attribution_reconciliation grader, and Portfolio Overview has no return-component reconciliation to check (see graders/finance/portfolio_overview.py's module docstring, which already documents this omission). framework/certification/engine.py treats any minimum_metric absent from a skill's metrics dict as an automatic failure, so every non-attribution skill certified against analytical-standard will show this same failure regardless of actual quality. This is a policy-profile design gap, not a Portfolio Overview defect -- left open for a human reviewer to decide whether analytical-standard should drop 'reconciliation' as a universal minimum metric, or whether a narrower profile should exist for skills without a reconciliation grader."
+  ],
+  "certification": {
+    "status": "FAIL",
+    "profile": "analytical-standard",
+    "failures": [
+      "discoverability: 0.8942 < 0.9",
+      "reconciliation: None < 0.99"
+    ],
+    "metrics_evaluated": {
+      "security": "pass",
+      "authorization": "pass",
+      "regression_pass_rate": 1.0,
+      "data_provenance": 1.0,
+      "correctness": 0.976,
+      "discoverability": 0.8942,
+      "effectiveness": 0.9653,
+      "efficiency": 0.858,
+      "skill_lift_overall": 0.1316,
+      "financial_accuracy": 1.0,
+      "temporal_consistency": 1.0
+    }
+  }
+}

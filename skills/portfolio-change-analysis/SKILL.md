@@ -1,6 +1,8 @@
 ---
 name: portfolio-change-analysis
 description: Explain what changed between two portfolio snapshots while keeping dates and sources consistent.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Portfolio Change Analysis
@@ -29,10 +31,14 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
 
 ## Domain rules
 
-- Resolve both comparison dates explicitly.
+- Call `portfolio.summary`/`portfolio.positions` once per comparison date;
+  resolve both dates explicitly and never conflate them into one snapshot.
 - Never mix observations from incompatible snapshots without disclosure.
 - Separate position change from market-value change when possible.
 
@@ -43,3 +49,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: portfolio-change-analysis`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

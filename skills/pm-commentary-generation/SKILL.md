@@ -1,6 +1,8 @@
 ---
 name: pm-commentary-generation
 description: Generate grounded PM-facing commentary from approved portfolio, performance, risk, and market facts.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # PM Commentary Generation
@@ -29,6 +31,20 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Draw only on `portfolio.summary`, `performance.attribution`, and
+  `risk.factor_exposure` facts already gathered for this request; never
+  introduce a fact from general knowledge to make the commentary read more
+  complete.
+- Attribute every quantitative claim in the commentary to the tool result
+  that produced it; do not present a synthesized judgment as a raw fact.
+- Never infer a missing performance, risk, or portfolio value; report it as
+  unavailable instead.
 
 ## Output
 
@@ -37,3 +53,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: pm-commentary-generation`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

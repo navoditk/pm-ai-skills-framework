@@ -27,19 +27,69 @@ jobs:
       - name: Unit tests
         run: pytest -q
 
-  # Blueprint: pin an approved SkillEvaluator version before production use.
+  # Milestone 9 (right-sized 2026-08-30): a single real PR gate demonstrating
+  # the mechanism -- a skill that fails Tier 1 cannot merge. Tier 1 is
+  # LLM-free by default, so this needs no API keys and no live agent spend.
+  # The other four jobs below remain documented placeholders (see the
+  # 2026-08-30 scope decision in docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
+  # -- this is a demonstration of the pattern, not the full production
+  # pipeline they represent.
   tier1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install SkillEvaluator
-        run: |
-          echo "Pin and install the organization-approved NVIDIA SkillEvaluator version here"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Validate changed skills
+      - name: Install SkillEvaluator (pinned) and SkillSpector
         run: |
-          echo "Run: skillevaluator validate <changed-skill>"
+          python -m pip install --upgrade pip uv
+          uv pip install --system \
+            'skillevaluator[all] @ git+https://github.com/NVIDIA/SkillEvaluator.git@009aa300be7925c7ba75760592baeb941cc29ba8'
+          uv pip install --system \
+            'git+https://github.com/NVIDIA/SkillSpector.git@29b0dc8c39424e8e31ca055fa027adf8ba8f9650'
+
+      - name: Install gitleaks
+        run: |
+          curl -sSL -o gitleaks.tar.gz \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
+          rm gitleaks.tar.gz
+
+      - name: Find changed skills
+        id: changed
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- 'skills/*' \
+            | awk -F/ '{print $2}' | sort -u)
+          echo "Changed skills:"
+          echo "$CHANGED"
+          echo "skills<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Validate each changed skill (Tier 1)
+        if: steps.changed.outputs.skills != ''
+        run: |
+          set -e
+          FAILED=0
+          while IFS= read -r skill; do
+            [ -z "$skill" ] && continue
+            echo "::group::skillevaluator validate skills/$skill"
+            skillevaluator validate "skills/$skill" --no-dedup || FAILED=1
+            echo "::endgroup::"
+          done <<< "${{ steps.changed.outputs.skills }}"
+          if [ "$FAILED" -ne 0 ]; then
+            echo "One or more changed skills failed Tier 1 validation."
+            exit 1
+          fi
 
   similarity:
     runs-on: ubuntu-latest

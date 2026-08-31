@@ -1,6 +1,8 @@
 ---
 name: exposure-analysis
 description: Analyze sector, factor, country, currency, and security exposures and identify material concentrations.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Exposure Analysis
@@ -29,6 +31,18 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `portfolio.positions` for sector/currency/security-level exposure and
+  `risk.factor_exposure` for factor-level exposure.
+- Include derivative and hedge positions in exposure totals; do not omit a
+  position because it carries a negative or unusual weight.
+- Never infer a missing exposure or factor value; report it as unavailable
+  instead.
 
 ## Output
 
@@ -37,3 +51,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: exposure-analysis`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

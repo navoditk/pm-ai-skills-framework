@@ -1,6 +1,8 @@
 ---
 name: market-move-explanation
 description: Investigate material market or security moves using approved market data and research context without overstating causality.
+metadata:
+  author: PM AI <pm-ai@example.com>
 ---
 
 # Market Move Explanation
@@ -29,6 +31,19 @@ Do not activate this skill for unrelated market lookup, general education, or re
 - Never fabricate a portfolio value, benchmark, position, return, exposure, or risk statistic.
 - Never bypass authorization.
 - Preserve source and as-of metadata for quantitative claims.
+- In the sandboxed reference evaluation, invoke the staged deterministic bridge
+  with `python /workspace/repo/synthetic_data_pipeline/tool_cli.py TOOL_NAME`
+  and the relevant flags. Treat its JSON response as the logical-tool result.
+
+## Domain rules
+
+- Use `market.price_history` for the price move and `market.security_context`
+  for the security's own facts; do not draw on either for facts the tool
+  does not actually return.
+- State moves as observed price/return facts, not as attributed causes,
+  unless an approved source explicitly supports the causal claim.
+- Never infer a missing price point or security fact; report it as
+  unavailable instead.
 
 ## Output
 
@@ -37,3 +52,7 @@ Provide:
 - material drivers;
 - supporting quantitative evidence;
 - important limitations/data gaps.
+
+For traceability, end the response with `Workflow: market-move-explanation`
+after completing the workflow. This marker is an execution trace, not a
+substitute for the supporting evidence.

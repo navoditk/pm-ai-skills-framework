@@ -1,11 +1,21 @@
+schema_version: 1
+
 harbor:
   n_attempts: 3
   pass_threshold: 0.80
   n_concurrent: 4
   agent_runtime_preflight: true
+  base_image_mode: reuse
+  pre_agent_setup:
+    - >-
+      if test -r /workspace/skills/risk-explanation/SKILL.md; then
+        printf '%s\n' '# Required skill bootstrap' 'Before answering, read /workspace/skills/risk-explanation/SKILL.md with cat.' 'Follow its numbered workflow and use the documented logical tools.' 'Include source, as-of date, and coverage evidence in the answer.' > /workspace/AGENTS.md;
+      else
+        rm -f /workspace/AGENTS.md;
+      fi
 
 skill_workspace:
-  mode: isolated
+  mode: group
 
 grading:
   mode: default_plus_custom

@@ -1,12 +1,14 @@
 # PM AI Skills Quality & Certification Framework
 
-Reference blueprint for building, testing, evaluating, certifying, and governing a growing library of AI skills for portfolio management and broader asset-management use cases.
+A hands-on reference project for building **familiarity with the NVIDIA SkillEvaluator framework** — how it works, how it is used, and how an AI skill's performance is actually measured — using a realistic portfolio-management skill library as the vehicle rather than a toy example.
 
 The design uses **NVIDIA SkillEvaluator as the evaluation engine** and layers a thin, PM-specific governance model on top: ownership enforcement, catalog-based duplicate detection, deterministic finance grading, risk-tiered certification rigor, and benchmark evidence. This is deliberately **not** a generic, domain-agnostic agent framework — see [Scope](#scope) below.
 
 ## Goals, upfront
 
-This repository exists because a PM organization's skill library grows faster than any one team can review by hand. The concrete goals, in priority order:
+**The primary goal, reaffirmed 2026-08-30, is learning-focused:** build real, hands-on familiarity with the NVIDIA SkillEvaluator framework — how its four evaluation tiers work, how to wire it into a real skill's development loop, and how to read and trust (or distrust) the numbers it produces. Everything below is in service of that goal, using a PM/asset-management skill library as a realistic, non-trivial domain to exercise it against — not because shipping that library into production is the point.
+
+Within that frame, the concrete engineering goals, in priority order:
 
 1. **Stop duplicate/near-duplicate skills from entering the library.** Every new skill is checked against a central catalog before merge (Tier 2 semantic similarity), so two teams don't independently build "explain portfolio performance" under different names.
 2. **Make skill quality measurable and comparable**, using NVIDIA SkillEvaluator's Tier 1 (construction/security) and Tier 3 (live-agent, with-skill vs. without-skill) evaluation, rather than relying on demos or subjective review.
@@ -16,9 +18,22 @@ This repository exists because a PM organization's skill library grows faster th
 6. **Insulate PM certification logic from NVIDIA's release cadence**, so upgrading the underlying evaluator doesn't silently change what "certified" means (see [NVIDIA upgrade policy](#nvidia-skillevaluator-upgrade-policy)).
 7. **Produce auditable benchmark evidence** — a `BENCHMARK.md` and normalized JSON record tied to an exact skill version, dataset, agent, model, and evaluator version — before a skill is trusted in production.
 
+**What this means in practice:** the project deliberately stops short of production-scale work that wouldn't teach anything new about the framework itself — see [Key findings and takeaways](#key-findings-and-takeaways) below and `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Scope decision (2026-08-30)" for exactly what was descoped and why.
+
 ## Scope
 
-This framework governs **PM/asset-management skills specifically**. It is not intended to become a catch-all, multi-domain skills platform. The value it provides — a central duplicate-detection catalog, a shared certification vocabulary, and reusable finance graders — depends on staying scoped to one organization's skill library rather than generalizing to arbitrary domains. See `docs/01_PROPOSAL.md` §1.5 for explicit non-goals.
+This framework governs **PM/asset-management skills specifically**, used as the domain for the learning goal above. It is not intended to become a catch-all, multi-domain skills platform, and — per the 2026-08-30 decision — it is not being pushed to full production scale (a complete 12-skill certified catalog, a production CI pipeline, a remediation engine, a live skill registry) purely for its own sake. The value it demonstrates — a central duplicate-detection catalog, a shared certification vocabulary, reusable finance graders, and a real evaluation-to-certification pipeline — depends on going deep on a few real skills rather than wide across many. See `docs/01_PROPOSAL.md` §1.5 for explicit non-goals and `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` for the full re-scope reasoning.
+
+## Key findings and takeaways
+
+For anyone new to this repo, this is the headline: two real skills have been taken end-to-end through the full pipeline (live agent, live judge, real Docker sandbox, real certification policy) — not demoed, not simulated. Both came back an honest **FAIL**, for precisely diagnosed reasons, which is itself the point: a governance layer that always says "pass" isn't doing anything.
+
+- **Performance Attribution** (Milestone 4): a complete 150-trial matrix scored **Skill Lift +0.1253**, real. Getting there surfaced **four distinct real bugs** — an agent-compatibility gap in the evaluator's execution-heuristic, a judge token-truncation bug found by reading the evaluator's own source, a missing CLI flag (this project's own operator error), and API credit exhaustion mid-run, twice. Final certification: **FAIL for exactly one well-evidenced reason** — discoverability narrowly missing its 0.90 floor, diagnosed as a metric-scoping artifact (two "ambiguous input" cases are structurally unable to score high on a tool-use metric because *not* using a tool is their correct behavior), not an actual skill defect. Full trail: `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`.
+- **Portfolio Overview** (Milestone 5): a second complete 150-trial matrix scored **Skill Lift +0.1316**, real. Certification: **FAIL for two reasons** — the *same* discoverability shortfall (0.8942 this time), independently corroborated by NVIDIA's own report recommending the same fix Milestone 4 had already diagnosed — plus a **newly discovered certification policy-profile gap**: one minimum metric (`reconciliation`) is specific to Performance Attribution's own grader and silently fails every other skill in the catalog regardless of quality. Found by actually running the real pipeline twice, not by auditing the policy file in the abstract. Evidence: `skills/portfolio-overview/BENCHMARK.md`.
+- **Milestone 6** (deliberate defects): 5 of 6 intentionally-introduced defects (vague description, duplicate skill, missing derivatives, mismatched dates, unauthorized data source) are caught and confirmed with real evidence — Tier 1 quality scoring, Tier 2 embedding similarity, and grader regression tests. Full trail: `docs/MILESTONE_6_DELIBERATE_DEFECTS.md`.
+- **Milestone 9** (CI/CD): one real GitHub Actions job now blocks a PR when a changed skill fails Tier 1 validation — a working demonstration of "invalid skills can't merge," not a full production pipeline.
+- **Three findings are deliberately left open for human review, not silently resolved** — the reconciliation policy gap, the recurring discoverability metric-scoping issue, and one defect (weak/no-value skill) confirmed only via a cheaper proxy rather than a full live measurement. See `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Open policy decisions pending human review."
+- **No skill in this catalog has cleared certification outright yet.** That is reported plainly rather than smoothed over — see `docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` for the complete, cold-readable walkthrough with an honest pros/cons assessment.
 
 ## Why this repository exists
 
@@ -225,11 +240,21 @@ Full process, triggers, rollback plan, and the compatibility-issue log live in
 
 ## Reference use cases
 
-The blueprint defines 12 representative skills:
+The blueprint defines 12 representative skills, at two different depths per
+the 2026-08-30 right-sizing decision — see
+[Key findings and takeaways](#key-findings-and-takeaways) above:
 
-1. Portfolio Overview
-2. Performance Attribution
-3. Risk Explanation
+**Full certification depth** (25 real eval cases each, live Sonnet Tier 3
+matrix run, real `BENCHMARK.md`):
+
+1. Portfolio Overview — certified run complete, real FAIL (two diagnosed reasons)
+2. Performance Attribution — certified run complete, real FAIL (one diagnosed reason)
+3. Risk Explanation — refined to standard, quick-pass validated, full certification deferred
+
+**Structurally complete** (real composite grader, correct tool declarations,
+Tier 1 passing 11/11, 10 starter eval cases each — not yet run through a
+live Tier 3 matrix):
+
 4. Exposure Analysis
 5. Benchmark Comparison
 6. Position Investigation
@@ -239,8 +264,6 @@ The blueprint defines 12 representative skills:
 10. Portfolio Change Analysis
 11. Concentration Analysis
 12. PM Commentary Generation
-
-Each skill contains a standard package and 10 starter evaluation cases.
 
 ## Start here
 
@@ -263,6 +286,8 @@ Read these documents in order:
     summary covering goals, architecture, milestone status, and an honest
     pros/cons assessment
 15. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
+16. `docs/MILESTONE_6_DELIBERATE_DEFECTS.md` — six synthetic broken-skill
+    variants and how the framework catches each one
 
 ## Repository layout
 
@@ -306,11 +331,23 @@ This protects the organization from vendor lock-in while still leveraging NVIDIA
 
 ## Blueprint status
 
-This package is an implementation blueprint and scaffold. It intentionally contains runnable-looking interfaces, schemas, test cases, policies, and CI examples, but production integration will require:
+This package started as an implementation blueprint and scaffold, but two
+skills (Performance Attribution, Portfolio Overview) have since been taken
+all the way through the real pipeline — live agent, live judge, real Docker
+sandbox, real certification policy — with genuine evidence on disk (`docs/
+MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, `skills/portfolio-overview/
+BENCHMARK.md`). The remaining nine reference skills are structurally
+complete but have not been run through a live Tier 3 matrix, and several
+production-scale pieces remain intentionally unbuilt per the 2026-08-30
+scope decision (a remediation engine, cross-repo portability, a production
+skill registry — see `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`).
+Actually adopting this in a production organization would still require:
 
-- approved internal tool/data connectors;
+- approved internal tool/data connectors (this repo uses a synthetic, local
+  data pipeline instead — see `docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`);
 - chosen model/agent credentials;
 - environment-specific security controls;
 - organization-specific ownership metadata;
 - CI secret configuration;
-- registry implementation or artifact repository integration.
+- registry implementation or artifact repository integration (deliberately
+  descoped here — see Milestone 12).
