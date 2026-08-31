@@ -2,6 +2,15 @@
 
 This document collects the external standards, frameworks, documentation, and implementation references that informed the PM AI Skills Quality & Certification Framework.
 
+**For a narrative, one-stop treatment** — what agent skills and
+SkillEvaluator actually are, what this project's own tests show, a
+feasibility assessment, step-by-step install/run instructions, repo layout
+requirements, CI/CD integration guidance, and curated tutorials/courses/a
+podcast episode — see
+[`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md).
+This document (09) stays a flat link catalog; document 15 is the guided
+walkthrough.
+
 The intent is to give engineers and reviewers a single starting point for understanding:
 - Agent Skills packaging;
 - NVIDIA SkillEvaluator;

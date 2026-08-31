@@ -18,22 +18,50 @@ Within that frame, the concrete engineering goals, in priority order:
 6. **Insulate PM certification logic from NVIDIA's release cadence**, so upgrading the underlying evaluator doesn't silently change what "certified" means (see [NVIDIA upgrade policy](#nvidia-skillevaluator-upgrade-policy)).
 7. **Produce auditable benchmark evidence** — a `BENCHMARK.md` and normalized JSON record tied to an exact skill version, dataset, agent, model, and evaluator version — before a skill is trusted in production.
 
-**What this means in practice:** the project deliberately stops short of production-scale work that wouldn't teach anything new about the framework itself — see [Key findings and takeaways](#key-findings-and-takeaways) below and `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Scope decision (2026-08-30)" for exactly what was descoped and why.
+**What this means in practice:** the project deliberately stops short of production-scale work that wouldn't teach anything new about the framework itself — see [Key findings and takeaways](#key-findings-and-takeaways) below and [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Scope decision (2026-08-30)" for exactly what was descoped and why.
 
 ## Scope
 
-This framework governs **PM/asset-management skills specifically**, used as the domain for the learning goal above. It is not intended to become a catch-all, multi-domain skills platform, and — per the 2026-08-30 decision — it is not being pushed to full production scale (a complete 12-skill certified catalog, a production CI pipeline, a remediation engine, a live skill registry) purely for its own sake. The value it demonstrates — a central duplicate-detection catalog, a shared certification vocabulary, reusable finance graders, and a real evaluation-to-certification pipeline — depends on going deep on a few real skills rather than wide across many. See `docs/01_PROPOSAL.md` §1.5 for explicit non-goals and `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` for the full re-scope reasoning.
+This framework governs **PM/asset-management skills specifically**, used as the domain for the learning goal above. It is not intended to become a catch-all, multi-domain skills platform, and — per the 2026-08-30 decision — it is not being pushed to full production scale (a complete 12-skill certified catalog, a production CI pipeline, a remediation engine, a live skill registry) purely for its own sake. The value it demonstrates — a central duplicate-detection catalog, a shared certification vocabulary, reusable finance graders, and a real evaluation-to-certification pipeline — depends on going deep on a few real skills rather than wide across many. See [`docs/01_PROPOSAL.md`](docs/01_PROPOSAL.md) §1.5 for explicit non-goals and [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) for the full re-scope reasoning.
 
 ## Key findings and takeaways
 
 For anyone new to this repo, this is the headline: two real skills have been taken end-to-end through the full pipeline (live agent, live judge, real Docker sandbox, real certification policy) — not demoed, not simulated. Both came back an honest **FAIL**, for precisely diagnosed reasons, which is itself the point: a governance layer that always says "pass" isn't doing anything.
 
-- **Performance Attribution** (Milestone 4): a complete 150-trial matrix scored **Skill Lift +0.1253**, real. Getting there surfaced **four distinct real bugs** — an agent-compatibility gap in the evaluator's execution-heuristic, a judge token-truncation bug found by reading the evaluator's own source, a missing CLI flag (this project's own operator error), and API credit exhaustion mid-run, twice. Final certification: **FAIL for exactly one well-evidenced reason** — discoverability narrowly missing its 0.90 floor, diagnosed as a metric-scoping artifact (two "ambiguous input" cases are structurally unable to score high on a tool-use metric because *not* using a tool is their correct behavior), not an actual skill defect. Full trail: `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`.
-- **Portfolio Overview** (Milestone 5): a second complete 150-trial matrix scored **Skill Lift +0.1316**, real. Certification: **FAIL for two reasons** — the *same* discoverability shortfall (0.8942 this time), independently corroborated by NVIDIA's own report recommending the same fix Milestone 4 had already diagnosed — plus a **newly discovered certification policy-profile gap**: one minimum metric (`reconciliation`) is specific to Performance Attribution's own grader and silently fails every other skill in the catalog regardless of quality. Found by actually running the real pipeline twice, not by auditing the policy file in the abstract. Evidence: `skills/portfolio-overview/BENCHMARK.md`.
-- **Milestone 6** (deliberate defects): 5 of 6 intentionally-introduced defects (vague description, duplicate skill, missing derivatives, mismatched dates, unauthorized data source) are caught and confirmed with real evidence — Tier 1 quality scoring, Tier 2 embedding similarity, and grader regression tests. Full trail: `docs/MILESTONE_6_DELIBERATE_DEFECTS.md`.
-- **Milestone 9** (CI/CD): one real GitHub Actions job now blocks a PR when a changed skill fails Tier 1 validation — a working demonstration of "invalid skills can't merge," not a full production pipeline.
-- **Three findings are deliberately left open for human review, not silently resolved** — the reconciliation policy gap, the recurring discoverability metric-scoping issue, and one defect (weak/no-value skill) confirmed only via a cheaper proxy rather than a full live measurement. See `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Open policy decisions pending human review."
-- **No skill in this catalog has cleared certification outright yet.** That is reported plainly rather than smoothed over — see `docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` for the complete, cold-readable walkthrough with an honest pros/cons assessment.
+- **Performance Attribution** (Milestone 4): a complete 150-trial matrix scored **Skill Lift +0.1253**, real. Getting there surfaced **four distinct real bugs** — an agent-compatibility gap in the evaluator's execution-heuristic, a judge token-truncation bug found by reading the evaluator's own source, a missing CLI flag (this project's own operator error), and API credit exhaustion mid-run, twice. Final certification: **FAIL for exactly one well-evidenced reason** — discoverability narrowly missing its 0.90 floor, diagnosed as a metric-scoping artifact (two "ambiguous input" cases are structurally unable to score high on a tool-use metric because *not* using a tool is their correct behavior), not an actual skill defect. Full trail: [`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md).
+- **Portfolio Overview** (Milestone 5): a second complete 150-trial matrix scored **Skill Lift +0.1316**, real. Certification: **FAIL for two reasons** — the *same* discoverability shortfall (0.8942 this time), independently corroborated by NVIDIA's own report recommending the same fix Milestone 4 had already diagnosed — plus a **newly discovered certification policy-profile gap**: one minimum metric (`reconciliation`) is specific to Performance Attribution's own grader and silently fails every other skill in the catalog regardless of quality. Found by actually running the real pipeline twice, not by auditing the policy file in the abstract. Evidence: [`skills/portfolio-overview/BENCHMARK.md`](skills/portfolio-overview/BENCHMARK.md).
+- **Milestone 6** (deliberate defects, `DONE`): 5 of 6 intentionally-introduced defects (vague description, duplicate skill, missing derivatives, mismatched dates, unauthorized data source) are caught and confirmed with real evidence — Tier 1 quality scoring, Tier 2 embedding similarity, and grader regression tests. The sixth (a weak/no-value skill's Skill Lift) was accepted on a Tier 1 proxy rather than a live measurement, a deliberate human-reviewer call, not a silently dropped gap. Full trail: [`docs/MILESTONE_6_DELIBERATE_DEFECTS.md`](docs/MILESTONE_6_DELIBERATE_DEFECTS.md).
+- **Milestone 9** (CI/CD, `DONE`): one real GitHub Actions job now blocks a PR when a changed skill fails Tier 1 validation — a working demonstration of "invalid skills can't merge," not a full production pipeline.
+- **Two findings remain deliberately open for human review, not silently resolved** — the reconciliation policy gap and the recurring discoverability metric-scoping issue. See [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Open policy decisions pending human review."
+- **No skill in this catalog has cleared certification outright yet.** That is reported plainly rather than smoothed over — see [`docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md`](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) for the complete, cold-readable walkthrough with an honest pros/cons assessment.
+- **New to agent skills or SkillEvaluator itself?** Start with [`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) — a one-stop guide covering what they are, whether they're worth adopting, exact install/run steps, repo layout requirements, CI/CD integration, and curated external resources.
+
+## What was attempted — milestones at a glance
+
+Full detail and evidence for every row lives in
+[`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md).
+
+| # | Milestone | Status | Note |
+|---|---|---|---|
+| 0 | Blueprint | `DONE` | Design docs, 12 skill scaffolds, starter graders |
+| 1 | Dev environment & NVIDIA smoke test | `DONE` | Pinned version, real Tier 1 + one controlled Tier 3 run |
+| 2 | Normalized framework contracts | `DONE` | Vendor-adapter boundary, test-covered |
+| 3 | Synthetic Agentic Data Pipeline | `DONE` | Deterministic local fixtures, no production systems touched |
+| 4 | Performance Attribution vertical slice | `IN PROGRESS` | Engineering complete; real certification `FAIL` for one diagnosed reason, left open for review |
+| 5 | Three-skill vertical slice | `IN PROGRESS` | 2 of 3 skills fully certified (both real `FAIL`); Risk Explanation refined but not yet run through full Tier 3 |
+| 6 | Deliberate defect demonstration | `DONE` | 5 of 6 defects caught directly; 1 accepted on proxy evidence |
+| 7 | Complete 12-skill library | `IN PROGRESS` | Right-sized to structural completion for 9 skills; blocked from fully closing only by Milestone 5 |
+| 8 | Finance grader library | `DONE` | Required graders built, reused across all 12 skills |
+| 9 | CI/CD | `DONE` | Real Tier 1 PR gate, right-sized from an 11-task pipeline |
+| 10 | Remediation engine | `DESCOPED` | Beyond the learning-focused goal; documented as a future extension |
+| 11 | Cross-repository portability | `DESCOPED` | Same reasoning as Milestone 10 |
+| 12 | Registry & production model | `DESCOPED` | Same reasoning as Milestone 10 |
+
+## Next steps
+
+- **Run Risk Explanation's full live Tier 3 certification matrix** — refined to standard and quick-pass validated already; the full run is the only thing blocking Milestones 5 and 7 from closing. Deferred pending budget, same cost profile as the two completed runs (~$15-45, ~30-55 minutes).
+- **Resolve the two open policy decisions**, tracked in [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Open policy decisions pending human review": whether `analytical-standard`'s `reconciliation` minimum metric should be dropped or scoped to a narrower profile, and whether the recurring discoverability metric-scoping shortfall should be accepted as a documented limitation or fixed at the eval-case level.
+- **Optional, lower priority:** decide whether any of the 9 structurally-complete skills warrant full live Tier 3 certification depth later, and whether Milestone 9's CI gate should ever be extended toward the Tier 2/Tier 3 jobs it currently leaves as documented placeholders — both are deliberately not being pursued now per the 2026-08-30 scope decision, not accidentally incomplete.
 
 ## Why this repository exists
 
@@ -102,7 +130,7 @@ pmai-skills certify ./skills/my-new-skill --profile release
 
 **Current status:** this CLI does not exist yet. All Milestone 1 and Milestone 4
 work was run directly against the pinned `skillevaluator` binary
-(`.venv/bin/skillevaluator ...`); see `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
+(`.venv/bin/skillevaluator ...`); see [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
 for exactly what is implemented versus planned. `pmai-skills` is intentionally
 scoped to stay a thin pass-through — it should add PM manifest/ownership
 checks, normalize output, and apply certification policy, and nothing more.
@@ -155,13 +183,13 @@ Central PM AI Skills Framework
           +--> central similarity catalog
 ```
 
-See `docs/11_QUICKSTART_FOR_CONSUMERS.md`.
+See [`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md).
 
 ## Project tracking
 
 The authoritative staged implementation plan and current status live in:
 
-`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
+[`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
 
 Update that file in every material implementation PR.
 
@@ -169,7 +197,7 @@ Update that file in every material implementation PR.
 
 The curated source list for NVIDIA, Anthropic/Agent Skills, OpenAI, Microsoft, OpenTelemetry, AWS, LangSmith and Google lives in:
 
-`docs/09_REFERENCES_AND_RESOURCES.md`
+[`docs/09_REFERENCES_AND_RESOURCES.md`](docs/09_REFERENCES_AND_RESOURCES.md)
 
 
 ## Architecture at a glance
@@ -211,7 +239,7 @@ provider abstraction, and benchmark identity rules — see
 The framework depends on one external evaluation engine, pinned to an exact
 version and commit (currently `0.2.1` /
 `009aa300be7925c7ba75760592baeb941cc29ba8` — see
-`docs/MILESTONE_1_SETUP.md`). Upgrading that dependency is a governed event,
+[`docs/MILESTONE_1_SETUP.md`](docs/MILESTONE_1_SETUP.md)). Upgrading that dependency is a governed event,
 not a routine `pip install --upgrade`:
 
 - version bumps run through a staged compatibility test (adapter tests, a
@@ -222,7 +250,7 @@ not a routine `pip install --upgrade`:
   change;
 - known evaluator-compatibility gaps (for example, the Tier 3 execution
   heuristic not recognizing Codex's `exec` action — see
-  `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`) are logged and tracked
+  [`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md)) are logged and tracked
   upstream rather than patched around locally.
 
 Full process, triggers, rollback plan, and the compatibility-issue log live in
@@ -269,24 +297,28 @@ live Tier 3 matrix):
 
 Read these documents in order:
 
-1. `docs/01_PROPOSAL.md`
-2. `docs/02_TARGET_ARCHITECTURE.md`
-3. `docs/03_SKILL_STANDARD.md`
-4. `docs/04_EVALUATION_AND_CERTIFICATION.md`
-5. `docs/05_IMPLEMENTATION_PLAN.md`
-6. `docs/06_ADOPTION_GUIDE.md`
-7. `docs/07_GITHUB_PUBLISHING.md`
-8. `docs/08_DEMO_AND_ACCEPTANCE_PLAN.md`
-9. `docs/09_REFERENCES_AND_RESOURCES.md`
-10. `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`
-11. `docs/11_QUICKSTART_FOR_CONSUMERS.md`
-12. `docs/12_END_TO_END_SKILL_WORKFLOW.md`
-13. `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`
-14. `docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` — a standalone, cold-read
+1. [`docs/01_PROPOSAL.md`](docs/01_PROPOSAL.md)
+2. [`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md)
+3. [`docs/03_SKILL_STANDARD.md`](docs/03_SKILL_STANDARD.md)
+4. [`docs/04_EVALUATION_AND_CERTIFICATION.md`](docs/04_EVALUATION_AND_CERTIFICATION.md)
+5. [`docs/05_IMPLEMENTATION_PLAN.md`](docs/05_IMPLEMENTATION_PLAN.md)
+6. [`docs/06_ADOPTION_GUIDE.md`](docs/06_ADOPTION_GUIDE.md)
+7. [`docs/07_GITHUB_PUBLISHING.md`](docs/07_GITHUB_PUBLISHING.md)
+8. [`docs/08_DEMO_AND_ACCEPTANCE_PLAN.md`](docs/08_DEMO_AND_ACCEPTANCE_PLAN.md)
+9. [`docs/09_REFERENCES_AND_RESOURCES.md`](docs/09_REFERENCES_AND_RESOURCES.md)
+10. [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
+11. [`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md)
+12. [`docs/12_END_TO_END_SKILL_WORKFLOW.md`](docs/12_END_TO_END_SKILL_WORKFLOW.md)
+13. [`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md)
+14. [`docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md`](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) — a standalone, cold-read
     summary covering goals, architecture, milestone status, and an honest
     pros/cons assessment
-15. `docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`
-16. `docs/MILESTONE_6_DELIBERATE_DEFECTS.md` — six synthetic broken-skill
+15. [`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) — one-stop reference:
+    what agent skills and SkillEvaluator are, feasibility, install/run
+    steps, layout requirements, CI/CD integration, and curated external
+    resources (standards, other vendors' approaches, tutorials, a podcast)
+16. [`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md)
+17. [`docs/MILESTONE_6_DELIBERATE_DEFECTS.md`](docs/MILESTONE_6_DELIBERATE_DEFECTS.md) — six synthetic broken-skill
     variants and how the framework catches each one
 
 ## Repository layout
@@ -340,11 +372,11 @@ BENCHMARK.md`). The remaining nine reference skills are structurally
 complete but have not been run through a live Tier 3 matrix, and several
 production-scale pieces remain intentionally unbuilt per the 2026-08-30
 scope decision (a remediation engine, cross-repo portability, a production
-skill registry — see `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`).
+skill registry — see [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)).
 Actually adopting this in a production organization would still require:
 
 - approved internal tool/data connectors (this repo uses a synthetic, local
-  data pipeline instead — see `docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`);
+  data pipeline instead — see [`docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`](docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md));
 - chosen model/agent credentials;
 - environment-specific security controls;
 - organization-specific ownership metadata;
