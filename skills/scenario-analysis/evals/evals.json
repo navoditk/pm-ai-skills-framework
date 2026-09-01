@@ -132,6 +132,191 @@
         "Activate scenario-analysis when it is the appropriate capability."
       ],
       "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-011",
+      "category": "multi-scenario",
+      "prompt": "Compare ABC's impact under the rates-up-100bp scenario (-1.2%) to the equity-down-10pct scenario (-8.2%).",
+      "expected_output": "Ground both scenario impacts in risk.scenario output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-012",
+      "category": "scenario-detail",
+      "prompt": "Explain what the rates-up-100bp scenario represents before reporting ABC's impact under it.",
+      "expected_output": "Describe the scenario definition and impact from authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground the scenario description in risk.scenario output."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for ABC's equity-down-10pct scenario impact.",
+      "expected_output": "Preserve source metadata for the scenario result.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-014",
+      "category": "provenance",
+      "prompt": "Confirm which tool supplied the rates-up-100bp scenario impact for ABC.",
+      "expected_output": "Cite risk.scenario as the source.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether ABC's impact under equity-down-10pct is -8.2%.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether ABC's impact under rates-up-100bp is -1.2%.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-017",
+      "category": "coverage",
+      "prompt": "Confirm which of ABC's positions, including ES_FUT, drive the equity-down-10pct scenario impact.",
+      "expected_output": "Tie scenario impact to specific holdings using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Ground the scenario driver in position-level data where available."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-018",
+      "category": "unapproved-scenario",
+      "prompt": "Run ABC through a 'market crash' scenario that is not one of the approved scenarios. Explain that this scenario is not available rather than approximating one.",
+      "expected_output": "Refuse to invent or approximate an unapproved scenario.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Only use scenarios explicitly approved for this evaluation.",
+        "Do not invent a scenario or extrapolate an unapproved one."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-019",
+      "category": "regression",
+      "prompt": "Confirm the ES_FUT hedge's effect is reflected in ABC's scenario impact, not excluded because it is a derivative.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect excluded derivative positions from scenario impact.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure in scenario results."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-020",
+      "category": "regression",
+      "prompt": "Confirm the rates-up-100bp and equity-down-10pct impacts are not swapped or conflated in the report.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect mixed up two scenario results.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Keep each scenario's impact distinct and correctly labeled."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-021",
+      "category": "derivatives",
+      "prompt": "How does the ES_FUT index-future hedge change ABC's scenario impact compared to an unhedged portfolio?",
+      "expected_output": "Discuss the hedge's effect on scenario impact using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-022",
+      "category": "tool-failure",
+      "prompt": "The risk.scenario tool is unavailable for equity-down-10pct. What can you safely say about ABC's scenario exposure?",
+      "expected_output": "Explain the limitation without fabricating a scenario impact.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent a scenario impact value."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-023",
+      "category": "ambiguous",
+      "prompt": "Run a scenario on 'the portfolio' without specifying which one or which scenario. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question resolving both ambiguities.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Resolve ambiguous references rather than assuming a portfolio or scenario."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-024",
+      "category": "contextual-positive",
+      "prompt": "The risk committee wants to know how ABC holds up under a rate shock. What can you tell them?",
+      "expected_output": "Use prior context and report the rates-up-100bp impact using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate scenario-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "scenario-analysis"
+    },
+    {
+      "id": "scenario-ana-025",
+      "category": "gross-net-exposure",
+      "prompt": "Under equity-down-10pct, distinguish ABC's gross scenario exposure from its net (hedge-adjusted) scenario exposure.",
+      "expected_output": "Separate gross and net scenario impact, grounded in authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Distinguish gross exposure from net exposure when both are relevant."
+      ],
+      "expected_skill": "scenario-analysis"
     }
   ]
 }

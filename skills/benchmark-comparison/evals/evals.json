@@ -132,6 +132,192 @@
         "Activate benchmark-comparison when it is the appropriate capability."
       ],
       "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-011",
+      "category": "benchmark-consistency",
+      "prompt": "Confirm ABC is compared against the SPX benchmark, not a substitute index.",
+      "expected_output": "Verify benchmark identity before comparing.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify benchmark identity.",
+        "Do not substitute another benchmark."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-012",
+      "category": "benchmark-consistency",
+      "prompt": "Compare ABC's AAPL weight (12%) to SPX's AAPL weight (7%) and report the difference.",
+      "expected_output": "Ground both weights in their respective authoritative tool outputs.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for both ABC's and SPX's position weights used in this comparison.",
+      "expected_output": "Preserve source metadata for both portfolio and benchmark figures.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-014",
+      "category": "provenance",
+      "prompt": "Confirm whether the benchmark weights came from benchmark.positions or were assumed.",
+      "expected_output": "Cite benchmark.positions explicitly as the source.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether SPX's JPM weight is 1.2% as of 2026-08-25.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify ABC's MSFT weight of 10% against SPX's MSFT weight of 6%.",
+      "expected_output": "Confirm both figures against authoritative tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-017",
+      "category": "coverage",
+      "prompt": "Confirm every ABC position, including ES_FUT, was considered in the benchmark comparison.",
+      "expected_output": "Verify coverage and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not invent a benchmark weight not returned by benchmark.positions. Explain why inventing one would be unsafe.",
+      "expected_output": "Refuse to invent a benchmark figure and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a position not present in the tool response.",
+        "Explain the risk of fabricating benchmark data."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-019",
+      "category": "regression",
+      "prompt": "Confirm ABC's own AAPL weight (12%) is not conflated with SPX's AAPL weight (7%) in the comparison.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect merged portfolio and benchmark weights.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Distinguish the portfolio's weights from the benchmark's weights."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-020",
+      "category": "regression",
+      "prompt": "Confirm the ES_FUT hedge is reported as an ABC-only position with no SPX equivalent, not silently matched to something in SPX.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect invented a benchmark counterpart for a hedge.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a position not present in the tool response."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-021",
+      "category": "derivatives",
+      "prompt": "Does SPX include an equivalent to ABC's ES_FUT index-future hedge? Answer from authoritative data only.",
+      "expected_output": "Confirm SPX's position list has no ES_FUT-equivalent entry, grounded in tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Ground the answer in benchmark.positions output."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-022",
+      "category": "tool-failure",
+      "prompt": "The benchmark.positions tool is unavailable. What can you safely say about ABC vs SPX?",
+      "expected_output": "Explain the limitation without fabricating benchmark weights.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent benchmark weights."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-023",
+      "category": "ambiguous",
+      "prompt": "Compare 'the portfolio' to its benchmark without a unique ID. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-024",
+      "category": "contextual-positive",
+      "prompt": "Ahead of the client review, how does ABC's positioning compare to SPX?",
+      "expected_output": "Use prior context and compare using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate benchmark-comparison when it is the appropriate capability."
+      ],
+      "expected_skill": "benchmark-comparison"
+    },
+    {
+      "id": "benchmark-co-025",
+      "category": "overweight-underweight",
+      "prompt": "Identify which ABC positions are overweight versus SPX and which are underweight, using the portfolio-minus-benchmark difference.",
+      "expected_output": "Compute the portfolio-minus-benchmark difference per position from authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "benchmark-comparison"
     }
   ]
 }

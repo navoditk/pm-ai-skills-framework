@@ -132,6 +132,192 @@
         "Activate pm-commentary-generation when it is the appropriate capability."
       ],
       "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-011",
+      "category": "benchmark-consistency",
+      "prompt": "Write commentary confirming ABC is benchmarked against SPX, not a substitute index.",
+      "expected_output": "Verify benchmark identity before drafting commentary.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify benchmark identity.",
+        "Do not substitute another benchmark."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-012",
+      "category": "attribution-synthesis",
+      "prompt": "Write a commentary paragraph on why ABC's return (0.42%) trailed SPX's return (0.63%), citing the drivers.",
+      "expected_output": "Synthesize performance.attribution output into commentary without inventing drivers.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for every figure cited in the commentary.",
+      "expected_output": "Preserve source metadata for every quantitative claim.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-014",
+      "category": "provenance",
+      "prompt": "Confirm which tools supplied the return, exposure, and risk figures used in this commentary.",
+      "expected_output": "Attribute each figure to portfolio.summary, performance.attribution, or risk.factor_exposure as appropriate.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Attribute every quantitative claim in the commentary to the tool result that produced it."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify the 0.42% ABC return and 0.63% SPX return cited in the commentary draft.",
+      "expected_output": "Confirm or correct the stated figures using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify the Technology factor exposure of 0.18 cited in the commentary draft.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-017",
+      "category": "coverage",
+      "prompt": "Confirm the commentary addresses all four ABC positions, including ES_FUT, where material.",
+      "expected_output": "Verify coverage and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not add a fact to the commentary that isn't returned by the tools. Explain why inventing one would be unsafe.",
+      "expected_output": "Refuse to invent a commentary fact and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Never introduce a fact from general knowledge to make the commentary read more complete.",
+        "Explain the risk of fabricating commentary content."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-019",
+      "category": "regression",
+      "prompt": "Confirm the commentary distinguishes ABC's own return from SPX's return rather than conflating them.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect blurred portfolio and benchmark return in prose.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Distinguish the portfolio's return from the benchmark's return."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-020",
+      "category": "regression",
+      "prompt": "Confirm the commentary does not omit the ES_FUT hedge when discussing composition or risk.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect's commentary silently dropped the hedge.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure in the commentary."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-021",
+      "category": "derivatives",
+      "prompt": "Write a commentary line explaining the role of the ES_FUT index-future hedge in ABC.",
+      "expected_output": "Describe the hedge's role grounded in authoritative position data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-022",
+      "category": "tool-failure",
+      "prompt": "The performance.attribution tool is unavailable. Draft what commentary you safely can about ABC.",
+      "expected_output": "Explain the limitation rather than fabricating attribution commentary.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent attribution drivers."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-023",
+      "category": "ambiguous",
+      "prompt": "Draft commentary on 'the portfolio' without a unique ID. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-024",
+      "category": "contextual-positive",
+      "prompt": "The PM needs a one-paragraph note on ABC for tomorrow's meeting. Draft it.",
+      "expected_output": "Use prior context and produce grounded, concise commentary.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate pm-commentary-generation when it is the appropriate capability."
+      ],
+      "expected_skill": "pm-commentary-generation"
+    },
+    {
+      "id": "pm-commentar-025",
+      "category": "judgment-vs-fact",
+      "prompt": "In the commentary, clearly separate factual figures from any synthesized PM-facing judgment or interpretation.",
+      "expected_output": "Label synthesized judgment distinctly from raw tool-sourced facts in the commentary.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Attribute every quantitative claim in the commentary to the tool result that produced it; do not present a synthesized judgment as a raw fact."
+      ],
+      "expected_skill": "pm-commentary-generation"
     }
   ]
 }

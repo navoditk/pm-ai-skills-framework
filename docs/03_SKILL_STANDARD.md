@@ -112,7 +112,10 @@ No owner -> no certification. **This is enforced as an automated pre-Tier-1
 CI check on `skill.yaml`, not a review convention** — a manifest containing a
 placeholder value (for example the literal string
 `domain-owner-required`) fails validation before any evaluation cost is
-spent. See `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`, "Suggested next
-three PRs," for the current status of this check: it is documented here but
-not yet implemented, and all 12 reference skills currently ship with the
-placeholder value pending real ownership assignment.
+spent. **Implemented 2026-08-31**: `framework/certification/check_ownership.py`
+(unit-tested in `tests/test_ownership_gate.py`) runs as a real step in
+`.github/workflows/skills-quality.yml`'s `tier1` job, before the Tier 1
+`skillevaluator validate` call, against every skill changed in a PR. All 13
+reference skills now carry real (synthetic-org) `domain_reviewer` values
+instead of the placeholder — the check was verified to actually catch a
+reverted placeholder before this was true.

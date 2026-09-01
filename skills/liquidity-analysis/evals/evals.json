@@ -132,6 +132,190 @@
         "Activate liquidity-analysis when it is the appropriate capability."
       ],
       "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-011",
+      "category": "concentration-proxy",
+      "prompt": "Identify ABC's most concentrated position by weight (AAPL at 12%) as a liquidity risk proxy.",
+      "expected_output": "Use position weight as a liquidity risk proxy, grounded in portfolio.positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-012",
+      "category": "derivative-proxy",
+      "prompt": "Explain why ES_FUT, as a futures position, may carry different liquidity/rollover risk than the equity positions.",
+      "expected_output": "Discuss futures-specific liquidity risk (margin, rollover) using authoritative position data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for the position weights used in this liquidity assessment.",
+      "expected_output": "Preserve source metadata for position data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-014",
+      "category": "provenance",
+      "prompt": "Confirm which tool supplied the position types (equity vs future) used to assess liquidity risk.",
+      "expected_output": "Cite portfolio.positions as the source.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether AAPL's weight of 12% is the largest single-position concentration in ABC.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify ES_FUT's weight of -5% before discussing its liquidity profile.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-017",
+      "category": "coverage",
+      "prompt": "Confirm all four ABC positions, including ES_FUT, were considered in the liquidity assessment.",
+      "expected_output": "Verify coverage and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-018",
+      "category": "no-classification-disclosure",
+      "prompt": "Provide a liquidity classification or score for ABC's positions if one is available from the tools.",
+      "expected_output": "Explicitly disclose that no formal liquidity classification field exists in the reference data, rather than inventing a score.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "The reference data has no dedicated liquidity classification field; explicitly disclose that limitation rather than inventing a liquidity score, tier, or classification."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-019",
+      "category": "regression",
+      "prompt": "Confirm ES_FUT is not silently dropped from the liquidity assessment for lacking a standard equity weight sign.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect excluded negative-weight positions from analysis.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Include ES_FUT in the liquidity assessment despite its negative weight."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-020",
+      "category": "regression",
+      "prompt": "Confirm JPM's Financials-sector classification is not conflated with a liquidity classification.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect treated sector as a liquidity proxy directly.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not conflate sector classification with liquidity classification."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-021",
+      "category": "derivatives",
+      "prompt": "Assess ES_FUT's liquidity risk profile specifically, separate from the equity positions.",
+      "expected_output": "Discuss the futures position's distinct liquidity considerations using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-022",
+      "category": "tool-failure",
+      "prompt": "The portfolio.positions tool is unavailable. What can you safely say about ABC's liquidity risk?",
+      "expected_output": "Explain the limitation without fabricating position weights or types.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent positions or weights."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-023",
+      "category": "ambiguous",
+      "prompt": "Assess liquidity risk for 'the fund' without a unique portfolio ID. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-024",
+      "category": "contextual-positive",
+      "prompt": "Ahead of a redemption request, what should I know about ABC's liquidity risk?",
+      "expected_output": "Use prior context and assess liquidity risk using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate liquidity-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "liquidity-analysis"
+    },
+    {
+      "id": "liquidity-an-025",
+      "category": "currency-concentration",
+      "prompt": "Note whether ABC's positions are concentrated in a single currency as a liquidity consideration.",
+      "expected_output": "Report currency concentration from portfolio.positions as a liquidity-relevant fact.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground currency claims in portfolio.positions output."
+      ],
+      "expected_skill": "liquidity-analysis"
     }
   ]
 }

@@ -7,7 +7,7 @@ skill:
 ownership:
   business: portfolio-management
   engineering: pm-ai
-  domain_reviewer: domain-owner-required
+  domain_reviewer: portfolio-management
 
 classification:
   domain: portfolio-management

@@ -132,6 +132,192 @@
         "Activate position-investigation when it is the appropriate capability."
       ],
       "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-011",
+      "category": "security-context",
+      "prompt": "What is AAPL's asset class and currency according to the security reference data?",
+      "expected_output": "Ground the answer in market.security_context output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground the answer in authoritative security reference data."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-012",
+      "category": "security-context",
+      "prompt": "Confirm ES_FUT's underlying and derivative type using authoritative security data.",
+      "expected_output": "Report ES_FUT's underlying (SPX) and derivative_type (future) from market.security_context.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground the answer in authoritative security reference data."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for AAPL's position weight in ABC.",
+      "expected_output": "Preserve source metadata for the position weight.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-014",
+      "category": "provenance",
+      "prompt": "Confirm which tool supplied AAPL's sector classification.",
+      "expected_output": "Cite portfolio.positions as the source of the sector field.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether AAPL's weight in ABC is 12% as of 2026-08-25.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether JPM's weight in ABC is 8%.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-017",
+      "category": "unrelated-security",
+      "prompt": "Investigate a security not held in ABC, such as GOOGL. Report that it is not a position in this portfolio.",
+      "expected_output": "Report that GOOGL is not an ABC holding rather than inventing a weight for it.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not substitute a different position for the one requested.",
+        "Explicitly report that the security is not held in this portfolio."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not invent a weight or sector for AAPL not returned by the tools. Explain why inventing one would be unsafe.",
+      "expected_output": "Refuse to invent position data and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a position weight or sector not present in the tool response.",
+        "Explain the risk of fabricating position data."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-019",
+      "category": "regression",
+      "prompt": "Confirm ES_FUT is correctly identified as a derivative, not classified as a normal equity position.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect misclassified the futures hedge as equity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Correctly classify ES_FUT as a derivative."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-020",
+      "category": "regression",
+      "prompt": "Confirm MSFT and AAPL are investigated as two distinct Technology-sector positions, not merged into one entry.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect conflated two similarly-classified positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Treat AAPL and MSFT as distinct positions despite sharing a sector."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-021",
+      "category": "derivatives",
+      "prompt": "Investigate ES_FUT specifically: what kind of position is it and what is its role in ABC?",
+      "expected_output": "Identify ES_FUT as an index-future hedge with a negative weight.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Identify ES_FUT as an index hedge."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-022",
+      "category": "tool-failure",
+      "prompt": "The market.security_context tool is unavailable for AAPL. What can you safely say about the position?",
+      "expected_output": "Explain the limitation without fabricating security-level facts.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent security-level facts."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-023",
+      "category": "ambiguous",
+      "prompt": "Investigate 'the tech position' without naming a specific security. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about which position is meant.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing which position."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-024",
+      "category": "contextual-positive",
+      "prompt": "A client asked about our JPM position this morning. What can you tell me?",
+      "expected_output": "Use prior context and investigate JPM using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate position-investigation when it is the appropriate capability."
+      ],
+      "expected_skill": "position-investigation"
+    },
+    {
+      "id": "position-inv-025",
+      "category": "price-context",
+      "prompt": "What was AAPL's price move from 2026-08-22 to 2026-08-25, and how does that relate to its position in ABC?",
+      "expected_output": "Ground the price move in market.price_history and connect it to the position, not invented.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "position-investigation"
     }
   ]
 }

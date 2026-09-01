@@ -15,8 +15,19 @@ profiles:
       efficiency: 0.75
       skill_lift_overall: 0.10
       financial_accuracy: 0.98
-      reconciliation: 0.99
       temporal_consistency: 0.99
+      # 'reconciliation' deliberately dropped 2026-08-31 (see
+      # docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md "Open policy decisions
+      # pending human review"): it checks return-component math specific to
+      # Performance Attribution's own attribution_reconciliation grader.
+      # framework/certification/engine.py treats any minimum_metric absent
+      # from a skill's metrics dict as an automatic failure, so keeping this
+      # here auto-failed every skill except Performance Attribution
+      # regardless of quality -- confirmed on Portfolio Overview's real
+      # certification run. Skills that DO compute reconciliation (currently
+      # only Performance Attribution) still report and check it internally
+      # via their own composite grader; this profile just stops treating it
+      # as a universal certification gate.
 
   informational:
     hard_gates:

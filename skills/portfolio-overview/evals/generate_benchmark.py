@@ -125,25 +125,18 @@ def build_result(tier3_result_dir: Path) -> dict:
         f"{len(tier4['regression_cases_passed'])}/{len(tier4['regression_cases_seen'])} "
         "passed all attempts."
     )
-    if any(f.startswith("reconciliation:") for f in decision.failures):
-        findings.append(
-            "The analytical-standard profile's 'reconciliation: 0.99' minimum "
-            "metric structurally cannot be met by this skill: reconciliation "
-            "checks return-component math specific to Performance "
-            "Attribution's attribution_reconciliation grader, and Portfolio "
-            "Overview has no return-component reconciliation to check (see "
-            "graders/finance/portfolio_overview.py's module docstring, which "
-            "already documents this omission). framework/certification/"
-            "engine.py treats any minimum_metric absent from a skill's "
-            "metrics dict as an automatic failure, so every non-attribution "
-            "skill certified against analytical-standard will show this same "
-            "failure regardless of actual quality. This is a policy-profile "
-            "design gap, not a Portfolio Overview defect -- left open for a "
-            "human reviewer to decide whether analytical-standard should "
-            "drop 'reconciliation' as a universal minimum metric, or whether "
-            "a narrower profile should exist for skills without a "
-            "reconciliation grader."
-        )
+    findings.append(
+        "Historical note: this run originally also failed a 'reconciliation: "
+        "0.99' minimum metric that Portfolio Overview structurally could "
+        "never meet (that metric checks return-component math specific to "
+        "Performance Attribution's own grader). Resolved 2026-08-31 by "
+        "dropping 'reconciliation' from analytical-standard's universal "
+        "minimum_metrics -- see policies/certification.yaml and "
+        "docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md's 'Open policy "
+        "decisions pending human review' for the reasoning. Performance "
+        "Attribution's own grader still checks reconciliation internally; "
+        "it just stopped being a blanket certification gate for every skill."
+    )
     normalized["findings"] = findings
 
     return normalized

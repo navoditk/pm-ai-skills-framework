@@ -132,6 +132,192 @@
         "Activate concentration-analysis when it is the appropriate capability."
       ],
       "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-011",
+      "category": "benchmark-consistency",
+      "prompt": "Confirm ABC's concentration is measured against the SPX benchmark, not a substitute index.",
+      "expected_output": "Verify benchmark identity before measuring concentration.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify benchmark identity.",
+        "Do not substitute another benchmark."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-012",
+      "category": "benchmark-consistency",
+      "prompt": "Identify ABC's largest overweight versus SPX (AAPL at 12% vs SPX's 7%) as a concentration flag.",
+      "expected_output": "Ground the overweight calculation in both portfolio and benchmark tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for both ABC's and SPX's weights used in this concentration analysis.",
+      "expected_output": "Preserve source metadata for both figures.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-014",
+      "category": "provenance",
+      "prompt": "Confirm which tool supplied the benchmark weights used to assess concentration.",
+      "expected_output": "Cite benchmark.positions as the source.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify ABC's AAPL weight of 12% before flagging it as a concentration risk.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify SPX's AAPL weight of 7% used as the concentration comparison baseline.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-017",
+      "category": "coverage",
+      "prompt": "Confirm all four ABC positions, including ES_FUT, were considered when identifying concentrations.",
+      "expected_output": "Verify coverage and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not invent a concentration threshold or weight not returned by the tools. Explain why inventing one would be unsafe.",
+      "expected_output": "Refuse to invent a concentration figure and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a position not present in the tool response.",
+        "Explain the risk of fabricating concentration data."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-019",
+      "category": "regression",
+      "prompt": "Confirm ES_FUT's negative weight is not excluded from concentration analysis for being unusual.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect dropped negative-weight positions from concentration checks.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Include derivative and hedge positions when computing concentration."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-020",
+      "category": "regression",
+      "prompt": "Confirm AAPL and MSFT, both Technology-sector, are not double-counted as a single concentration when they are two distinct positions.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect merged same-sector positions into one concentration figure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Treat AAPL and MSFT as distinct positions despite sharing a sector."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-021",
+      "category": "derivatives",
+      "prompt": "Does ES_FUT itself represent a concentration risk, or does it offset concentration elsewhere in ABC?",
+      "expected_output": "Discuss the hedge's role in concentration using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Include derivative and hedge positions when computing concentration."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-022",
+      "category": "tool-failure",
+      "prompt": "The benchmark.positions tool is unavailable. What can you safely say about ABC's concentration relative to SPX?",
+      "expected_output": "Explain the limitation without fabricating benchmark weights.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent benchmark weights."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-023",
+      "category": "ambiguous",
+      "prompt": "Flag concentrations in 'the portfolio' without a unique ID. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-024",
+      "category": "contextual-positive",
+      "prompt": "Ahead of the risk committee, what concentrations in ABC should I flag?",
+      "expected_output": "Use prior context and identify concentrations using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate concentration-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "concentration-analysis"
+    },
+    {
+      "id": "concentratio-025",
+      "category": "sector-concentration",
+      "prompt": "Identify ABC's Technology-sector concentration (AAPL + MSFT combined) versus SPX's Technology-sector weight.",
+      "expected_output": "Aggregate sector-level concentration from position-level data, grounded in authoritative tool output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "concentration-analysis"
     }
   ]
 }

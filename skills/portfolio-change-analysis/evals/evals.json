@@ -132,6 +132,191 @@
         "Activate portfolio-change-analysis when it is the appropriate capability."
       ],
       "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-011",
+      "category": "date-conflation",
+      "prompt": "Compare ABC's composition on 2026-08-22 to 2026-08-25 without conflating the two snapshots into one.",
+      "expected_output": "Resolve both dates explicitly and keep the two snapshots distinct.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Resolve both comparison dates explicitly.",
+        "Never mix observations from incompatible snapshots without disclosure."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-012",
+      "category": "position-level-change",
+      "prompt": "Report which ABC position weights changed between the two snapshot dates, grounded in authoritative data.",
+      "expected_output": "Report position-level changes from portfolio.positions for each date.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for each of the two snapshots used in this comparison.",
+      "expected_output": "Preserve source metadata for both snapshot dates.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-014",
+      "category": "provenance",
+      "prompt": "Confirm which tool calls supplied each of the two comparison snapshots.",
+      "expected_output": "Cite portfolio.summary/portfolio.positions per date as the source.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify ABC's return figures used in the change comparison are grounded in authoritative data for each date.",
+      "expected_output": "Confirm or correct the stated figures using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify AAPL's weight is compared correctly across both snapshot dates, not just reported once.",
+      "expected_output": "Confirm the weight for each date separately using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-017",
+      "category": "coverage",
+      "prompt": "Confirm all four positions, including ES_FUT, were considered in both snapshots of the comparison.",
+      "expected_output": "Verify coverage across both dates and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not invent a position or weight not returned by the tools for either snapshot date. Explain why inventing one would be unsafe.",
+      "expected_output": "Refuse to invent snapshot data and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a position not present in the tool response.",
+        "Explain the risk of fabricating snapshot data."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-019",
+      "category": "regression",
+      "prompt": "Confirm market-value change is not conflated with position-count change when describing what changed.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect merged two distinct kinds of change.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Separate position change from market-value change when possible."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-020",
+      "category": "regression",
+      "prompt": "Confirm the ES_FUT hedge's change (if any) between the two dates is not silently omitted from the comparison.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect dropped derivative positions from change analysis.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure when comparing snapshots."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-021",
+      "category": "derivatives",
+      "prompt": "Did the ES_FUT hedge's weight change between the two snapshot dates? Answer from authoritative data only.",
+      "expected_output": "Compare ES_FUT's weight across both dates using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-022",
+      "category": "tool-failure",
+      "prompt": "The portfolio.positions tool is unavailable for the earlier snapshot date. What can you safely say about the change?",
+      "expected_output": "Explain the limitation without fabricating the missing snapshot.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent the missing snapshot's positions."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-023",
+      "category": "ambiguous",
+      "prompt": "Compare 'recent' snapshots without specifying the two dates. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about which two dates to compare.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing the comparison dates."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-024",
+      "category": "contextual-positive",
+      "prompt": "What changed in ABC since our last review?",
+      "expected_output": "Use prior context and describe changes using authoritative data across the two dates.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate portfolio-change-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "portfolio-change-analysis"
+    },
+    {
+      "id": "portfolio-ch-025",
+      "category": "benchmark-return-change",
+      "prompt": "Confirm ABC's own return (0.42%) is not conflated with a change in SPX's return (0.63%) when describing what changed.",
+      "expected_output": "Distinguish the portfolio's own return from the benchmark's return in the change narrative.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Distinguish the portfolio's return from the benchmark's return."
+      ],
+      "expected_skill": "portfolio-change-analysis"
     }
   ]
 }

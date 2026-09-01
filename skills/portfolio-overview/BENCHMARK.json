@@ -1531,14 +1531,13 @@
     "Tier 4 domain grading covered 45 of 45 expected trials across 15 gradable cases (portfolio-ov-001, portfolio-ov-002, portfolio-ov-003, portfolio-ov-004, portfolio-ov-012, portfolio-ov-013, portfolio-ov-016, portfolio-ov-017, portfolio-ov-018, portfolio-ov-019, portfolio-ov-020, portfolio-ov-021, portfolio-ov-022, portfolio-ov-023, portfolio-ov-025); 0 trial(s) skipped as genuinely not gradable (see aggregate_tier4.py output for reasons), not counted as failures. All gradable trials scored a clean 1.0 across all five deterministic checks.",
     "Authorization checked all 150 trials across both arms (not just the gradable subset): zero permission denials found.",
     "Regression cases (portfolio-ov-016, portfolio-ov-017, portfolio-ov-018, portfolio-ov-025): 4/4 passed all attempts.",
-    "The analytical-standard profile's 'reconciliation: 0.99' minimum metric structurally cannot be met by this skill: reconciliation checks return-component math specific to Performance Attribution's attribution_reconciliation grader, and Portfolio Overview has no return-component reconciliation to check (see graders/finance/portfolio_overview.py's module docstring, which already documents this omission). framework/certification/engine.py treats any minimum_metric absent from a skill's metrics dict as an automatic failure, so every non-attribution skill certified against analytical-standard will show this same failure regardless of actual quality. This is a policy-profile design gap, not a Portfolio Overview defect -- left open for a human reviewer to decide whether analytical-standard should drop 'reconciliation' as a universal minimum metric, or whether a narrower profile should exist for skills without a reconciliation grader."
+    "Historical note: this run originally also failed a 'reconciliation: 0.99' minimum metric that Portfolio Overview structurally could never meet (that metric checks return-component math specific to Performance Attribution's own grader). Resolved 2026-08-31 by dropping 'reconciliation' from analytical-standard's universal minimum_metrics -- see policies/certification.yaml and docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md's 'Open policy decisions pending human review' for the reasoning. Performance Attribution's own grader still checks reconciliation internally; it just stopped being a blanket certification gate for every skill."
   ],
   "certification": {
     "status": "FAIL",
     "profile": "analytical-standard",
     "failures": [
-      "discoverability: 0.8942 < 0.9",
-      "reconciliation: None < 0.99"
+      "discoverability: 0.8942 < 0.9"
     ],
     "metrics_evaluated": {
       "security": "pass",

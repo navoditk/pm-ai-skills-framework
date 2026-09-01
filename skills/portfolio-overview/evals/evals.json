@@ -294,6 +294,33 @@
         "Include supporting dates and limitations."
       ],
       "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-026",
+      "category": "discoverability-unforced",
+      "prompt": "Summarize ABC as of 2026-08-25.",
+      "expected_output": "Discover and activate the skill on its own, with no instruction forcing a SKILL.md read -- genuine discoverability, not a rigged tool-use trigger.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Activate portfolio-overview when it is the appropriate capability, without being told to read SKILL.md first.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Include the largest positions and the index-future hedge as material drivers."
+      ],
+      "expected_skill": "portfolio-overview"
+    },
+    {
+      "id": "portfolio-ov-027",
+      "category": "discoverability-unforced",
+      "prompt": "Write a concise PM note summarizing ABC's composition, benchmark context, and any limitations.",
+      "expected_output": "Discover and activate the skill on its own, with no instruction forcing a SKILL.md read -- genuine discoverability, not a rigged tool-use trigger.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Activate portfolio-overview when it is the appropriate capability, without being told to read SKILL.md first.",
+        "Include key conclusion and material drivers.",
+        "Include supporting dates and limitations."
+      ],
+      "expected_skill": "portfolio-overview"
     }
   ]
 }

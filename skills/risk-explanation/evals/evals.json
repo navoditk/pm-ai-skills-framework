@@ -293,6 +293,33 @@
         "Explain the risk of fabricating a risk statistic."
       ],
       "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-026",
+      "category": "discoverability-unforced",
+      "prompt": "Explain ABC's risk as of 2026-08-25.",
+      "expected_output": "Discover and activate the skill on its own, with no instruction forcing a SKILL.md read -- genuine discoverability, not a rigged tool-use trigger.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Activate risk-explanation when it is the appropriate capability, without being told to read SKILL.md first.",
+        "Preserve relevant as-of dates.",
+        "Use approved logical tools when analysis is required.",
+        "Identify the largest factor exposure as a material driver."
+      ],
+      "expected_skill": "risk-explanation"
+    },
+    {
+      "id": "risk-explana-027",
+      "category": "discoverability-unforced",
+      "prompt": "Explain net equity risk without ignoring the index-futures hedge.",
+      "expected_output": "Discover and activate the skill on its own, with no instruction forcing a SKILL.md read -- genuine discoverability, not a rigged tool-use trigger.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Activate risk-explanation when it is the appropriate capability, without being told to read SKILL.md first.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Distinguish gross exposure from net exposure."
+      ],
+      "expected_skill": "risk-explanation"
     }
   ]
 }

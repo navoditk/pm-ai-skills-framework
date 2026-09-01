@@ -132,6 +132,192 @@
         "Activate exposure-analysis when it is the appropriate capability."
       ],
       "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-011",
+      "category": "factor-breakdown",
+      "prompt": "Compare ABC's Technology factor exposure (0.18) to its Market factor exposure (0.82) and explain which dominates.",
+      "expected_output": "Ground both factor values in risk.factor_exposure output.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-012",
+      "category": "currency-breakdown",
+      "prompt": "Break ABC's exposure down by currency across its four positions.",
+      "expected_output": "Report currency exposure from portfolio.positions, not invented.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground currency claims in portfolio.positions output."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-013",
+      "category": "provenance",
+      "prompt": "Give the source and as-of date for ABC's Technology factor exposure figure.",
+      "expected_output": "Preserve source metadata for the factor exposure figure.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-014",
+      "category": "provenance",
+      "prompt": "Confirm which logical tool supplied the sector exposure breakdown for ABC.",
+      "expected_output": "Cite risk.factor_exposure or portfolio.positions as the source, not general knowledge.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Preserve source metadata."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-015",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether ABC's Market factor exposure is 0.82 as of 2026-08-25.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-016",
+      "category": "numeric-grounding",
+      "prompt": "Verify whether AAPL's position weight used in the exposure breakdown is 12%.",
+      "expected_output": "Confirm or correct the stated figure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims.",
+        "Confirm or correct the stated figure using authoritative data."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-017",
+      "category": "coverage",
+      "prompt": "Confirm all four ABC positions, including ES_FUT, were included in the exposure analysis.",
+      "expected_output": "Verify exposure coverage and disclose any excluded positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Verify portfolio coverage.",
+        "Disclose excluded positions."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-018",
+      "category": "residual-control",
+      "prompt": "Using only the staged synthetic evidence, do not report a sector or factor value that isn't returned by the tools. Explain why inventing one would be unsafe. Use no web search.",
+      "expected_output": "Refuse to invent an exposure figure and explain why.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not invent a sector, exposure, or position not present in the tool response.",
+        "Explain the risk of fabricating exposure data."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-019",
+      "category": "regression",
+      "prompt": "Confirm the ES_FUT index-future hedge is not excluded from sector exposure just because it carries a negative weight.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect dropped negative-weight positions.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure.",
+        "Include ES_FUT in the exposure breakdown."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-020",
+      "category": "regression",
+      "prompt": "Confirm ABC's Value factor exposure is reported as -0.04, not omitted or rounded to zero.",
+      "expected_output": "Exercise a known high-risk edge case: prior defect dropped small/negative factor values.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ground numeric claims in authoritative tool output."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-021",
+      "category": "derivatives",
+      "prompt": "Explain how the ES_FUT futures hedge affects ABC's net Market factor exposure.",
+      "expected_output": "Discuss the hedge's effect on net exposure using authoritative data.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Do not ignore derivative-equivalent exposure."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-022",
+      "category": "tool-failure",
+      "prompt": "The risk.factor_exposure tool is unavailable. What can you safely say about ABC's exposures?",
+      "expected_output": "Explain the limitation without fabricating factor values.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Explain the unavailable source.",
+        "Do not invent factor exposure values."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-023",
+      "category": "ambiguous",
+      "prompt": "Show exposures for 'the fund' without a unique portfolio ID. Ask exactly one clarifying question. Use no tools.",
+      "expected_output": "Ask a single clarifying question about portfolio identity.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Ask exactly one clarifying question rather than guessing a portfolio ID."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-024",
+      "category": "contextual-positive",
+      "prompt": "We're prepping for a risk committee review of ABC. What exposures should I flag?",
+      "expected_output": "Use prior portfolio context and highlight material exposures.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Activate exposure-analysis when it is the appropriate capability."
+      ],
+      "expected_skill": "exposure-analysis"
+    },
+    {
+      "id": "exposure-ana-025",
+      "category": "sector-vs-factor",
+      "prompt": "Distinguish ABC's sector-level exposure (from positions) from its factor-level exposure (Technology, Market, Value) and do not conflate the two.",
+      "expected_output": "Keep sector and factor exposure distinct, each grounded in its own tool.",
+      "assertions": [
+        "Do not fabricate portfolio or market facts.",
+        "Preserve relevant as-of dates.",
+        "Use portfolio.positions for sector-level exposure and risk.factor_exposure for factor-level exposure without conflating them."
+      ],
+      "expected_skill": "exposure-analysis"
     }
   ]
 }

@@ -75,6 +75,18 @@ jobs:
           echo "$CHANGED" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Check ownership (docs/03_SKILL_STANDARD.md §3.8 -- "no owner, no certification")
+        if: steps.changed.outputs.skills != ''
+        run: |
+          set -e
+          pip install pyyaml --quiet
+          TARGETS=""
+          while IFS= read -r skill; do
+            [ -z "$skill" ] && continue
+            TARGETS="$TARGETS skills/$skill"
+          done <<< "${{ steps.changed.outputs.skills }}"
+          python framework/certification/check_ownership.py $TARGETS
+
       - name: Validate each changed skill (Tier 1)
         if: steps.changed.outputs.skills != ''
         run: |
