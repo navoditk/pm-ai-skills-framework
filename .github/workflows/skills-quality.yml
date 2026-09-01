@@ -103,15 +103,62 @@ jobs:
             exit 1
           fi
 
+  # Milestone 9 extension (2026-08-31, zero *ongoing* cost beyond embedding
+  # calls priced in fractions of a cent): real Tier 2 governance gate, built
+  # on the real central catalog (catalogs/skill-catalog.json, all 12
+  # skills, real OpenAI embeddings, zero duplicates found). Only fails the
+  # build on EXACT_DUPLICATE, per policies/similarity.yaml's governance
+  # actions -- HIGH_SIMILARITY routes to architecture_review (advisory),
+  # not a block. See framework/certification/check_similarity.py for why
+  # this can't just use the CLI's own exit code.
   similarity:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install SkillEvaluator (pinned) and dependencies
+        run: |
+          python -m pip install --upgrade pip uv
+          uv pip install --system \
+            'skillevaluator[all] @ git+https://github.com/NVIDIA/SkillEvaluator.git@009aa300be7925c7ba75760592baeb941cc29ba8'
+          uv pip install --system pyyaml
+
+      - name: Find changed skills
+        id: changed
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- 'skills/*' \
+            | awk -F/ '{print $2}' | sort -u)
+          echo "skills<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Candidate vs approved catalog
+        if: steps.changed.outputs.skills != ''
+        env:
+          SKILL_EVAL_EMBEDDING_PROVIDER: openai
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "Run candidate skills against catalogs/skill-catalog.json"
-          echo "High similarity should follow policies/similarity.yaml"
+          set -e
+          TARGETS=""
+          while IFS= read -r skill; do
+            [ -z "$skill" ] && continue
+            TARGETS="$TARGETS skills/$skill"
+          done <<< "${{ steps.changed.outputs.skills }}"
+          if [ -z "$TARGETS" ]; then exit 0; fi
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY secret not set -- skipping Tier 2 (see docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md)."
+            exit 0
+          fi
+          python framework/certification/check_similarity.py $TARGETS
 
   tier3-fast:
     # Start advisory; make blocking after the eval environment is stable.

@@ -613,16 +613,25 @@ merge-blocking mechanism (given branch protection requires this check).
 No API keys or live-agent spend required: Tier 1 is LLM-free by default.
 Locally verified: workflow YAML parses cleanly, and the changed-skill diff
 logic correctly extracted all 9 skills touched by this session's real
-uncommitted changes when tested against `git diff`. The other four jobs in
-the same file (`similarity`, `tier3-fast`, `domain-graders`) remain
-documented placeholders, deliberately not built -- see the scope decision
-above.
+uncommitted changes when tested against `git diff`. Two of the other four
+jobs (`tier3-fast`, `domain-graders`) remain documented placeholders,
+deliberately not built -- see the scope decision above.
 
-**Extended 2026-08-31**: the `tier1` job now also runs a real ownership
-gate (`framework/certification/check_ownership.py`) before the Tier 1
-`skillevaluator validate` call, closing the documented-but-unenforced
-Milestone 9 / PR 2 gap from `docs/03_SKILL_STANDARD.md` §3.8. Zero API
-cost -- deterministic YAML parsing only.
+**Extended 2026-08-31 (twice, both zero-cost or near-zero-cost)**:
+- The `tier1` job now also runs a real ownership gate
+  (`framework/certification/check_ownership.py`) before the Tier 1
+  `skillevaluator validate` call, closing the documented-but-unenforced
+  Milestone 9 / PR 2 gap from `docs/03_SKILL_STANDARD.md` §3.8. Zero API
+  cost -- deterministic YAML parsing only.
+- The `similarity` job is now real too: built the central
+  `catalogs/skill-catalog.json` (real OpenAI embeddings, all 13 skill
+  entries, a fraction of a cent) and wired
+  `framework/certification/check_similarity.py` into CI, which applies
+  this project's own `policies/similarity.yaml` governance actions
+  (`EXACT_DUPLICATE` blocks, `HIGH_SIMILARITY` is advisory) rather than the
+  raw CLI exit code. Gracefully skips if `OPENAI_API_KEY` isn't yet
+  configured as a repo secret, rather than hard-failing every PR. See "PR
+  1" below for the full detail.
 
 Tasks:
 - [x] Tier 1 required PR gate (single GitHub Actions workflow).
@@ -841,15 +850,28 @@ alone — they deliver real duplication/ownership control immediately, and
 don't require the NVIDIA execution-heuristic gap to be resolved first.
 
 ## PR 1 — Central catalog and blocking Tier 2 gate
-- create one org-wide `catalogs/skill-catalog.json` (the current
-  `catalogs/performance-attribution-catalog.json` is skill-scoped, not
-  central);
-- wire the `similarity` job in `.github/workflows/skills-quality.yml` to run
-  for real instead of the current `echo` placeholder;
-- make `EXACT_DUPLICATE` and `HIGH_SIMILARITY` (`policies/similarity.yaml`)
-  actually block merge;
-- assign an owner and SLA for the `architecture_review` action on
-  `HIGH_SIMILARITY` findings.
+- ~~create one org-wide `catalogs/skill-catalog.json`~~ **Done 2026-08-31**:
+  built with real OpenAI embeddings against all 13 skill entries (12
+  reference skills + the M1 smoke fixture) — cost a fraction of a cent.
+  Real finding: **zero duplicates detected** at the 0.75 threshold across
+  the whole catalog.
+- ~~wire the `similarity` job ... to run for real~~ **Done 2026-08-31**:
+  `.github/workflows/skills-quality.yml`'s `similarity` job now runs
+  `framework/certification/check_similarity.py` against changed skills for
+  real, gracefully skipping (not failing) if `OPENAI_API_KEY` isn't set as
+  a repo secret yet.
+- ~~make `EXACT_DUPLICATE` and `HIGH_SIMILARITY` actually block merge~~
+  **Done differently, deliberately**: `check_similarity.py` blocks on
+  `EXACT_DUPLICATE` only, matching `policies/similarity.yaml`'s own
+  governance table exactly (`HIGH_SIMILARITY` routes to
+  `architecture_review`, advisory, not blocking) — the CLI's own
+  `overall_passed` goes false on `HIGH_SIMILARITY` too (confirmed
+  empirically in Milestone 6), which would have over-blocked relative to
+  this project's own written policy; the wrapper script exists specifically
+  to apply the policy's actual severities instead of the raw exit code.
+- **Still open:** assign an owner and SLA for the `architecture_review`
+  action on `HIGH_SIMILARITY` findings — a process/people decision, not a
+  code change.
 
 ## PR 2 — Ownership gate and risk-tiered certification profiles
 - ~~add a Tier 1 / schema check that fails CI on the literal placeholder
