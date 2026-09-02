@@ -766,7 +766,19 @@ practice established in Milestone 4.
    Attribution's `--007`/`--020`) will likely still drag the average, since
    their *correct* behavior is to use no tool at all. A full resolution may
    still come down to accepting a documented measurement limitation for
-   that category specifically.
+   that category specifically. **A 2026-09-01 attempt to run only the 2 new
+   cases (rather than the full set) via `skill.yaml`'s `dataset:` field
+   silently failed to trim anything — the pinned evaluator doesn't read
+   that field at all, so the full 27-case set ran instead, incurring real
+   uncontrolled cost before being caught and killed mid-run (~$3-5, well
+   under the authorized ceiling but not the intended ~$2-6/18-trial
+   budget). Root-caused and documented 2026-09-01 as
+   `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6's newest entry**: the
+   only safe way to run a trimmed subset against this pinned version is a
+   scratch copy of the skill directory with its own edited
+   `evals/evals.json`, never a `skill.yaml` field or an alternately-named
+   file in the real skill directory. Any future rerun attempt must use that
+   approach.
 3. ~~**Milestone 6's weak/no-value skill defect** is caught only via a Tier 1
    quality-score proxy (87.2→79.5).~~ **Resolved 2026-08-31**: a human
    reviewer accepted the Tier 1 proxy as sufficient evidence rather than
@@ -937,7 +949,14 @@ don't require the NVIDIA execution-heuristic gap to be resolved first.
   matching the committed `BENCHMARK.json` files), the other 11 correctly
   report `NOT_CERTIFIED` with no benchmark date. See
   `tests/test_registry_index.py`.
-- **Still open:** wiring regeneration into CI on every merge (this PR built
-  the generator and ran it once by hand) — that needs the workflow to have
-  write access back to the branch, which is a bigger step than the other
-  zero-cost items here and was deliberately left for a dedicated PR.
+- ~~wiring regeneration into CI on every merge~~ **Done 2026-09-01**:
+  `.github/workflows/registry-index.yml`, a dedicated workflow (separate
+  from `skills-quality.yml`, which is PR-triggered — this needs to run on
+  `push` to `main` instead, since the index reflects main's state and
+  regenerating it on a PR branch would commit into the wrong history).
+  Grants `contents: write`, regenerates
+  `catalogs/skill-registry.json` only when a skill's `skill.yaml`,
+  `BENCHMARK.json`, or the catalog itself changed, and commits back only if
+  the output actually differs — a `[skip registry]` marker in its own
+  commit message prevents it from re-triggering itself. Zero API cost:
+  `generate_index.py` reads only already-committed files.
