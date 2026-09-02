@@ -5,6 +5,21 @@ governance:
     action: block
   HIGH_SIMILARITY:
     action: architecture_review
+    # Assigned 2026-09-01 (docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md, PR 1
+    # "Still open" item). HIGH_SIMILARITY is advisory in CI
+    # (framework/certification/check_similarity.py does not block merge on
+    # it, only on EXACT_DUPLICATE) -- but "advisory" without an owner and a
+    # deadline is where findings quietly go unreviewed. The candidate
+    # skill's own domain_reviewer (ownership.domain_reviewer in its
+    # skill.yaml, enforced by framework/certification/check_ownership.py --
+    # every skill has one, or it can't merge) is the reviewer of first
+    # resort: they already own that skill's quality and can decide fastest
+    # whether the overlap is a real duplication risk or coincidental. A real
+    # org would route this to a shared architecture-review queue instead of
+    # a single individual; this repo has no such queue, so the fallback is
+    # the one role guaranteed to exist for every skill.
+    owner: candidate skill's ownership.domain_reviewer (skill.yaml)
+    sla_business_days: 5
   SIMILAR:
     action: advisory_with_justification
   LOOSELY_RELATED:

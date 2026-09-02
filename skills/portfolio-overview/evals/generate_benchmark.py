@@ -25,6 +25,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from framework.adapters.nvidia_skillevaluator import parse_nvidia_report_file  # noqa: E402
 from framework.certification.engine import decide  # noqa: E402
+from framework.certification.profile_resolver import resolve_profile  # noqa: E402
 from framework.reporting.normalized_report import write_json, write_markdown  # noqa: E402
 
 import yaml  # noqa: E402
@@ -76,13 +77,15 @@ def build_result(tier3_result_dir: Path) -> dict:
         # rather than faked with a copy of another metric.
         "temporal_consistency": tier4["metric_averages"]["temporal_consistency"],
     }
+    skill_yaml = yaml.safe_load(open(REPO_ROOT / "skills" / "portfolio-overview" / "skill.yaml"))
+    risk_level = skill_yaml["classification"]["risk_level"]
     policy = yaml.safe_load(open(REPO_ROOT / "policies" / "certification.yaml"))
-    profile = policy["profiles"]["analytical-standard"]
+    profile_name, profile = resolve_profile(policy, risk_level)
     decision = decide(certification_metrics, profile)
 
     normalized["certification"] = {
         "status": decision.status,
-        "profile": "analytical-standard",
+        "profile": profile_name,
         "failures": decision.failures,
         "metrics_evaluated": certification_metrics,
     }

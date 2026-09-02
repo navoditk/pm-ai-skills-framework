@@ -59,6 +59,28 @@ Numeric Grounding
 
 ## 4.2a Risk-tiered certification rigor
 
+**Implemented 2026-09-01**: `policies/certification.yaml` carries one profile
+per risk level (`informational-standard`, `low-standard`,
+`analytical-standard`, `decision-support-standard`, `action-standard`) plus
+a `risk_level_profiles` mapping, resolved by
+`framework/certification/profile_resolver.py` from a skill's own
+`classification.risk_level` rather than every caller hardcoding
+`analytical-standard`. Both flagship skills'
+`evals/generate_benchmark.py` scripts now go through the resolver;
+regenerating their `BENCHMARK.json` against already-collected trial data
+(no new API cost) produced byte-identical certification verdicts, since both
+are `risk_level: analytical` -- the resolver is a pure refactor for them,
+not a behavior change. `decision-support-standard` and `action-standard`
+promote the Tier 4 finance-grader metrics from a weighted `minimum_metric`
+into a `hard_gate`, matching the "required, hard gate" cells in the table
+below; `action-standard` additionally hard-gates on a
+`human_review_required` metric that no automated collector in this repo
+produces, so an `action`-risk skill cannot self-certify from Tier 1-4
+evidence alone by design -- a human must record that outcome first. No
+skill in this repo currently carries `risk_level: decision-support` or
+`action`; all 12 real reference skills are `analytical`. See
+`tests/test_certification_profiles.py` for the resolver's test coverage.
+
 Not every skill should cost the same to certify. Certification rigor scales
 with the `classification.risk_level` value already required in
 `skill.yaml` / `framework/schemas/skill.schema.json`

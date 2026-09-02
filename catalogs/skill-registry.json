@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "generated_from": {
+    "catalog": "catalogs/skill-catalog.json",
+    "catalog_created_at": "2026-09-01T13:30:26.630338+00:00"
+  },
+  "skills": [
+    {
+      "id": "pm.benchmark.comparison",
+      "name": "Benchmark Comparison",
+      "version": "0.1.0",
+      "path": "benchmark-comparison",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "a3db94ed200aef5dca42f39456d05ad2b94f1336eaa47f98eb27745795330496"
+    },
+    {
+      "id": "pm.concentration.analysis",
+      "name": "Concentration Analysis",
+      "version": "0.1.0",
+      "path": "concentration-analysis",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "cfe19aecab2b38f4e1178289977f5b05ebc90d83426a391de033fbe686df65a0"
+    },
+    {
+      "id": "pm.exposure.analysis",
+      "name": "Exposure Analysis",
+      "version": "0.1.0",
+      "path": "exposure-analysis",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "d76e198d2d03d94b9a1108fdc9d9f1e1e79bccd141aecb8495146d72e8d8c811"
+    },
+    {
+      "id": "pm.liquidity.analysis",
+      "name": "Liquidity Analysis",
+      "version": "0.1.0",
+      "path": "liquidity-analysis",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "bf56aaefeb3cd3c77b98cbf553f50aa9cf1c22677221c37d7a231a0451e889c4"
+    },
+    {
+      "id": "pm.m1.tier3-smoke",
+      "name": "Milestone 1 Tier 3 Smoke Test",
+      "version": "0.1.0",
+      "path": "m1-tier3-smoke",
+      "domain": "framework",
+      "risk_level": "low",
+      "owner": {
+        "business": "pm-ai",
+        "engineering": "pm-ai",
+        "domain_reviewer": "pm-ai"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "ba57d0ffadce3713cdc848849fe3a2a1fc95cf10085b60383f1ffd63f60d81cc"
+    },
+    {
+      "id": "pm.market.move.explanation",
+      "name": "Market Move Explanation",
+      "version": "0.1.0",
+      "path": "market-move-explanation",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "033eb9fb506c07378fefc3557f5b64c1a867f990d7ceb92c40d3768d43ba45ae"
+    },
+    {
+      "id": "pm.performance.attribution",
+      "name": "Performance Attribution",
+      "version": "0.1.0",
+      "path": "performance-attribution",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "FAIL",
+      "certification_profile": "analytical-standard",
+      "last_benchmark_date": "2026-08-30T06:12:21-07:00",
+      "content_fingerprint": "0288a17d5e3921fa2992466406137ca7d8abdc14615c76b2661240f560277ff6"
+    },
+    {
+      "id": "pm.pm.commentary.generation",
+      "name": "PM Commentary Generation",
+      "version": "0.1.0",
+      "path": "pm-commentary-generation",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "0099376d2adb3f171ad5f6600c9a6021d3afe4b87807e2b5758c06e4d799e29d"
+    },
+    {
+      "id": "pm.portfolio.change.analysis",
+      "name": "Portfolio Change Analysis",
+      "version": "0.1.0",
+      "path": "portfolio-change-analysis",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "d2b92cb37f2d054f9f9df17eccd935d527c4d3db40ff6cdf7b552b8f4e09f787"
+    },
+    {
+      "id": "pm.portfolio.overview",
+      "name": "Portfolio Overview",
+      "version": "0.1.0",
+      "path": "portfolio-overview",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "FAIL",
+      "certification_profile": "analytical-standard",
+      "last_benchmark_date": "2026-09-01T06:12:47-07:00",
+      "content_fingerprint": "83852e02530ec8e6c60eef8f655bb3cc11f089cbed5251f38134bbeb7b626211"
+    },
+    {
+      "id": "pm.position.investigation",
+      "name": "Position Investigation",
+      "version": "0.1.0",
+      "path": "position-investigation",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "8f0c4f1c98279efb725205415dcff2e4467d2e14f5b0dd631027f35dca8ae9cd"
+    },
+    {
+      "id": "pm.risk.explanation",
+      "name": "Risk Explanation",
+      "version": "0.1.0",
+      "path": "risk-explanation",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "d453c74cd0537fb3f14c9ce72d4b53ace45ba48038573ff5bf119d9e0f7a0245"
+    },
+    {
+      "id": "pm.scenario.analysis",
+      "name": "Scenario Analysis",
+      "version": "0.1.0",
+      "path": "scenario-analysis",
+      "domain": "portfolio-management",
+      "risk_level": "analytical",
+      "owner": {
+        "business": "portfolio-management",
+        "engineering": "pm-ai",
+        "domain_reviewer": "portfolio-management"
+      },
+      "certification_state": "NOT_CERTIFIED",
+      "certification_profile": null,
+      "last_benchmark_date": null,
+      "content_fingerprint": "1a92e504306676c0e3a745ac9ed6362a00a538a241402c608ab580edb7df252b"
+    }
+  ]
+}
