@@ -810,9 +810,11 @@ Milestone 4 certification          FAIL — one reason only (discoverability 0.8
                                    metric-scoping limitation, not a skill defect); decision left to a
                                    human reviewer, see docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md
 Milestone 5 (3-skill slice)        IN PROGRESS — Performance Attribution certified; Portfolio Overview
-                                   full Sonnet certification running; Risk Explanation quick-passed,
-                                   certification deferred to a later budget cycle
-Milestone 6 (deliberate defects)   IN PROGRESS — Tier 1/2 static checks only, no live-agent spend
+                                   full Sonnet certification complete (real result: FAIL, one reason,
+                                   see BENCHMARK.md); Risk Explanation quick-passed, certification
+                                   deferred to a later budget cycle
+Milestone 6 (deliberate defects)   DONE — closed 2026-08-31, Tier 1/2 static checks only, no
+                                   live-agent spend; see docs/MILESTONE_6_DELIBERATE_DEFECTS.md
 Cross-repo demonstration          DESCOPED (Milestone 11 — documented as a future extension, not built)
 ```
 

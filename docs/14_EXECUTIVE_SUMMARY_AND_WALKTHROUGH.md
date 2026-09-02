@@ -113,20 +113,24 @@ in the order they apply to a new skill:
 
 1. **Ownership gate, before any evaluation runs.** A skill manifest without a
    real business owner and domain reviewer should not enter the pipeline —
-   "no owner, no certification" (`docs/03_SKILL_STANDARD.md` §3.8). Currently
-   documented but not yet enforced by an automated check (see
-   [Honest gaps](#honest-gaps-and-open-risks) below).
+   "no owner, no certification" (`docs/03_SKILL_STANDARD.md` §3.8). Enforced
+   as a real, unit-tested CI check (`framework/certification/check_ownership.py`)
+   since 2026-08-31, not just documented convention.
 2. **Central duplicate-detection catalog, before merge.** Every new skill is
    checked against an approved-skill catalog so two teams don't independently
    build the same capability under different names — the single highest-
    leverage control against the original duplication problem, and cheaper
-   than catching it after both skills reach production.
+   than catching it after both skills reach production. Real since
+   2026-08-31 (`catalogs/skill-catalog.json`, real OpenAI embeddings, wired
+   into CI's `similarity` job).
 3. **Risk-tiered certification cost, before production.** Not every skill
    needs the same evaluation budget. A skill's declared `risk_level`
-   (`informational` through `action` in `skill.schema.json`) should
-   proportionally scale how many live-agent attempts, how much case coverage,
-   and whether finance-domain grading is a hard gate versus advisory
-   (`docs/04_EVALUATION_AND_CERTIFICATION.md` §4.2a).
+   (`informational` through `action` in `skill.schema.json`) proportionally
+   scales how many live-agent attempts, how much case coverage, and whether
+   finance-domain grading is a hard gate versus advisory
+   (`docs/04_EVALUATION_AND_CERTIFICATION.md` §4.2a). Real since 2026-09-01
+   (`policies/certification.yaml`'s five risk-tiered profiles, resolved by
+   `framework/certification/profile_resolver.py`).
 
 ## Architecture, in one picture
 
@@ -175,57 +179,24 @@ mirrors financial-controls thinking, not typical software QA.
 
 ## Milestone-by-milestone status
 
-Authoritative live source: `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`.
-Summarized here for a cold read:
+This section used to restate every milestone's status here, which meant it
+went stale the moment `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` changed
+without a matching edit landing here too — exactly the kind of drift this
+project's own documentation practice is supposed to avoid. Rather than
+maintain the same information in two places, this doc now defers entirely:
 
-- **Milestone 0 (Blueprint) — DONE.** All design docs, 12 reference skill
-  scaffolds, 120 starter eval cases, 6 starter finance graders.
-- **Milestone 1 (Dev environment + NVIDIA smoke test) — DONE.** Pinned
-  SkillEvaluator `0.2.1`, verified Tier 1 against a real skill (11/11 checks),
-  completed one controlled Tier 3 sandbox run.
-- **Milestone 2 (Normalized contracts) — DONE.** The adapter/schema boundary
-  described above, with test coverage proving nothing downstream depends on
-  NVIDIA's raw format.
-- **Milestone 3 (Synthetic data pipeline) — DONE.** Deterministic local
-  fixtures (portfolio, benchmark, attribution, risk, scenario, market data)
-  so reference evaluations never touch production systems.
-- **Milestone 4 (Performance Attribution vertical slice) — IN PROGRESS,**
-  see the detailed walkthrough immediately below. Real certification FAIL
-  for one well-evidenced reason (discoverability), left open for human
-  review rather than resolved unilaterally.
-- **Milestone 5 (three-skill vertical slice) — IN PROGRESS.** Performance
-  Attribution certified (see above); Portfolio Overview fully certified
-  2026-08-30 with the same real-evidence rigor (see the second walkthrough
-  below); Risk Explanation refined to the same standard and quick-pass
-  validated, full certification deferred to a later budget cycle.
-- **Milestone 6 (deliberate defects) — IN PROGRESS.** 5 of 6 defects caught
-  and confirmed with real evidence (Tier 1 quality scoring, Tier 2 embedding
-  similarity, and existing grader regression tests); one (weak/no-value
-  skill's Skill Lift) caught only via a Tier 1 proxy, live confirmation
-  left open. See `docs/MILESTONE_6_DELIBERATE_DEFECTS.md`.
-- **Milestone 7 (12-skill library) — right-sized and DONE at that scope.**
-  All 12 skills exist; 3 carry full certification-grade depth (Milestone 5),
-  the other 9 are structurally complete (real composite graders, correct
-  tool declarations, Tier 1 passing 11/11) rather than fully certified —
-  a deliberate 2026-08-30 scope decision favoring breadth-with-honesty over
-  a ninth expensive live-agent matrix that would teach nothing new.
-- **Milestone 8 (finance grader library) — DONE.** The required six graders
-  are built and proven reusable across all three vertical-slice skills plus
-  all nine structurally-complete skills (`tests/test_graders.py`, 32/32
-  passing). Extension graders dropped as out of scope.
-- **Milestone 9 (CI/CD) — right-sized and DONE at that scope.** One real
-  GitHub Actions job (`tier1` in `.github/workflows/skills-quality.yml`)
-  that installs the pinned evaluator and blocks a PR when a changed skill
-  fails Tier 1 — demonstrating the mechanism, not the full 11-task
-  production pipeline originally scoped.
-- **Milestones 10-12 — DESCOPED**, 2026-08-30, as production-hardening and
-  multi-repo scale-out work beyond this project's actual goal (building
-  familiarity with the NVIDIA SkillEvaluator framework, not shipping a
-  production skill registry). Documented as identified future extensions.
+**Authoritative live source: `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`**
+— its "Current project status" table and per-milestone sections are updated
+in every material PR. `docs/10`'s "Scope decision (2026-08-30)" section also
+explains why Milestones 10-12 are descoped and Milestones 7/9 are
+right-sized, and its "Open policy decisions pending human review" section
+tracks what's still genuinely undecided (as of 2026-09-01, one: whether the
+discoverability metric-scoping gap needs a metric fix or a documented
+exception).
 
-See `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Scope decision
-(2026-08-30)" and "Open policy decisions pending human review" sections for
-the full reasoning and the three items still awaiting a human call.
+The detailed walkthroughs immediately below (Milestone 4 and Milestone 5)
+remain here because they're evidence and narrative, not a status summary —
+they don't go stale the same way a restated status line does.
 
 ## Milestone 4: the proving ground, with four real bugs found
 
@@ -415,18 +386,14 @@ pending human review" section.
   regression test added. This is exactly the kind of gap the framework
   exists to catch, and it is a reminder that "the grader ran and returned a
   score" is not the same as "the evidence it graded was scoped correctly."
-- **The governance mechanisms are still mostly specified, not built.** As of
-  this writing: the central duplicate-detection catalog referenced in
-  `pmai-skills.yaml` doesn't exist yet (only a skill-specific catalog does);
-  the ownership-placeholder check described in `docs/03_SKILL_STANDARD.md`
-  §3.8 is not automated — all 12 reference skills currently carry the literal
-  placeholder `domain-owner-required`; the CI workflow
-  (`.github/workflows/skills-quality.yml`) is mostly `echo` placeholders, not
-  functioning gates; and the `pmai-skills` CLI described throughout the
-  README and adoption docs does not exist as code. None of this is hidden —
-  it is tracked plainly in the roadmap — but a reader relying only on the
-  README/adoption guide would form an overly advanced mental model of what's
-  actually built.
+- **The `pmai-skills` CLI described throughout the README and adoption docs
+  does not exist as code** — only `pmai-skills.yaml`, a config file, does.
+  This is the one real gap between the adoption docs' framing and what's
+  actually built; a reader relying only on the README/adoption guide would
+  form an overly advanced mental model on that specific point. (Earlier
+  drafts of this section also listed the central catalog, the ownership
+  gate, and the CI workflow as unbuilt — all three are real and wired in as
+  of 2026-08-31/09-01; see `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`.)
 - **Live-run evidence is expensive and slow.** A single 150-trial
   certification matrix took roughly an hour end to end in this session, and
   three separate runs were needed before a clean, unconfounded result was
@@ -455,8 +422,11 @@ found by actually running the pipeline twice. A benchmark becomes stale and
 must be rerun the moment skill version, dataset, agent, model, or evaluator
 version changes — including an NVIDIA version bump, per
 `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`. No skill in this catalog has
-yet cleared certification outright; three real, specific, open decisions
-stand between "evidence collected" and "certified," tracked in
+yet cleared certification outright. Of the three open policy decisions this
+originally raised, two are now resolved (the reconciliation metric-scoping
+gap, and Milestone 6's weak-skill defect accepted on Tier 1 proxy evidence);
+one real decision remains open — whether the discoverability metric-scoping
+gap needs a metric fix or a documented, accepted exception — tracked in
 `docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`'s "Open policy decisions
 pending human review" section.
 
