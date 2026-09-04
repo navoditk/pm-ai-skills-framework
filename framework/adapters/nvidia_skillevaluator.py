@@ -132,12 +132,13 @@ class NvidiaSkillEvaluatorProvider(EvaluationProvider):
         return ProviderResult(raw=raw, normalized=normalized)
 
     def evaluate(self, skill_path: str, profile: str) -> ProviderResult:
-        attempts = "3" if profile == "certification" else "1"
+        attempts = "3" if profile in {"certification", "release"} else "1"
         raw = self._run([
             "tier3", "evaluate", skill_path,
             "--agents", "codex",
             "--env-mode", "docker",
-            "--n-attempts", attempts
+            "--n-attempts", attempts,
+            "--copy-repo",
         ])
         normalized = {
             "framework_version": FRAMEWORK_VERSION,

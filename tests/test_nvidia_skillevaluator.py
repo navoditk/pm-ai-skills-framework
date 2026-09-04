@@ -50,6 +50,7 @@ def test_tier3_uses_codex_docker_command_and_certification_attempts():
         "docker",
         "--n-attempts",
         "3",
+        "--copy-repo",
     ]
     assert result.normalized["passed"] is False
 

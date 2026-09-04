@@ -30,7 +30,7 @@ jobs:
   # Milestone 9 (right-sized 2026-08-30): a single real PR gate demonstrating
   # the mechanism -- a skill that fails Tier 1 cannot merge. Tier 1 is
   # LLM-free by default, so this needs no API keys and no live agent spend.
-  # The other four jobs below remain documented placeholders (see the
+  # The remaining jobs below include documented placeholders (see the
   # 2026-08-30 scope decision in docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
   # -- this is a demonstration of the pattern, not the full production
   # pipeline they represent.
@@ -155,8 +155,9 @@ jobs:
           done <<< "${{ steps.changed.outputs.skills }}"
           if [ -z "$TARGETS" ]; then exit 0; fi
           if [ -z "$OPENAI_API_KEY" ]; then
-            echo "OPENAI_API_KEY secret not set -- skipping Tier 2 (see docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md)."
-            exit 0
+            echo "OPENAI_API_KEY secret is required for the blocking Tier 2 similarity gate."
+            echo "Configure the repository secret or use an explicitly advisory workflow."
+            exit 1
           fi
           python framework/certification/check_similarity.py $TARGETS
 

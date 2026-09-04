@@ -91,7 +91,7 @@ The current fixture setup and expected outputs are documented in
 Run the framework validation for the skill:
 
 ```bash
-pmai-skills validate ./skills/my-new-skill
+uv run pmai-skills validate ./skills/my-new-skill
 ```
 
 Tier 1 checks package structure, metadata, instruction quality, and security
@@ -103,7 +103,7 @@ The repository's real Tier 1 evidence is in
 ## Step 4 — Check catalog similarity
 
 ```bash
-pmai-skills similarity ./skills/my-new-skill
+uv run pmai-skills similarity ./skills/my-new-skill
 ```
 
 The candidate is compared with approved skills. Exact duplicates are blocked;
@@ -114,7 +114,7 @@ capability.
 ## Step 5 — Run the live agent evaluation
 
 ```bash
-pmai-skills evaluate ./skills/my-new-skill --profile pr
+uv run pmai-skills evaluate ./skills/my-new-skill --profile pr
 ```
 
 The evaluator runs the same cases in two arms:
@@ -151,7 +151,7 @@ evaluator, grader, and execution environment.
 For a release candidate, run the full profile:
 
 ```bash
-pmai-skills certify ./skills/my-new-skill --profile release
+uv run pmai-skills certify ./skills/my-new-skill --profile release --metrics normalized-metrics.json
 ```
 
 Certification applies hard gates (for example security, authorization,
@@ -178,9 +178,11 @@ Milestones 1–3 establish the foundation for this workflow:
 - Milestone 3 created deterministic logical tools and fixtures so reference
   evaluations can run without production data systems.
 
-Milestone 4 is the next implementation step: complete the Performance
-Attribution skill through evaluation, domain grading, benchmark generation, and
-certification.
+Milestones 4–9 have since added two live benchmark attempts, reusable finance
+graders, deliberate-defect evidence, ownership and similarity governance, and a
+lightweight registry. The framework CLI now covers the implemented offline
+checks, evaluator invocation, report normalization, and policy decision. Tier 3
+and domain-grader CI remain advisory/documented placeholders.
 
 ## Related documents
 

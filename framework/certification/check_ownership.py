@@ -37,13 +37,13 @@ PLACEHOLDER_VALUES = {
 }
 
 
-def check_skill(skill_dir: Path) -> list[str]:
+def check_skill(skill_dir: Path, *, require_manifest: bool = False) -> list[str]:
     """Return a list of violation messages for one skill directory (empty if clean)."""
     skill_yaml = skill_dir / "skill.yaml"
     if not skill_yaml.exists():
         # Not every skill directory ships a skill.yaml (e.g. smoke-test
         # fixtures) -- absence of the file is out of scope for this check.
-        return []
+        return [f"{skill_dir}: missing required skill.yaml"] if require_manifest else []
 
     data = yaml.safe_load(skill_yaml.read_text()) or {}
     ownership = data.get("ownership") or {}

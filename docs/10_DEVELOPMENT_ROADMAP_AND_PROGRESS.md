@@ -422,18 +422,23 @@ Skills:
    spend) found a clean 1.0 across all five domain-grader checks on 45/45
    gradable trials, zero permission denials across all 150 trials, and 4/4
    regression cases passed.
-2. Performance Attribution — fully certified (see Milestone 4).
-3. Risk Explanation — refined to standard (25 eval cases, composite grader);
-   Haiku quick-pass complete; full Sonnet certification deferred to a later
-   budget cycle (2026-08-30 cost-scoping decision — one skill at a time).
+2. Performance Attribution — full matrix and benchmark evidence complete;
+   certification verdict FAIL for one documented discoverability reason (see
+   Milestone 4).
+3. Risk Explanation — refined to standard (27 current eval cases including
+   discoverability twins, composite grader); quick-pass complete. Two later
+   live attempts did not produce certification evidence: the first was
+   manually stopped after 100 observed arms at an estimated $30, and the
+   second failed Claude Code runtime preflight after 71.843 seconds. The
+   full Sonnet certification matrix remains outstanding.
 
 Tasks:
 - [x] Complete all three end-to-end (skill refinement + composite grader).
 - [x] Demonstrate different grader types (performance_attribution,
       portfolio_overview, and risk_explanation composite graders each reuse a
       different subset of the shared building blocks).
-- [ ] Demonstrate routing/discoverability (pending full Portfolio
-      Overview/Risk Explanation certification evidence).
+- [ ] Demonstrate routing/discoverability (pending Risk Explanation's full
+      certification evidence; the other flagship runs are complete).
 - [x] Demonstrate derivatives handling (eval cases in all three skills).
 - [x] Demonstrate data/date failure detection (stale-data/temporal cases in
       all three skills).
@@ -489,8 +494,11 @@ regardless of the skill's actual domain, and a stub `grader.py` returning
 `{}` (contributing nothing to Tier 4 grading). All three are now fixed for
 all 9 skills, completed 2026-08-30:
 
-- Portfolio Overview, Performance Attribution, Risk Explanation — full
-  certification depth via Milestone 5 (25 cases, live Sonnet Tier 3).
+- Portfolio Overview, Performance Attribution, Risk Explanation — prepared
+  for full certification depth via Milestone 5 (27 current cases including
+  discoverability twins, composite graders, and live Sonnet configuration).
+  Portfolio Overview and Performance Attribution have completed finalized
+  live matrices; Risk Explanation has not.
 - Exposure Analysis, Benchmark Comparison, Position Investigation, Scenario
   Analysis, Market Move Explanation, Liquidity Analysis, Portfolio Change
   Analysis, Concentration Analysis, PM Commentary Generation — structural
@@ -529,7 +537,8 @@ skills -- it does not run one.
 Tasks:
 - [ ] Portfolio Overview (Milestone 5, in progress)
 - [x] Performance Attribution (Milestone 4, certified)
-- [ ] Risk Explanation (Milestone 5, quick-pass done, certification deferred)
+- [ ] Risk Explanation (Milestone 5, quick-pass done; full live certification
+      outstanding after two non-finalized runtime/budget-controlled attempts)
 - [x] Exposure Analysis — structural completion done
 - [x] Benchmark Comparison — structural completion done
 - [x] Position Investigation — structural completion done
@@ -540,8 +549,9 @@ Tasks:
 - [x] Concentration Analysis — structural completion done
 - [x] PM Commentary Generation — structural completion done
 
-Target (revised, met): all 12 skills now carry 25 real, fixture-grounded
-eval cases each (**300 total**, matching the original Milestone 7 target in
+Target (revised, met): the 12 PM skills carry 300 base real, fixture-grounded
+eval cases, with six additional flagship twins; the separate smoke skill adds
+one case (**307 total skill-directory cases**), matching the original Milestone 7 target in
 full) — the 9 non-flagship skills expanded from 10 to 25 cases on
 2026-08-31, free authoring work grounded in the same real
 `synthetic_data_pipeline` fixtures used by the 3 flagship skills, not
@@ -797,7 +807,7 @@ Synthetic data pipeline           DONE (Milestone 3)
 Scope decision (2026-08-30)       DONE — reprioritized around the project's learning goal; M9-12 descoped
 12 skill definitions              3 refined to full standard (flagship); 9 structurally complete
                                    (metadata, correct tools, real composite grader) — DONE 2026-08-30
-300 eval cases (target met)       All 12 skills now carry 25 real, fixture-grounded cases each
+307 eval cases (target met)       300 base cases across 12 PM skills, six flagship twins, and one smoke case
                                    (expanded 2026-08-31, zero API cost — see Milestone 7)
 Finance graders                   DONE (Milestone 8 closed; required list built + reused across all
                                    12 skills — proven in tests/test_graders.py + test_ownership_gate.py,
@@ -823,12 +833,37 @@ Milestone 4 certification          FAIL — one reason only (discoverability 0.8
                                    human reviewer, see docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md
 Milestone 5 (3-skill slice)        IN PROGRESS — Performance Attribution certified; Portfolio Overview
                                    full Sonnet certification complete (real result: FAIL, one reason,
-                                   see BENCHMARK.md); Risk Explanation quick-passed, certification
-                                   deferred to a later budget cycle
+                                   see BENCHMARK.md); Risk Explanation quick-passed, two later live
+                                   attempts did not finalize because of budget/runtime-preflight controls;
+                                   full certification remains outstanding
 Milestone 6 (deliberate defects)   DONE — closed 2026-08-31, Tier 1/2 static checks only, no
                                    live-agent spend; see docs/MILESTONE_6_DELIBERATE_DEFECTS.md
 Cross-repo demonstration          DESCOPED (Milestone 11 — documented as a future extension, not built)
 ```
+
+## Handoff state for the next CLI
+
+Last updated 2026-09-04 (local run; the repository's stated date is
+2026-09-03). Risk Explanation is the only flagship skill without finalized
+full Tier 3 evidence. The attempted certification work is not resumable from
+the evaluator's output:
+
+- The first run observed 100 of 162 arms and was manually stopped at the
+  authorized estimated $30 cap. Its interrupted per-trial artifacts were not
+  finalized.
+- A second one-attempt run was launched with an additional $30 allowance and
+  stopped during Claude Code runtime preflight after 71.843 seconds. Its
+  failure record is local-only under
+  `reports/m5/risk-explanation-tier3-additional30/.../result.json`.
+- The pinned SkillEvaluator 0.2.1 exposes no reliable token/cost telemetry and
+  no case-level resume option. Do not treat either run as benchmark evidence,
+  and do not assume the first 100 arms can be skipped.
+
+Before another paid run, verify the Claude Code runtime preflight independently
+and obtain an explicit budget. If a partial run is desired, create a scratch
+copy with an explicitly reduced `evals/evals.json`; the pinned evaluator does
+not honor `skill.yaml`'s `dataset:` field for trimming cases. Use
+`--harbor-keep-jobs` so a future handoff retains per-trial diagnostics.
 
 ---
 

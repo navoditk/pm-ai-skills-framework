@@ -32,7 +32,7 @@ For anyone new to this repo, this is the headline: two real skills have been tak
 - **Portfolio Overview** (Milestone 5): a second complete 150-trial matrix scored **Skill Lift +0.1316**, real. Certification: **FAIL for the same single reason as Performance Attribution** — discoverability (0.8942 here vs 0.8862 there), independently corroborated by NVIDIA's own report recommending the same fix Milestone 4 had already diagnosed. The run also surfaced a **certification policy-profile gap** — one minimum metric (`reconciliation`) was specific to Performance Attribution's own grader and silently failed every other skill in the catalog regardless of quality, found by actually running the real pipeline twice rather than auditing the policy file in the abstract — **resolved 2026-08-31** by dropping it from the universal minimum metrics. Evidence: [`skills/portfolio-overview/BENCHMARK.md`](skills/portfolio-overview/BENCHMARK.md).
 - **Milestone 6** (deliberate defects, `DONE`): 5 of 6 intentionally-introduced defects (vague description, duplicate skill, missing derivatives, mismatched dates, unauthorized data source) are caught and confirmed with real evidence — Tier 1 quality scoring, Tier 2 embedding similarity, and grader regression tests. The sixth (a weak/no-value skill's Skill Lift) was accepted on a Tier 1 proxy rather than a live measurement, a deliberate human-reviewer call, not a silently dropped gap. Full trail: [`docs/MILESTONE_6_DELIBERATE_DEFECTS.md`](docs/MILESTONE_6_DELIBERATE_DEFECTS.md).
 - **Milestone 9** (CI/CD, `DONE`): two real GitHub Actions jobs now gate a PR — `tier1` blocks on Tier 1 validation failure and, as of 2026-08-31, a real ownership-enforcement check (`framework/certification/check_ownership.py`) that fails on the literal `domain-owner-required` placeholder; `similarity` (real as of 2026-08-31, live as of 2026-09-01 with `OPENAI_API_KEY` configured as a repo secret) applies this project's own `policies/similarity.yaml` governance actions against the central catalog, blocking only on `EXACT_DUPLICATE`. All 13 skills carry real ownership values. A working demonstration of "invalid or duplicate skills can't merge," not a full production pipeline — `tier3-fast` and `domain-graders` remain documented placeholders.
-- **Zero-cost follow-ups completed 2026-08-31 through 2026-09-01**: dropped the `reconciliation` policy gap, added the ownership gate above, prepared (but not yet live-confirmed) a discoverability fix by adding unforced-preamble eval-case twins to all three flagship skills, and expanded all 9 structurally-complete skills' eval suites from 10 to 25 real, fixture-grounded cases each — **300 total cases across the catalog**, matching the original Milestone 7 target. Then, 2026-09-01: built the real central similarity catalog and wired the `similarity` CI job above; replaced the single flat certification profile with five real risk-tiered profiles (`policies/certification.yaml`, resolved by `framework/certification/profile_resolver.py` from a skill's `risk_level`); built a lightweight skill registry (`catalogs/skill-registry.json`) that now auto-regenerates on every merge to `main`; assigned an owner/SLA to the `HIGH_SIMILARITY` review action; root-caused why an attempted discoverability-confirmation rerun ran the full case set instead of a trimmed one (the pinned evaluator never reads `skill.yaml`'s `dataset:` field — see `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6); and did a documentation consistency pass (fixed stale status claims, removed two orphaned bootstrap docs). None of this spent any live API budget beyond the fractions of a cent for embedding calls.
+- **Zero-cost follow-ups completed 2026-08-31 through 2026-09-01**: dropped the `reconciliation` policy gap, added the ownership gate above, prepared (but not yet live-confirmed) a discoverability fix by adding unforced-preamble eval-case twins to all three flagship skills, and expanded all 9 structurally-complete skills' eval suites from 10 to 25 real, fixture-grounded cases each — **300 cases across the 12 PM skills, plus six flagship twins and one smoke case**. Then, 2026-09-01: built the real central similarity catalog and wired the `similarity` CI job above; replaced the single flat certification profile with five real risk-tiered profiles (`policies/certification.yaml`, resolved by `framework/certification/profile_resolver.py` from a skill's `risk_level`); built a lightweight skill registry (`catalogs/skill-registry.json`) that now auto-regenerates on every merge to `main`; assigned an owner/SLA to the `HIGH_SIMILARITY` review action; root-caused why an attempted discoverability-confirmation rerun ran the full case set instead of a trimmed one (the pinned evaluator never reads `skill.yaml`'s `dataset:` field — see `docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` §13.6); and did a documentation consistency pass (fixed stale status claims, removed two orphaned bootstrap docs). None of this spent any live API budget beyond the fractions of a cent for embedding calls.
 - **One finding remains open for human review** — the recurring discoverability metric-scoping shortfall; a partial fix is prepared but not yet confirmed with a live rerun (now unblocked in principle by the dataset-routing root-cause above, but a live rerun is still a real-cost decision). See [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Open policy decisions pending human review."
 - **No skill in this catalog has cleared certification outright yet.** That is reported plainly rather than smoothed over — see [`docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md`](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) for the complete, cold-readable walkthrough with an honest pros/cons assessment.
 - **New to agent skills or SkillEvaluator itself?** Start with [`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) — a one-stop guide covering what they are, whether they're worth adopting, exact install/run steps, repo layout requirements, CI/CD integration, and curated external resources.
@@ -49,7 +49,7 @@ Full detail and evidence for every row lives in
 | 2 | Normalized framework contracts | `DONE` | Vendor-adapter boundary, test-covered |
 | 3 | Synthetic Agentic Data Pipeline | `DONE` | Deterministic local fixtures, no production systems touched |
 | 4 | Performance Attribution vertical slice | `IN PROGRESS` | Engineering complete; real certification `FAIL` for one diagnosed reason, left open for review |
-| 5 | Three-skill vertical slice | `IN PROGRESS` | 2 of 3 skills fully certified (both real `FAIL`); Risk Explanation refined but not yet run through full Tier 3 |
+| 5 | Three-skill vertical slice | `IN PROGRESS` | 2 of 3 skills have finalized full certification evidence (both real `FAIL`); Risk Explanation has a quick pass plus two non-finalized live attempts blocked by runtime preflight |
 | 6 | Deliberate defect demonstration | `DONE` | 5 of 6 defects caught directly; 1 accepted on proxy evidence |
 | 7 | Complete 12-skill library | `IN PROGRESS` | Right-sized to structural completion for 9 skills; blocked from fully closing only by Milestone 5 |
 | 8 | Finance grader library | `DONE` | Required graders built, reused across all 12 skills |
@@ -60,7 +60,7 @@ Full detail and evidence for every row lives in
 
 ## Next steps
 
-- **Run Risk Explanation's full live Tier 3 certification matrix** — refined to standard and quick-pass validated already; the full run is the only thing blocking Milestones 5 and 7 from closing. Deferred pending budget, same cost profile as the two completed runs (~$15-45, ~30-55 minutes).
+- **Run Risk Explanation's full live Tier 3 certification matrix** — refined to standard and quick-pass validated, but the 2026-09-03/04 attempts did not produce certification evidence: the first was manually capped after 100 observed arms at an estimated $30, and the second stopped during Claude Code runtime preflight after 72 seconds. The full run remains the only thing blocking Milestones 5 and 7 from closing. The pinned CLI has no case-level resume or reliable cost telemetry; use an explicit budget and retain Harbor jobs before trying again.
 - **Confirm the discoverability fix with a live rerun** — the unforced-preamble eval-case twins are prepared (zero cost) but not yet verified against a real Tier 3 matrix. See [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Open policy decisions pending human review."
 - **Optional, lower priority:** decide whether any of the 9 structurally-complete skills (now at full 25-case depth, ready to go) warrant full live Tier 3 certification depth later, and whether Milestone 9's CI gate should ever be extended toward the `tier3-fast`/`domain-graders` jobs it still leaves as documented placeholders (the `similarity` job is no longer one of them — see above) — both are deliberately not being pursued now per the 2026-08-30 scope decision, not accidentally incomplete.
 
@@ -119,22 +119,24 @@ The consuming repository provides:
 - local fixtures and logical-tool dependencies;
 - optional specialist graders for its domain.
 
-Target usage — the intended day-to-day interface once `framework/cli/` is
-implemented as a thin wrapper around the pinned `skillevaluator` CLI — is:
+The day-to-day interface is a thin wrapper around the pinned `skillevaluator`
+CLI:
 
 ```bash
-pmai-skills validate ./skills
-pmai-skills similarity ./skills/my-new-skill
-pmai-skills evaluate ./skills/my-new-skill --profile pr
-pmai-skills certify ./skills/my-new-skill --profile release
+uv run pmai-skills validate ./skills
+uv run pmai-skills similarity ./skills/my-new-skill
+uv run pmai-skills evaluate ./skills/my-new-skill --profile pr
+uv run pmai-skills certify ./skills/my-new-skill --metrics normalized-metrics.json
 ```
 
-**Current status:** this CLI does not exist yet. All Milestone 1 and Milestone 4
-work was run directly against the pinned `skillevaluator` binary
+**Current status:** a thin `pmai-skills` CLI now exists for package validation,
+ownership checks, evaluator invocation, report normalization, similarity
+governance, and certification decisions. It is not yet published as an
+installable central package. Live benchmark work was run directly against the pinned `skillevaluator` binary
 (`.venv/bin/skillevaluator ...`); see [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
 for exactly what is implemented versus planned. `pmai-skills` is intentionally
-scoped to stay a thin pass-through — it should add PM manifest/ownership
-checks, normalize output, and apply certification policy, and nothing more.
+scoped to stay a thin pass-through — it adds PM manifest/ownership checks,
+normalizes output, and applies certification policy, and nothing more.
 It should not reimplement flags or behavior NVIDIA already provides.
 
 The consuming repository should depend on a pinned framework version. It should
@@ -273,12 +275,12 @@ The blueprint defines 12 representative skills, at two different depths per
 the 2026-08-30 right-sizing decision — see
 [Key findings and takeaways](#key-findings-and-takeaways) above:
 
-**Full certification depth** (25 real eval cases each, live Sonnet Tier 3
-matrix run, real `BENCHMARK.md`):
+**Full certification depth** (25-case live Sonnet Tier 3 matrix run, with 27
+cases now present in the current datasets, real `BENCHMARK.md`):
 
 1. Portfolio Overview — certified run complete, real FAIL (one diagnosed reason)
 2. Performance Attribution — certified run complete, real FAIL (one diagnosed reason)
-3. Risk Explanation — refined to standard, quick-pass validated, full certification deferred
+3. Risk Explanation — refined to standard, quick-pass validated, two non-finalized live attempts blocked by runtime preflight/budget controls; no certification evidence yet
 
 **Structurally complete** (real composite grader, correct tool declarations,
 Tier 1 passing 11/11, 25 real fixture-grounded eval cases each as of
@@ -296,7 +298,8 @@ Tier 1 passing 11/11, 25 real fixture-grounded eval cases each as of
 
 ## Start here
 
-Read these documents in order:
+For a hands-on introduction, start with [`docs/00_TUTORIAL.md`](docs/00_TUTORIAL.md).
+For the full design history, read these documents in order:
 
 1. [`docs/01_PROPOSAL.md`](docs/01_PROPOSAL.md)
 2. [`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md)

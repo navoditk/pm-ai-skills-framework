@@ -27,6 +27,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -43,25 +44,29 @@ def load_governance() -> dict:
 
 def run_similarity_check(skill_dir: Path) -> dict:
     """Invoke the real CLI for one skill against the central catalog."""
-    result = subprocess.run(
-        [
-            "skillevaluator", "similarity-check", str(skill_dir),
-            "--type", "skill",
-            "--catalog", str(CATALOG_PATH),
-            "-r", "json",
-            "-o", "/tmp/similarity-check-output",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    # skillevaluator writes its own JSON report file rather than printing
-    # clean JSON to stdout -- read the report back rather than parsing stdout.
-    report_path = Path("/tmp/similarity-check-output/skillevaluator-similarity.json")
-    if not report_path.exists():
-        print(result.stdout)
-        print(result.stderr, file=sys.stderr)
-        raise RuntimeError(f"similarity-check produced no report for {skill_dir}")
-    return json.loads(report_path.read_text())
+    # Use an isolated directory so stale reports cannot be mistaken for a
+    # successful current run and parallel invocations cannot overwrite one
+    # another.
+    with tempfile.TemporaryDirectory(prefix="pmai-similarity-") as output_dir:
+        result = subprocess.run(
+            [
+                "skillevaluator", "similarity-check", str(skill_dir),
+                "--type", "skill",
+                "--catalog", str(CATALOG_PATH),
+                "-r", "json",
+                "-o", output_dir,
+            ],
+            capture_output=True,
+            text=True,
+        )
+        # skillevaluator writes its own JSON report file rather than printing
+        # clean JSON to stdout -- read the report back rather than parsing stdout.
+        report_path = Path(output_dir) / "skillevaluator-similarity.json"
+        if not report_path.exists():
+            print(result.stdout)
+            print(result.stderr, file=sys.stderr)
+            raise RuntimeError(f"similarity-check produced no report for {skill_dir}")
+        return json.loads(report_path.read_text())
 
 
 def classify_findings(report: dict) -> list[dict]:

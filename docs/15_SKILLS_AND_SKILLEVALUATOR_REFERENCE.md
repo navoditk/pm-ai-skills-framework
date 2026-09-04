@@ -1,6 +1,8 @@
 # 15. Skills & SkillEvaluator — One-Stop Reference
 
-This document is the single place to point someone who asks "what are agent
+This document is the reference after completing the local tutorial. Start with
+[`docs/00_TUTORIAL.md`](00_TUTORIAL.md) for a no-credentials exercise. This
+document is the single place to point someone who asks "what are agent
 skills, what does NVIDIA SkillEvaluator actually do, is it worth adopting,
 and how do I get it running on my own repo?" It is written to stand alone —
 combining the official upstream documentation with this project's own

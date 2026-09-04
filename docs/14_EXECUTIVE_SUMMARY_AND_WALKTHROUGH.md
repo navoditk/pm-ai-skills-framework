@@ -386,8 +386,9 @@ pending human review" section.
   regression test added. This is exactly the kind of gap the framework
   exists to catch, and it is a reminder that "the grader ran and returned a
   score" is not the same as "the evidence it graded was scoped correctly."
-- **The `pmai-skills` CLI described throughout the README and adoption docs
-  does not exist as code** — only `pmai-skills.yaml`, a config file, does.
+- **The `pmai-skills` CLI is now a thin local wrapper** for package validation,
+  evaluator invocation, report normalization, similarity governance, and
+  certification decisions. It is not yet published as a central package.
   This is the one real gap between the adoption docs' framing and what's
   actually built; a reader relying only on the README/adoption guide would
   form an overly advanced mental model on that specific point. (Earlier

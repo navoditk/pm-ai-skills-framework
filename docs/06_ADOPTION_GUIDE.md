@@ -51,23 +51,24 @@ reporting:
 ## 6.4 Team workflow
 
 ```text
-pmai-skills init <skill>
-pmai-skills validate <skill>
-pmai-skills similarity <skill>
-pmai-skills evaluate <skill> --profile pr
-pmai-skills report <skill>
+uv run pmai-skills init <skill>
+uv run pmai-skills validate <skill>
+uv run pmai-skills similarity <skill>
+uv run pmai-skills evaluate <skill> --profile pr
+uv run pmai-skills report <raw-report.json> <normalized-report.json> \
+  --skill-id <id> --skill-name <name> --skill-version <version>
 ```
 
 For certification:
 
 ```text
-pmai-skills certify <skill> --profile release
+uv run pmai-skills certify <skill> --profile release --metrics normalized-metrics.json
 ```
 
 ## 6.5 What the central platform provides
 
 - skill schema;
-- CLI;
+- CLI (available from this checkout; package publication is future work);
 - NVIDIA adapter;
 - similarity governance;
 - report normalization;

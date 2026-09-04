@@ -32,3 +32,14 @@ def validate_skill_library(skills_root: str | Path) -> dict[str, list[str]]:
         str(path): validate_skill_manifest(path)
         for path in sorted(root.glob("*/skill.yaml"))
     }
+
+
+def validate_skill_package(skill_dir: str | Path) -> list[str]:
+    """Validate the PM package contract, including required evaluator files."""
+    root = Path(skill_dir)
+    required = ("SKILL.md", "skill.yaml", "evals/EVAL.md", "evals/evals.json", "evals/config.yml")
+    errors = [f"{root}: missing required file {name}" for name in required if not (root / name).is_file()]
+    manifest = root / "skill.yaml"
+    if manifest.is_file():
+        errors.extend(validate_skill_manifest(manifest))
+    return errors

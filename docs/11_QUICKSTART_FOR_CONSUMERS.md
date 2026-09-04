@@ -53,18 +53,20 @@ Optional:
 
 ## Step 3 — Install the central framework
 
-Target future usage:
+From this repository, use the checked-out CLI during development:
 
 ```bash
-pip install pmai-skills-framework
+uv run pmai-skills --help
 ```
 
-Pin an organization-approved version.
+The framework is not published as a package yet. For another repository,
+install an internal release once published or run the CLI from a pinned
+checkout. Do not treat these commands as available from PyPI today.
 
 ## Step 4 — Validate your skills
 
 ```bash
-pmai-skills validate ./skills
+uv run pmai-skills validate ./skills
 ```
 
 This runs:
@@ -74,7 +76,7 @@ This runs:
 ## Step 5 — Check for duplication
 
 ```bash
-pmai-skills similarity ./skills/my-new-skill
+uv run pmai-skills similarity ./skills/my-new-skill
 ```
 
 The new skill is checked against the centrally published approved-skill catalog.
@@ -82,7 +84,7 @@ The new skill is checked against the centrally published approved-skill catalog.
 ## Step 6 — Run a fast developer evaluation
 
 ```bash
-pmai-skills evaluate ./skills/my-new-skill --profile pr
+uv run pmai-skills evaluate ./skills/my-new-skill --profile pr
 ```
 
 Review:
@@ -118,14 +120,15 @@ The reusable GitHub workflow runs:
 For release:
 
 ```bash
-pmai-skills certify ./skills/my-new-skill --profile release
+uv run pmai-skills certify ./skills/my-new-skill --profile release --metrics normalized-metrics.json
 ```
 
 Certification retains the without-skill baseline and measures Skill Lift.
 
 ## Step 10 — Publish evidence
 
-Successful certification produces:
+Successful certification, after a completed benchmark has supplied metrics,
+produces:
 - normalized JSON;
 - Markdown/HTML report;
 - BENCHMARK.md;
