@@ -4,6 +4,26 @@ A hands-on reference project for building **familiarity with the NVIDIA SkillEva
 
 The design uses **NVIDIA SkillEvaluator as the evaluation engine** and layers a thin, PM-specific governance model on top: ownership enforcement, catalog-based duplicate detection, deterministic finance grading, risk-tiered certification rigor, and benchmark evidence. This is deliberately **not** a generic, domain-agnostic agent framework — see [Scope](#scope) below.
 
+## Start with your goal
+
+The repository contains a detailed implementation history as well as the
+current framework. Choose the shortest reading path for your purpose:
+
+| If you want to... | Start here |
+|---|---|
+| Run the local, no-credential path | [First tutorial](docs/00_TUTORIAL.md) |
+| Understand the framework's purpose and boundaries | [Executive summary](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) |
+| Understand the design | [Proposal](docs/01_PROPOSAL.md) and [target architecture](docs/02_TARGET_ARCHITECTURE.md) |
+| Author, evaluate, or certify a skill | [Skill standard](docs/03_SKILL_STANDARD.md), [evaluation model](docs/04_EVALUATION_AND_CERTIFICATION.md), and [end-to-end workflow](docs/12_END_TO_END_SKILL_WORKFLOW.md) |
+| Adopt the framework in another repository | [Consumer quickstart](docs/11_QUICKSTART_FOR_CONSUMERS.md) and [adoption guide](docs/06_ADOPTION_GUIDE.md) |
+| Review outcomes, evidence, and open work | [Roadmap and progress](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) and [evidence index](docs/EVIDENCE_INDEX.md) |
+| Learn NVIDIA SkillEvaluator itself | [Skills and SkillEvaluator reference](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) |
+
+See the reader-oriented [documentation map](docs/README.md) for the complete
+guide. The root README remains the project narrative; detailed milestone
+records, benchmarks, and operating instructions remain in their existing
+canonical documents.
+
 ## Goals, upfront
 
 **The primary goal, reaffirmed 2026-08-30, is learning-focused:** build real, hands-on familiarity with the NVIDIA SkillEvaluator framework — how its four evaluation tiers work, how to wire it into a real skill's development loop, and how to read and trust (or distrust) the numbers it produces. Everything below is in service of that goal, using a PM/asset-management skill library as a realistic, non-trivial domain to exercise it against — not because shipping that library into production is the point.

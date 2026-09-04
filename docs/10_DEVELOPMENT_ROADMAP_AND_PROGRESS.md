@@ -4,20 +4,6 @@ This document is the working execution plan for building the reference implement
 
 Update this file in every material pull request.
 
-## Scope decision (2026-08-27)
-
-This framework leverages **NVIDIA SkillEvaluator as the evaluation engine**
-and stays scoped to **PM/asset-management skill governance** — it is not
-being built as a generic, domain-agnostic skills platform. The near-term
-priority is therefore governance controls over the growing PM skill library
-(deduplication, ownership enforcement, risk-tiered certification cost) ahead
-of breadth (more skills) or generality (more domains). See
-`docs/01_PROPOSAL.md` §1.5 for the corresponding non-goal and
-`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md` for how the framework stays
-insulated from the one external dependency this scope decision leans on
-most heavily. This reprioritizes the "Suggested next three PRs" section at
-the bottom of this document; milestone numbering below is unchanged.
-
 ## Scope decision (2026-08-30)
 
 This project's purpose is to **build familiarity with the NVIDIA
