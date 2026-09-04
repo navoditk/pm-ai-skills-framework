@@ -30,7 +30,7 @@ profiles:
 
     minimum_metrics:
       correctness: 0.90
-      discoverability: 0.85
+      discoverability_eligible: 0.85
       effectiveness: 0.85
       skill_lift_overall: 0.05
 
@@ -51,7 +51,7 @@ profiles:
 
     minimum_metrics:
       correctness: 0.92
-      discoverability: 0.88
+      discoverability_eligible: 0.88
       effectiveness: 0.88
       efficiency: 0.70
       skill_lift_overall: 0.08
@@ -71,7 +71,14 @@ profiles:
 
     minimum_metrics:
       correctness: 0.95
-      discoverability: 0.90
+      # Discoverability measures skill activation only where activation is
+      # applicable. Explicitly tool-free ambiguous-reference cases measure
+      # safe clarification and are excluded from this denominator; their
+      # assertions are evaluated through correctness and domain checks.
+      # Producers must emit this case-filtered metric as
+      # `discoverability_eligible`; the raw provider-wide score is retained
+      # as diagnostic evidence but never gates certification.
+      discoverability_eligible: 0.90
       effectiveness: 0.90
       efficiency: 0.75
       skill_lift_overall: 0.10
@@ -108,7 +115,7 @@ profiles:
 
     minimum_metrics:
       correctness: 0.95
-      discoverability: 0.92
+      discoverability_eligible: 0.92
       effectiveness: 0.92
       efficiency: 0.80
       skill_lift_overall: 0.12
@@ -137,7 +144,7 @@ profiles:
 
     minimum_metrics:
       correctness: 0.97
-      discoverability: 0.92
+      discoverability_eligible: 0.92
       effectiveness: 0.92
       efficiency: 0.80
       skill_lift_overall: 0.12

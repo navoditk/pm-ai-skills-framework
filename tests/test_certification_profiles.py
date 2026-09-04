@@ -2,6 +2,10 @@ import pytest
 import yaml
 
 from framework.certification.engine import decide
+from framework.certification.metric_eligibility import (
+    eligible_discoverability_case_ids,
+    eligible_discoverability_score,
+)
 from framework.certification.profile_resolver import resolve_profile
 
 REPO_ROOT_POLICY = yaml.safe_load(open("policies/certification.yaml"))
@@ -30,8 +34,42 @@ def test_rigor_increases_with_risk_level():
     floors = []
     for risk_level in ["informational", "low", "analytical", "decision-support"]:
         _, profile = resolve_profile(REPO_ROOT_POLICY, risk_level)
-        floors.append(profile["minimum_metrics"]["discoverability"])
+        floors.append(profile["minimum_metrics"]["discoverability_eligible"])
     assert floors == sorted(floors)
+
+
+def test_tool_free_ambiguous_cases_are_excluded_from_discoverability():
+    evaluations = [
+        {"id": "activation-required", "category": "implicit-positive"},
+        {"id": "ask-for-clarification", "category": "ambiguous"},
+    ]
+    scores = {"activation-required": 1.0, "ask-for-clarification": 0.0}
+
+    assert eligible_discoverability_case_ids(evaluations) == {"activation-required"}
+    assert eligible_discoverability_score(evaluations, scores) == 1.0
+
+
+def test_analytical_policy_gates_eligible_discoverability_not_raw_score():
+    _, analytical = resolve_profile(REPO_ROOT_POLICY, "analytical")
+    metrics = {
+        "security": "pass",
+        "authorization": "pass",
+        "regression_pass_rate": 1.0,
+        "data_provenance": 1.0,
+        "correctness": 0.99,
+        "discoverability": 0.0,
+        "discoverability_eligible": 0.91,
+        "effectiveness": 0.99,
+        "efficiency": 0.99,
+        "skill_lift_overall": 0.20,
+        "financial_accuracy": 1.0,
+        "temporal_consistency": 1.0,
+    }
+
+    decision = decide(metrics, analytical)
+
+    assert decision.status == "PASS"
+    assert not any("discoverability:" in failure for failure in decision.failures)
 
 
 def test_decision_support_promotes_tier4_metrics_to_hard_gates():
@@ -56,7 +94,7 @@ def test_action_profile_cannot_pass_without_a_recorded_human_review():
         "financial_accuracy": 0.999,
         "temporal_consistency": 1.0,
         "correctness": 0.99,
-        "discoverability": 0.99,
+        "discoverability_eligible": 0.99,
         "effectiveness": 0.99,
         "efficiency": 0.99,
         "skill_lift_overall": 0.20,

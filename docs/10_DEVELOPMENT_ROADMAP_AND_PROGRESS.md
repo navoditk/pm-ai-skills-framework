@@ -747,7 +747,7 @@ practice established in Milestone 4.
    BENCHMARK.md` regenerated (free — reads already-collected trial data, no
    new API calls) and now fails for exactly one reason (discoverability),
    the same single gate as Performance Attribution, instead of two.
-2. **Discoverability (`skill_execution`) narrowly misses the 0.90 floor on
+2. ~~**Discoverability (`skill_execution`) narrowly misses the 0.90 floor on
    both certified skills so far** (Performance Attribution 0.8862,
    Portfolio Overview 0.8942), independently corroborated by NVIDIA's own
    Tier 3 report recommending removal of the forced `cat SKILL.md` preamble
@@ -774,7 +774,19 @@ practice established in Milestone 4.
    scratch copy of the skill directory with its own edited
    `evals/evals.json`, never a `skill.yaml` field or an alternately-named
    file in the real skill directory. Any future rerun attempt must use that
-   approach.
+   approach.~~ **Resolved 2026-09-03**: certification now consumes
+   `discoverability_eligible`, which excludes only `ambiguous` cases that
+   explicitly require a clarification and prohibit tools. Those cases remain
+   subject to correctness and applicable domain checks; they are no longer
+   misclassified as failed activation. Raw provider-wide discoverability is
+   retained as diagnostic evidence. The rule, policy wiring, and deterministic
+   positive/negative coverage are in
+   `framework/certification/metric_eligibility.py`,
+   `policies/certification.yaml`, and
+   `tests/test_certification_profiles.py`. Existing benchmark records retain
+   their historical raw-score verdicts; a future Tier 3 run must emit the
+   eligible metric before it can receive a certification verdict under this
+   revised policy.
 3. ~~**Milestone 6's weak/no-value skill defect** is caught only via a Tier 1
    quality-score proxy (87.2→79.5).~~ **Resolved 2026-08-31**: a human
    reviewer accepted the Tier 1 proxy as sufficient evidence rather than

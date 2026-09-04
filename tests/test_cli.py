@@ -25,7 +25,7 @@ def test_certify_applies_resolved_policy(tmp_path, monkeypatch, capsys):
     metrics = tmp_path / "metrics.json"
     metrics.write_text(json.dumps({
         "security": "pass", "authorization": "pass", "correctness": 0.95,
-        "discoverability": 0.90, "effectiveness": 0.90, "skill_lift_overall": 0.10,
+        "discoverability_eligible": 0.90, "effectiveness": 0.90, "skill_lift_overall": 0.10,
     }))
     monkeypatch.setattr("sys.argv", ["pmai-skills", "certify", str(source), "--profile", "release", "--metrics", str(metrics)])
     assert main() == 0

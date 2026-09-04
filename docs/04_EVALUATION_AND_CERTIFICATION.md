@@ -22,7 +22,7 @@ Retain the baseline arm for certification:
 Measure:
 - Security;
 - Correctness;
-- Discoverability;
+- Discoverability, only across cases where skill activation is applicable;
 - Effectiveness;
 - Efficiency;
 - Skill Lift;
@@ -146,6 +146,17 @@ Each skill should have:
 - tool-failure;
 - adversarial;
 - regression.
+
+**Discoverability eligibility policy.** A case that explicitly requires the
+agent to ask a clarifying question and use no tools tests safe ambiguity
+handling, not skill activation. Such `ambiguous` cases are excluded from the
+discoverability denominator and remain subject to correctness and applicable
+domain checks. Certification consumes the case-filtered
+`discoverability_eligible` metric, while the provider-wide raw
+`discoverability` score remains diagnostic evidence. The policy is implemented
+by `framework/certification/metric_eligibility.py` and enforced by
+`policies/certification.yaml`; `tests/test_certification_profiles.py` covers
+both the exclusion and the certification decision.
 
 ## 4.6 Skill Lift
 
