@@ -10,7 +10,10 @@ from framework.schemas.validation import validate_skill_library
 
 def test_all_reference_skill_manifests_match_schema():
     results = validate_skill_library("skills")
-    assert len(results) == 13
+    # 13 PM/framework skills plus the skillevaluator-mastery utility skill
+    # (a training/reference skill, not part of the finance certification
+    # catalog -- see docs/16_SKILLEVALUATOR_MASTERY.md).
+    assert len(results) == 14
     assert all(not errors for errors in results.values())
 
 

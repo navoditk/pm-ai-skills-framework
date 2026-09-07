@@ -1,0 +1,62 @@
+{
+  "skill_name": "skillevaluator-mastery",
+  "evals": [
+    {
+      "id": "skillevaluator-mastery-001",
+      "category": "explicit-positive",
+      "prompt": "What does Tier 3 Skill Lift measure?",
+      "expected_output": "With-skill score minus without-skill score, produced by a live agent + judge run.",
+      "assertions": [
+        "Define Skill Lift as with-skill score minus without-skill score.",
+        "Do not fabricate a different formula or metric name."
+      ],
+      "expected_skill": "skillevaluator-mastery"
+    },
+    {
+      "id": "skillevaluator-mastery-002",
+      "category": "explicit-positive",
+      "prompt": "Why does Tier 2 similarity checking need an OpenAI key even if my agent is Claude-based?",
+      "expected_output": "Anthropic does not provide an embedding provider; Tier 2 requires SKILL_EVAL_EMBEDDING_PROVIDER=openai (or an OpenAI-compatible endpoint) regardless of the Tier 3 agent.",
+      "assertions": [
+        "State that Anthropic does not provide an embedding provider.",
+        "Name SKILL_EVAL_EMBEDDING_PROVIDER as the relevant environment variable.",
+        "Do not invent an unrelated environment variable."
+      ],
+      "expected_skill": "skillevaluator-mastery"
+    },
+    {
+      "id": "skillevaluator-mastery-003",
+      "category": "explicit-positive",
+      "prompt": "Which SkillEvaluator tier is free and safe to run on every PR?",
+      "expected_output": "Tier 1 (schema/quality/security validation) is offline, free, and runs in seconds with no API key.",
+      "assertions": [
+        "Identify Tier 1 as the free/offline tier.",
+        "Mention it needs no API key, Docker, or sandbox."
+      ],
+      "expected_skill": "skillevaluator-mastery"
+    },
+    {
+      "id": "skillevaluator-mastery-004",
+      "category": "ambiguous-input",
+      "prompt": "How do I make my PM portfolio-performance skill certified?",
+      "expected_output": "Route to the certification/evaluation documentation and the relevant PM skill's own material rather than answering as if this were a SkillEvaluator mechanics question.",
+      "assertions": [
+        "Recognize this is a PM/finance certification question, not a SkillEvaluator-mechanics question.",
+        "Do not answer using this skill's own procedure; point to docs/04_EVALUATION_AND_CERTIFICATION.md or the relevant PM skill instead.",
+        "Do not fabricate certification policy details."
+      ],
+      "expected_skill": "skillevaluator-mastery"
+    },
+    {
+      "id": "skillevaluator-mastery-005",
+      "category": "explicit-positive",
+      "prompt": "What CLI flag is easy to forget on a Tier 3 run and silently breaks the sandbox's access to repo tools?",
+      "expected_output": "--copy-repo",
+      "assertions": [
+        "Name --copy-repo specifically.",
+        "Do not invent a different flag name."
+      ],
+      "expected_skill": "skillevaluator-mastery"
+    }
+  ]
+}

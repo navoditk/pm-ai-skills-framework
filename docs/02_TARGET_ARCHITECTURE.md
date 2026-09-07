@@ -298,3 +298,23 @@ A lightweight registry view — generated from the catalog and certification
 results, not maintained by hand — is the visible artifact this produces: a
 single place a PM engineer checks *before* building a new skill, to see
 whether something similar already exists and who owns it.
+
+## 2.8 Core terms
+
+- **Agentic Data Pipeline** — governed logical access layer exposing
+  portfolio, risk, benchmark, market, research, and analytical capabilities
+  to agents through stable tool contracts (§2.2).
+- **Skill** — reusable agent instructions plus optional scripts and
+  reference materials (`docs/03_SKILL_STANDARD.md`).
+- **SkillEvaluator Adapter** — wrapper around NVIDIA SkillEvaluator; NVIDIA
+  is an evaluation engine, not the organization-level API contract (§2.4).
+- **Domain Grader** — deterministic or rubric-based evaluator validating
+  asset-management correctness (Tier 4; `graders/finance/`).
+- **Certification Policy** — threshold and hard-gate rules determining
+  whether a particular skill version may be published
+  (`docs/04_EVALUATION_AND_CERTIFICATION.md`).
+- **Skill Registry** — catalog of approved skills, versions, owners,
+  dependencies, quality results, and certification state
+  (`catalogs/skill-registry.json`).
+- **Benchmark Evidence** — immutable evaluation evidence associated with a
+  specific skill/model/agent/eval/grader/environment combination (§2.5).

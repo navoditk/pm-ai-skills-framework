@@ -4,6 +4,55 @@ A hands-on reference project for building **familiarity with the NVIDIA SkillEva
 
 The design uses **NVIDIA SkillEvaluator as the evaluation engine** and layers a thin, PM-specific governance model on top: ownership enforcement, catalog-based duplicate detection, deterministic finance grading, risk-tiered certification rigor, and benchmark evidence. This is deliberately **not** a generic, domain-agnostic agent framework — see [Scope](#scope) below.
 
+## New here? Start with the interactive SkillEvaluator trainer
+
+Before reading any of the design docs below, get hands-on familiarity with
+NVIDIA SkillEvaluator itself using this repository's own
+[`skillevaluator-mastery`](skills/skillevaluator-mastery/) agent skill — an
+interactive trainer with guided lessons, quizzes, scenario challenges, and a
+final exam covering all four evaluation tiers.
+
+**How to invoke it:**
+- This repository already ships a GitHub Copilot project-skill loader at
+  `.github/skills/skillevaluator-mastery/SKILL.md`, so if you're using
+  **GitHub Copilot CLI** (or the cloud agent, code review, or IDE agent
+  mode) inside a checkout of this repository, the skill is auto-discovered.
+  Just say **`skillevalexpert`** in your session to start.
+- To use it in another repository or globally, copy (not symlink, for
+  cross-platform reliability) the whole `skills/skillevaluator-mastery/`
+  folder to that repo's `.github/skills/`, `.claude/skills/`, or
+  `.agents/skills/` (project-level), or to `~/.copilot/skills/` (personal,
+  works across all your repos) — see
+  [About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills).
+- Prefer to read instead of doing it interactively? Use the equivalent
+  self-paced walkthrough at
+  [`docs/16_SKILLEVALUATOR_MASTERY.md`](docs/16_SKILLEVALUATOR_MASTERY.md).
+
+Once you're comfortable with what SkillEvaluator does and how its tiers
+work, move on to this framework's own design and evidence below.
+
+## Is this a good fit for your PM AI use case?
+
+This is a governance layer on top of NVIDIA SkillEvaluator, not a
+replacement for your agent runtime, data pipeline, or model choice
+(see [Adopting this framework](#adopting-this-framework-for-another-team)). Quick self-check before you
+invest time:
+
+| Signal | Likely a fit | Likely not (yet) |
+|---|---|---|
+| Skill count & duplication risk | Multiple teams building similar PM/finance skills independently | A single small team, one skill, low duplication risk |
+| Risk tolerance | You need graded rigor (informational vs. decision-support) before production | Everything ships from demo/manual review today, and that's acceptable |
+| Domain-correctness needs | Generic LLM-judge scoring can't catch your failure modes (e.g. reconciliation errors, stale dates, missing derivatives coverage) — see [`graders/finance/`](graders/finance/) for real examples | Generic quality/security scoring (Tier 1) is already enough for your bar |
+| Budget for live evaluation | You can afford Tier 3's real cost — **$15-45 and 30-55 minutes per skill** for a full certification-depth matrix (see [Module 4](docs/16_SKILLEVALUATOR_MASTERY.md)) | You need a free/instant signal only — use Tier 1 alone, it's free and offline |
+| Tolerance for "Experimental" tooling | You can budget time to read vendor source and work around real bugs (four found and documented here — see [Key findings](#key-findings-and-takeaways)) | You need a fully supported, SLA-backed evaluation product |
+| Production readiness today | You're prototyping governance and want a real, evidence-backed reference implementation | You need a turnkey, production-hardened registry/remediation pipeline today — several pieces here are deliberately descoped (see [Scope](#scope)) |
+
+If most of the left column applies, read on. If not, the
+[`skillevaluator-mastery`](skills/skillevaluator-mastery/) skill and
+[`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md)
+are still worth it purely to evaluate NVIDIA SkillEvaluator on its own
+merits, independent of this repository's PM-specific layer.
+
 ## Start with your goal
 
 The repository contains a detailed implementation history as well as the
@@ -17,7 +66,7 @@ current framework. Choose the shortest reading path for your purpose:
 | Author, evaluate, or certify a skill | [Skill standard](docs/03_SKILL_STANDARD.md), [evaluation model](docs/04_EVALUATION_AND_CERTIFICATION.md), and [end-to-end workflow](docs/12_END_TO_END_SKILL_WORKFLOW.md) |
 | Adopt the framework in another repository | [Consumer quickstart](docs/11_QUICKSTART_FOR_CONSUMERS.md) and [adoption guide](docs/06_ADOPTION_GUIDE.md) |
 | Review outcomes, evidence, and open work | [Roadmap and progress](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) and [evidence index](docs/EVIDENCE_INDEX.md) |
-| Learn NVIDIA SkillEvaluator itself | [Skills and SkillEvaluator reference](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) |
+| Learn NVIDIA SkillEvaluator itself | [Skills and SkillEvaluator reference](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) and the [from-scratch mastery tutorial](docs/16_SKILLEVALUATOR_MASTERY.md) (paired with the interactive [`skillevaluator-mastery`](skills/skillevaluator-mastery/) agent skill) |
 
 See the reader-oriented [documentation map](docs/README.md) for the complete
 guide. The root README remains the project narrative; detailed milestone
@@ -35,7 +84,7 @@ Within that frame, the concrete engineering goals, in priority order:
 3. **Catch financially wrong answers that generic evaluation can't see** — reconciliation errors, stale/mismatched dates, missing derivatives coverage — via deterministic PM domain graders (Tier 4).
 4. **Scale certification rigor to actual risk**, so an informational skill and a decision-support skill aren't held to the same (or held to an insufficiently strict) bar.
 5. **Enforce ownership before evaluation**, so every skill has a named business owner and domain reviewer prior to certification — no owner, no certification.
-6. **Insulate PM certification logic from NVIDIA's release cadence**, so upgrading the underlying evaluator doesn't silently change what "certified" means (see [NVIDIA upgrade policy](#nvidia-skillevaluator-upgrade-policy)).
+6. **Insulate PM certification logic from NVIDIA's release cadence**, so upgrading the underlying evaluator doesn't silently change what "certified" means (see [`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md)).
 7. **Produce auditable benchmark evidence** — a `BENCHMARK.md` and normalized JSON record tied to an exact skill version, dataset, agent, model, and evaluator version — before a skill is trusted in production.
 
 **What this means in practice:** the project deliberately stops short of production-scale work that wouldn't teach anything new about the framework itself — see [Key findings and takeaways](#key-findings-and-takeaways) below and [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)'s "Scope decision (2026-08-30)" for exactly what was descoped and why.
@@ -101,46 +150,22 @@ This repository defines a repeatable answer:
 
 **Skill specification -> validation -> deduplication -> live evaluation -> domain grading -> certification -> benchmark evidence -> registry -> production feedback -> regression tests.**
 
-## Purpose and usage at a glance
+## Adopting this framework (for another team)
 
-This repository is the central framework for governing an enterprise library of
-AI skills. It provides the shared standards, evaluation machinery, reports, and
-certification controls that a team needs before publishing a skill for
-production use.
-
-It is designed to be consumed by other skill repositories. A consuming team
-keeps its own skills and domain content, then adds a small configuration file
-and the reusable CI workflow:
+This repository is designed to be **consumed by**, not forked into, other
+skill repositories. A consuming team keeps its own skills and domain
+content, adds a small `pmai-skills.yaml` config and the reusable CI
+workflow, and depends on a pinned framework version rather than copying
+implementation or parsing raw NVIDIA reports directly:
 
 ```text
 my-domain-skills/
 ├── skills/
-│   ├── skill-a/
-│   └── skill-b/
 ├── pmai-skills.yaml
 └── .github/workflows/skills-quality.yml
 ```
 
-The central framework provides:
-
-- the common skill package and metadata standard;
-- NVIDIA SkillEvaluator integration through a provider adapter;
-- Tier 1 quality/security checks, Tier 2 similarity governance, and Tier 3
-  live-agent evaluation;
-- normalized reports, benchmark evidence, and certification policy;
-- reusable finance graders and CI/CD workflows;
-- a central approved-skill similarity catalog.
-
-The consuming repository provides:
-
-- its `SKILL.md` files and `skill.yaml` metadata;
-- business owners, domain reviewers, and risk classification;
-- positive, negative, adversarial, and regression evaluation cases;
-- local fixtures and logical-tool dependencies;
-- optional specialist graders for its domain.
-
-The day-to-day interface is a thin wrapper around the pinned `skillevaluator`
-CLI:
+The day-to-day interface is a thin wrapper around the pinned `skillevaluator` CLI:
 
 ```bash
 uv run pmai-skills validate ./skills
@@ -149,81 +174,19 @@ uv run pmai-skills evaluate ./skills/my-new-skill --profile pr
 uv run pmai-skills certify ./skills/my-new-skill --metrics normalized-metrics.json
 ```
 
-**Current status:** a thin `pmai-skills` CLI now exists for package validation,
-ownership checks, evaluator invocation, report normalization, similarity
-governance, and certification decisions. It is not yet published as an
-installable central package. Live benchmark work was run directly against the pinned `skillevaluator` binary
-(`.venv/bin/skillevaluator ...`); see [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
-for exactly what is implemented versus planned. `pmai-skills` is intentionally
-scoped to stay a thin pass-through — it adds PM manifest/ownership checks,
-normalizes output, and applies certification policy, and nothing more.
-It should not reimplement flags or behavior NVIDIA already provides.
+**Current status:** `pmai-skills` exists for package validation, ownership
+checks, evaluator invocation, report normalization, similarity governance,
+and certification decisions — it is not yet published as an installable
+central package. It is intentionally a thin pass-through: PM manifest/
+ownership checks, output normalization, and certification policy, nothing
+more; it should not reimplement flags or behavior NVIDIA already provides.
 
-The consuming repository should depend on a pinned framework version. It should
-not copy the framework implementation, duplicate certification logic, or parse
-raw NVIDIA reports. Provider-specific behavior remains behind the framework
-adapter, while skills depend on stable logical tool contracts.
-
-Live evaluations still require the consuming environment to provide the
-appropriate agent credentials, sandbox, logical tools, and test fixtures. The
-framework governs and measures those evaluations; it does not replace the
-agent runtime, authorization layer, or enterprise data pipeline.
-
-The repository's local, reproducible example of those logical tools is documented in
-[`docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`](docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md).
-
-The Performance Attribution vertical-slice evidence is documented in
-[`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md).
-
-For the detailed adoption path, see
-[`docs/06_ADOPTION_GUIDE.md`](docs/06_ADOPTION_GUIDE.md) and
-[`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md).
-
-For the complete workflow from a new skill to certification, see
+Full adoption path: [`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md)
+and [`docs/06_ADOPTION_GUIDE.md`](docs/06_ADOPTION_GUIDE.md). Full skill
+lifecycle from draft to certification:
 [`docs/12_END_TO_END_SKILL_WORKFLOW.md`](docs/12_END_TO_END_SKILL_WORKFLOW.md).
 
-
-## The purpose in one sentence
-
-**Make every enterprise agent skill measurable, comparable, testable, governable, and portable before it is allowed into a production skills library.**
-
-## How another team uses this
-
-A consuming asset-management repository should not fork this project. The target operating model is:
-
-```text
-Your Repository
-  ├── skills/
-  ├── pmai-skills.yaml
-  └── reusable GitHub workflow
-          |
-          v
-Central PM AI Skills Framework
-          |
-          +--> NVIDIA SkillEvaluator
-          +--> organization graders
-          +--> certification policy
-          +--> central similarity catalog
-```
-
-See [`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md).
-
-## Project tracking
-
-The authoritative staged implementation plan and current status live in:
-
-[`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
-
-Update that file in every material implementation PR.
-
-## External references
-
-The curated source list for NVIDIA, Anthropic/Agent Skills, OpenAI, Microsoft, OpenTelemetry, AWS, LangSmith and Google lives in:
-
-[`docs/09_REFERENCES_AND_RESOURCES.md`](docs/09_REFERENCES_AND_RESOURCES.md)
-
-
-## Architecture at a glance
+## Architecture, in one picture
 
 ```text
 PM / Research experience  ->  Agent / Orchestrator  ->  Skill Runtime + Policy Layer
@@ -240,110 +203,21 @@ PM / Research experience  ->  Agent / Orchestrator  ->  Skill Runtime + Policy L
                           normalized adapter output  ---->  certification engine  ->  registry
 ```
 
-Two boundaries matter most:
+Two boundaries carry most of the design's weight: skills call stable
+**Agentic Data Pipeline** logical capabilities (never a physical database or
+vendor API directly), and nothing outside `framework/adapters/` parses
+NVIDIA's raw report format — everything downstream consumes a normalized PM
+AI result schema instead, so an evaluator version bump is a contained,
+testable event rather than a library-wide breaking change.
 
-- **The Agentic Data Pipeline boundary** — skills call stable logical capabilities
-  (`portfolio.positions`, `performance.attribution`), never a physical database or
-  vendor API directly. This is what lets a skill's certification evidence stay
-  valid across infrastructure changes.
-- **The NVIDIA adapter boundary** — nothing outside `framework/adapters/`
-  parses NVIDIA's raw report format. Everything downstream (certification,
-  reporting, registry) consumes a normalized PM AI result schema instead. This
-  is what makes NVIDIA version upgrades a contained, testable event instead of
-  a library-wide breaking change — see
-  [NVIDIA SkillEvaluator upgrade policy](#nvidia-skillevaluator-upgrade-policy).
-
-For the full architecture — every layer's responsibility, the evaluation
-provider abstraction, and benchmark identity rules — see
-[`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md).
-
-## NVIDIA SkillEvaluator upgrade policy
-
-The framework depends on one external evaluation engine, pinned to an exact
-version and commit (currently `0.2.1` /
-`009aa300be7925c7ba75760592baeb941cc29ba8` — see
-[`docs/MILESTONE_1_SETUP.md`](docs/MILESTONE_1_SETUP.md)). Upgrading that dependency is a governed event,
-not a routine `pip install --upgrade`:
-
-- version bumps run through a staged compatibility test (adapter tests, a
-  Tier 1 reference run, and a full Tier 3 matrix compared against the last
-  certified benchmark) before becoming the new pin;
-- the normalized result schema is expected to stay stable across evaluator
-  versions; only `framework/adapters/nvidia_skillevaluator.py` should need to
-  change;
-- known evaluator-compatibility gaps (for example, the Tier 3 execution
-  heuristic not recognizing Codex's `exec` action — see
-  [`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md)) are logged and tracked
-  upstream rather than patched around locally.
-
-Full process, triggers, rollback plan, and the compatibility-issue log live in
-[`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md).
-
-## Core architectural terms
-
-- **Agentic Data Pipeline** — governed logical access layer exposing portfolio, risk, benchmark, market, research, and analytical capabilities to agents through stable tool contracts.
-- **Skill** — reusable agent instructions plus optional scripts and reference materials.
-- **SkillEvaluator Adapter** — wrapper around NVIDIA SkillEvaluator. NVIDIA is an engine, not the organization-level API contract.
-- **Domain Grader** — deterministic or rubric-based evaluator validating asset-management correctness.
-- **Certification Policy** — threshold and hard-gate rules determining whether a particular skill version may be published.
-- **Skill Registry** — catalog of approved skills, versions, owners, dependencies, quality results, and certification state.
-- **Benchmark Evidence** — immutable evaluation evidence associated with a specific skill/model/agent/eval/grader/environment combination.
-
-## Reference use cases
-
-The blueprint defines 12 representative skills, at two different depths per
-the 2026-08-30 right-sizing decision — see
-[Key findings and takeaways](#key-findings-and-takeaways) above:
-
-**Full certification depth** (25-case live Sonnet Tier 3 matrix run, with 27
-cases now present in the current datasets, real `BENCHMARK.md`):
-
-1. Portfolio Overview — certified run complete, real FAIL (one diagnosed reason)
-2. Performance Attribution — certified run complete, real FAIL (one diagnosed reason)
-3. Risk Explanation — refined to standard, quick-pass validated, two non-finalized live attempts blocked by runtime preflight/budget controls; no certification evidence yet
-
-**Structurally complete** (real composite grader, correct tool declarations,
-Tier 1 passing 11/11, 25 real fixture-grounded eval cases each as of
-2026-08-31 — not yet run through a live Tier 3 matrix):
-
-4. Exposure Analysis
-5. Benchmark Comparison
-6. Position Investigation
-7. Scenario Analysis
-8. Market Move Explanation
-9. Liquidity Analysis
-10. Portfolio Change Analysis
-11. Concentration Analysis
-12. PM Commentary Generation
-
-## Start here
-
-For a hands-on introduction, start with [`docs/00_TUTORIAL.md`](docs/00_TUTORIAL.md).
-For the full design history, read these documents in order:
-
-1. [`docs/01_PROPOSAL.md`](docs/01_PROPOSAL.md)
-2. [`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md)
-3. [`docs/03_SKILL_STANDARD.md`](docs/03_SKILL_STANDARD.md)
-4. [`docs/04_EVALUATION_AND_CERTIFICATION.md`](docs/04_EVALUATION_AND_CERTIFICATION.md)
-5. [`docs/05_IMPLEMENTATION_PLAN.md`](docs/05_IMPLEMENTATION_PLAN.md)
-6. [`docs/06_ADOPTION_GUIDE.md`](docs/06_ADOPTION_GUIDE.md)
-7. [`docs/07_GITHUB_PUBLISHING.md`](docs/07_GITHUB_PUBLISHING.md)
-8. [`docs/08_DEMO_AND_ACCEPTANCE_PLAN.md`](docs/08_DEMO_AND_ACCEPTANCE_PLAN.md)
-9. [`docs/09_REFERENCES_AND_RESOURCES.md`](docs/09_REFERENCES_AND_RESOURCES.md)
-10. [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
-11. [`docs/11_QUICKSTART_FOR_CONSUMERS.md`](docs/11_QUICKSTART_FOR_CONSUMERS.md)
-12. [`docs/12_END_TO_END_SKILL_WORKFLOW.md`](docs/12_END_TO_END_SKILL_WORKFLOW.md)
-13. [`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md)
-14. [`docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md`](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) — a standalone, cold-read
-    summary covering goals, architecture, milestone status, and an honest
-    pros/cons assessment
-15. [`docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md`](docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) — one-stop reference:
-    what agent skills and SkillEvaluator are, feasibility, install/run
-    steps, layout requirements, CI/CD integration, and curated external
-    resources (standards, other vendors' approaches, tutorials, a podcast)
-16. [`docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`](docs/MILESTONE_4_PERFORMANCE_ATTRIBUTION.md)
-17. [`docs/MILESTONE_6_DELIBERATE_DEFECTS.md`](docs/MILESTONE_6_DELIBERATE_DEFECTS.md) — six synthetic broken-skill
-    variants and how the framework catches each one
+Full layer-by-layer detail, the evaluation-provider abstraction, benchmark
+identity rules, governance model, and a core-terms glossary:
+[`docs/02_TARGET_ARCHITECTURE.md`](docs/02_TARGET_ARCHITECTURE.md). Narrative
+walkthrough of the same diagram with real evidence:
+[`docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md`](docs/14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md).
+NVIDIA version-pinning policy (currently `0.2.1` /
+`009aa300be7925c7ba75760592baeb941cc29ba8`) and the governed upgrade
+process: [`docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md`](docs/13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md).
 
 ## Repository layout
 
@@ -365,51 +239,34 @@ pm-ai-skills-framework/
 ├── catalogs/
 ├── tests/
 ├── examples/
+├── .github/skills/          # Copilot project-skill loaders (see trainer above)
 └── .github/workflows/
 ```
 
-## Important implementation principle
+## Current status & production-adoption caveats
 
-Application repositories should depend on **PM AI contracts**, not directly on NVIDIA result formats.
+Two skills (Performance Attribution, Portfolio Overview) have been taken
+all the way through the real pipeline with genuine evidence on disk; the
+remaining nine reference skills are structurally complete but not yet run
+through a live Tier 3 matrix, and several production-scale pieces
+(a remediation engine, cross-repo portability, a full production registry)
+remain intentionally unbuilt per the 2026-08-30 scope decision (see
+[Scope](#scope)). Actually adopting this in a production organization would
+still require approved internal tool/data connectors (this repo uses a
+synthetic, local pipeline instead — see
+[`docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`](docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md)),
+chosen model/agent credentials, environment-specific security controls,
+organization-specific ownership metadata, and CI secret configuration.
 
-```text
-Consuming Repository
-        |
-        v
-PM AI Skills Framework API
-        |
-        +--> NVIDIA SkillEvaluator
-        +--> PM deterministic graders
-        +--> future evaluator providers
-```
+Full current status, per-milestone detail, and what's still genuinely
+undecided: [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md).
 
-This protects the organization from vendor lock-in while still leveraging NVIDIA's validation, semantic deduplication, live-agent evaluation, Skill Lift, pass@k, sandboxes, and reporting.
+## Where to go next
 
-## Blueprint status
-
-This package started as an implementation blueprint and scaffold, but two
-skills (Performance Attribution, Portfolio Overview) have since been taken
-all the way through the real pipeline — live agent, live judge, real Docker
-sandbox, real certification policy — with genuine evidence on disk (`docs/
-MILESTONE_4_PERFORMANCE_ATTRIBUTION.md`, `skills/portfolio-overview/
-BENCHMARK.md`). The remaining nine reference skills are structurally
-complete but have not been run through a live Tier 3 matrix, and several
-production-scale pieces remain intentionally unbuilt per the 2026-08-30
-scope decision (a remediation engine, cross-repo portability, a production
-skill registry — see [`docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](docs/10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)).
-Actually adopting this in a production organization would still require:
-
-- approved internal tool/data connectors (this repo uses a synthetic, local
-  data pipeline instead — see [`docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md`](docs/MILESTONE_3_SYNTHETIC_DATA_PIPELINE.md));
-- chosen model/agent credentials;
-- environment-specific security controls;
-- organization-specific ownership metadata;
-- CI secret configuration;
-- a full production registry with a signed-artifact model and a runtime
-  resolver, or artifact repository integration (deliberately descoped here
-  — see Milestone 12). A much lighter index does exist
-  (`catalogs/skill-registry.json`: skill id, owner, risk_level,
-  certification state, last benchmark date, auto-regenerated on every
-  merge to `main` by `.github/workflows/registry-index.yml`) — pulled
-  forward from Milestone 12 on 2026-09-01 as the cheap, high-leverage
-  piece of that milestone, not the full production model.
+- Full reader-oriented documentation map, grouped by goal:
+  [`docs/README.md`](docs/README.md)
+- Tracked benchmark evidence and explicit caveats:
+  [`docs/EVIDENCE_INDEX.md`](docs/EVIDENCE_INDEX.md)
+- Curated external references (NVIDIA, Anthropic/Agent Skills, OpenAI,
+  Microsoft, AWS, LangSmith, Google):
+  [`docs/09_REFERENCES_AND_RESOURCES.md`](docs/09_REFERENCES_AND_RESOURCES.md)

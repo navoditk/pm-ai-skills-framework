@@ -30,6 +30,44 @@ def test_validate_uses_pinned_tier1_command():
     }
 
 
+def test_similarity_uses_catalog_flag_and_reports_pass_on_zero_exit():
+    provider = NvidiaSkillEvaluatorProvider(executable="skillevaluator-0.2.1")
+    with patch("framework.adapters.nvidia_skillevaluator.subprocess.run") as run:
+        run.return_value.returncode = 0
+        run.return_value.stdout = "{}"
+        run.return_value.stderr = ""
+
+        result = provider.similarity("skills/portfolio-overview", "catalogs/skill-catalog.json")
+
+    assert run.call_args.args[0] == [
+        "skillevaluator-0.2.1",
+        "similarity-check",
+        "skills/portfolio-overview",
+        "--catalog",
+        "catalogs/skill-catalog.json",
+    ]
+    assert result.normalized == {
+        "framework_version": "0.1.0",
+        "provider": "nvidia-skillevaluator",
+        "phase": "similarity",
+        "passed": True,
+    }
+
+
+def test_similarity_reports_failed_on_nonzero_exit_eg_exact_duplicate():
+    provider = NvidiaSkillEvaluatorProvider(executable="skillevaluator-0.2.1")
+    with patch("framework.adapters.nvidia_skillevaluator.subprocess.run") as run:
+        # skillevaluator's own overall_passed goes false on HIGH_SIMILARITY
+        # too, not just EXACT_DUPLICATE -- see check_similarity.py docstring.
+        run.return_value.returncode = 1
+        run.return_value.stdout = '{"overall_passed": false}'
+        run.return_value.stderr = ""
+
+        result = provider.similarity("skills/portfolio-overview", "catalogs/skill-catalog.json")
+
+    assert result.normalized["passed"] is False
+
+
 def test_tier3_uses_codex_docker_command_and_certification_attempts():
     provider = NvidiaSkillEvaluatorProvider(executable="skillevaluator-0.2.1")
     with patch("framework.adapters.nvidia_skillevaluator.subprocess.run") as run:

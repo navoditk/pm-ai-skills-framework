@@ -1,0 +1,28 @@
+schema_version: 1
+skill:
+  id: pm.framework.skillevaluator-mastery
+  name: SkillEvaluator Mastery
+  version: 1.0.0
+
+ownership:
+  business: pm-ai
+  engineering: pm-ai
+  domain_reviewer: pm-ai
+
+classification:
+  domain: framework
+  risk_level: informational
+
+dependencies:
+  tools: []
+
+evaluation:
+  dataset: evals/evals.json
+  require_baseline_for_certification: false
+  notes: >-
+    Utility/training skill, not a PM domain skill. Not intended for the
+    finance Skill Lift certification path (docs/04_EVALUATION_AND_CERTIFICATION.md);
+    evals.json exercises factual grounding and quiz/routing behavior only.
+
+certification:
+  policy_profile: analytical-standard
