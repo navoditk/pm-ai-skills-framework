@@ -1,78 +1,68 @@
-# Documentation map
+# PM AI Skills Framework — Documentation Portal
 
-This page is the reader-oriented entry point for the PM AI Skills Quality &
-Certification Framework. The numbered documents provide a deliberate sequence;
-use the routes below to find the shortest path for your goal.
+Welcome to the central documentation portal for the PM AI Skills Quality & Certification Framework. Use the interactive tools or path routes below to navigate directly to the material relevant to your role.
 
-## Pick your path
+> 🌐 **Public Web Curriculum**: [GitHub Pages Site](https://navoditk.github.io/pm-ai-skills-framework/)  
+> 📄 **Single-File HTML Artifact**: [skillevaluator-mastery-standalone.html](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html)  
+> 🤖 **Interactive Copilot Agent Skill**: Say **`skillevalexpert`** in any Copilot CLI session inside this checkout
 
-### New to the repository or SkillEvaluator
+---
 
-1. [First tutorial](00_TUTORIAL.md)
-2. [Executive summary and walkthrough](14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md)
-3. [Skills and SkillEvaluator reference](15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md)
-4. [SkillEvaluator mastery — from-scratch tutorial](16_SKILLEVALUATOR_MASTERY.md)
+## 🎯 Pick Your Path
 
-### Understanding the design
+Find the shortest reading path based on your immediate objective:
 
-1. [Proposal](01_PROPOSAL.md)
-2. [Target architecture](02_TARGET_ARCHITECTURE.md)
-3. [Skill standard](03_SKILL_STANDARD.md)
-4. [Evaluation and certification](04_EVALUATION_AND_CERTIFICATION.md)
-5. [Implementation plan](05_IMPLEMENTATION_PLAN.md)
+| Goal | Recommended Sequence | Cost / Prerequisites |
+|---|---|---|
+| **Master NVIDIA SkillEvaluator from scratch** | [`16_MASTERY`](16_SKILLEVALUATOR_MASTERY.md) ➔ [`15_REFERENCE`](15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) | Free (Offline) |
+| **Run a local 5-minute zero-credential test** | [`00_TUTORIAL`](00_TUTORIAL.md) | Free (Offline) |
+| **Adopt this framework in another repository** | [`11_QUICKSTART`](11_QUICKSTART_FOR_CONSUMERS.md) ➔ [`06_ADOPTION`](06_ADOPTION_GUIDE.md) | Free (Offline) |
+| **Understand purpose & architecture** | [`14_EXECUTIVE_SUMMARY`](14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) ➔ [`02_TARGET_ARCHITECTURE`](02_TARGET_ARCHITECTURE.md) | Reading |
+| **Author, evaluate, or certify a skill** | [`03_SKILL_STANDARD`](03_SKILL_STANDARD.md) ➔ [`12_WORKFLOW`](12_END_TO_END_SKILL_WORKFLOW.md) ➔ [`04_CERTIFICATION`](04_EVALUATION_AND_CERTIFICATION.md) | Tier 3 requires Docker & API Keys |
+| **Review benchmark evidence & roadmap** | [`10_ROADMAP`](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) ➔ [`EVIDENCE_INDEX`](EVIDENCE_INDEX.md) | Reading |
 
-### Authoring, evaluating, or certifying a skill
+---
 
-1. [Skill standard](03_SKILL_STANDARD.md)
-2. [End-to-end skill workflow](12_END_TO_END_SKILL_WORKFLOW.md)
-3. [Evaluation and certification](04_EVALUATION_AND_CERTIFICATION.md)
-4. [NVIDIA evaluator upgrade policy](13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md)
+## 📚 Complete Document Catalog (00 — 16)
 
-### Adopting the framework in another repository
+Every core document in this repository serves a specific operational or architectural role:
 
-1. [Quickstart for consumers](11_QUICKSTART_FOR_CONSUMERS.md)
-2. [Adoption guide](06_ADOPTION_GUIDE.md)
-3. [GitHub publishing](07_GITHUB_PUBLISHING.md)
+| Doc # | Title | Purpose | Cost / Prereqs |
+|---|---|---|---|
+| **00** | [First Tutorial](00_TUTORIAL.md) | Local zero-credential walkthrough | Free (Offline) |
+| **01** | [Proposal](01_PROPOSAL.md) | Problem statement, framework goals, non-goals | Reading |
+| **02** | [Target Architecture](02_TARGET_ARCHITECTURE.md) | 4-tier engine, governance layer, glossary | Reading |
+| **03** | [Skill Standard](03_SKILL_STANDARD.md) | Skill package layout, schema, metadata rules | Reading |
+| **04** | [Evaluation & Certification](04_EVALUATION_AND_CERTIFICATION.md) | Risk levels, policy profiles, metric thresholds | Reading |
+| **05** | [Implementation Plan](05_IMPLEMENTATION_PLAN.md) | Technical phase breakdown | Reading |
+| **06** | [Adoption Guide](06_ADOPTION_GUIDE.md) | Multi-team rollout strategy | Reading |
+| **07** | [GitHub Publishing](07_GITHUB_PUBLISHING.md) | Repository publishing & release strategy | Reading |
+| **08** | [Demo & Acceptance Plan](08_DEMO_AND_ACCEPTANCE_PLAN.md) | Verification gates & acceptance criteria | Reading |
+| **09** | [Reference & Resources](09_REFERENCES_AND_RESOURCES.md) | Academic papers, vendor links, industry standards | Reading |
+| **10** | [Roadmap & Progress Tracker](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) | Canonical status tracker & milestone records | Reading |
+| **11** | [Consumer Quickstart](11_QUICKSTART_FOR_CONSUMERS.md) | Step-by-step consumer setup (`pmai-skills.yaml`) | Free (Offline) |
+| **12** | [End-to-End Skill Workflow](12_END_TO_END_SKILL_WORKFLOW.md) | Lifecycle from draft to certification | Tier 3 needs API Keys |
+| **13** | [NVIDIA Upgrade Policy](13_NVIDIA_EVALUATOR_UPGRADE_POLICY.md) | Pinned versioning & vendor bug workarounds | Reading |
+| **14** | [Executive Summary & Walkthrough](14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md) | Standalone overview of verified outcomes | Reading |
+| **15** | [SkillEvaluator Reference](15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) | One-stop guide to NVIDIA framework & findings | Reading |
+| **16** | [SkillEvaluator Mastery Tutorial](16_SKILLEVALUATOR_MASTERY.md) | Self-paced hands-on tutorial for all 4 tiers | Free (Offline) |
 
-### Reviewing evidence, status, and limitations
+---
 
-1. [Executive summary and walkthrough](14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md)
-2. [Development roadmap and progress](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md)
-3. [Evidence index](EVIDENCE_INDEX.md)
-4. [Demo and acceptance plan](08_DEMO_AND_ACCEPTANCE_PLAN.md)
+## 📌 Reading Rules
 
-## Documentation roles
+- The root [README](../README.md) is the high-level project narrative and reference summary.
+- Read [`10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md`](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md) for current execution status rather than inferring state from historical milestone records.
+- Read [`EVIDENCE_INDEX.md`](EVIDENCE_INDEX.md) before interpreting benchmark results as a certification decision.
+- Historical `MILESTONE_*.md` files retain detailed experiment logs, but support rather than supersede the roadmap and evidence index.
 
-| Document group | Purpose |
-|---|---|
-| `00_TUTORIAL.md` | First local run without provider credentials |
-| `01` through `05` | Canonical purpose, architecture, standards, evaluation model, and implementation plan |
-| `06` through `08` | Adoption, publishing, and acceptance |
-| `09` and `15` | External reading and SkillEvaluator-specific reference |
-| `16_SKILLEVALUATOR_MASTERY.md` | From-scratch, hands-on SkillEvaluator tutorial; paired with the public [GitHub Pages Web Curriculum](https://navoditk.github.io/pm-ai-skills-framework/), the [Standalone Single-File HTML Artifact](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html), and the interactive `skills/skillevaluator-mastery/` agent skill (say "skillevalexpert") |
-| `10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` | Canonical current status, scope decisions, blockers, and next work |
-| `11` through `13` | Consumer workflow, operational workflow, and evaluator-version policy |
-| `14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` | Standalone explanation of verified outcomes, tradeoffs, and limitations |
-| `MILESTONE_*.md` | Detailed historical implementation and experiment records |
-| `EVIDENCE_INDEX.md` | Tracked benchmark evidence and explicit caveats |
+---
 
-## Reading rules
+## 🔗 Related Repository Resources
 
-- The root [README](../README.md) is the project narrative and high-level
-  reference, not a replacement for the numbered implementation documents.
-- Read `10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` for the current state rather
-  than inferring status from older milestone records.
-- Read `EVIDENCE_INDEX.md` before interpreting benchmark results as a
-  certification decision.
-- Milestone documents retain useful detail, but support rather than supersede
-  the roadmap and evidence index.
-
-## Related repository material
-
-- [Reference skills](../skills/)
-- [Framework implementation](../framework/)
-- [Deterministic PM graders](../graders/)
-- [Synthetic data pipeline](../synthetic_data_pipeline/)
-- [Policies](../policies/)
-- [Local reports](../reports/)
-- [Contributing](../CONTRIBUTING.md)
+- 🛠️ [Framework Source (`framework/`)](../framework/) — Adapter, CLI, certification engine, and schema validators
+- 📐 [Reference Skills (`skills/`)](../skills/) — 12 PM skills + 1 utility mastery skill
+- 🎯 [Deterministic PM Graders (`graders/`)](../graders/) — Financial reconciliation, date match, and benchmark graders
+- 📊 [Synthetic Data Pipeline (`synthetic_data_pipeline/`)](../synthetic_data_pipeline/) — Financial portfolio data generator
+- 🔒 [Policies (`policies/`)](../policies/) — Risk-tiered certification and similarity policy definitions
+- 📝 [Contributing Guide](../CONTRIBUTING.md) — Guidelines for adding skills, graders, or docs
