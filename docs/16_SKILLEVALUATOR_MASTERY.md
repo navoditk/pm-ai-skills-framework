@@ -8,7 +8,11 @@ scaffold a toy skill, watch each tier fire, break it on purpose, and read a
 real report. It assumes zero prior SkillEvaluator experience.
 
 An interactive, gamified version of this same material (lessons, quizzes,
-scenario challenges, a final exam) lives as an agent skill at
+scenario challenges, a final exam) is published publicly and updated automatically on every push:
+- 🌐 **GitHub Pages Web Site**: [https://navoditk.github.io/pm-ai-skills-framework/](https://navoditk.github.io/pm-ai-skills-framework/)
+- 📄 **Standalone Single-File HTML Artifact**: [skillevaluator-mastery-standalone.html](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html)
+
+It also lives as an agent skill at
 [`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/). If
 you're using GitHub Copilot CLI (or another Copilot surface) inside a
 checkout of this repository, it's auto-discovered via the project-skill

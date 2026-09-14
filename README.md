@@ -12,21 +12,11 @@ NVIDIA SkillEvaluator itself using this repository's own
 interactive trainer with guided lessons, quizzes, scenario challenges, and a
 final exam covering all four evaluation tiers.
 
-**How to invoke it:**
-- This repository already ships a GitHub Copilot project-skill loader at
-  `.github/skills/skillevaluator-mastery/SKILL.md`, so if you're using
-  **GitHub Copilot CLI** (or the cloud agent, code review, or IDE agent
-  mode) inside a checkout of this repository, the skill is auto-discovered.
-  Just say **`skillevalexpert`** in your session to start.
-- To use it in another repository or globally, copy (not symlink, for
-  cross-platform reliability) the whole `skills/skillevaluator-mastery/`
-  folder to that repo's `.github/skills/`, `.claude/skills/`, or
-  `.agents/skills/` (project-level), or to `~/.copilot/skills/` (personal,
-  works across all your repos) — see
-  [About agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills).
-- Prefer to read instead of doing it interactively? Use the equivalent
-  self-paced walkthrough at
-  [`docs/16_SKILLEVALUATOR_MASTERY.md`](docs/16_SKILLEVALUATOR_MASTERY.md).
+**Ways to access the curriculum:**
+- 🌐 **Public Web Curriculum (GitHub Pages)**: [https://navoditk.github.io/pm-ai-skills-framework/](https://navoditk.github.io/pm-ai-skills-framework/) — full interactive web version with dark mode, sidebar navigation, and module quizzes.
+- 📄 **Standalone Single-File HTML Artifact**: [skillevaluator-mastery-standalone.html](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html) — self-contained, offline-viewable HTML artifact containing the entire curriculum, re-compiled and published automatically on every push/merge to `main`.
+- 🤖 **Interactive Copilot Agent Skill**: Auto-discovered inside a repository checkout via `.github/skills/skillevaluator-mastery/SKILL.md`. Just say **`skillevalexpert`** in your session to start. (To use globally or in another repo, copy `skills/skillevaluator-mastery/` to `.github/skills/`, `.claude/skills/`, `.agents/skills/`, or `~/.copilot/skills/`).
+- 📖 **Self-Paced Markdown Walkthrough**: [`docs/16_SKILLEVALUATOR_MASTERY.md`](docs/16_SKILLEVALUATOR_MASTERY.md).
 
 Once you're comfortable with what SkillEvaluator does and how its tiers
 work, move on to this framework's own design and evidence below.

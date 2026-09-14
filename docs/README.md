@@ -49,7 +49,7 @@ use the routes below to find the shortest path for your goal.
 | `01` through `05` | Canonical purpose, architecture, standards, evaluation model, and implementation plan |
 | `06` through `08` | Adoption, publishing, and acceptance |
 | `09` and `15` | External reading and SkillEvaluator-specific reference |
-| `16_SKILLEVALUATOR_MASTERY.md` | From-scratch, hands-on SkillEvaluator tutorial; paired with the interactive `skills/skillevaluator-mastery/` agent skill (auto-discovered by GitHub Copilot via `.github/skills/`; say "skillevalexpert") |
+| `16_SKILLEVALUATOR_MASTERY.md` | From-scratch, hands-on SkillEvaluator tutorial; paired with the public [GitHub Pages Web Curriculum](https://navoditk.github.io/pm-ai-skills-framework/), the [Standalone Single-File HTML Artifact](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html), and the interactive `skills/skillevaluator-mastery/` agent skill (say "skillevalexpert") |
 | `10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md` | Canonical current status, scope decisions, blockers, and next work |
 | `11` through `13` | Consumer workflow, operational workflow, and evaluator-version policy |
 | `14_EXECUTIVE_SUMMARY_AND_WALKTHROUGH.md` | Standalone explanation of verified outcomes, tradeoffs, and limitations |
