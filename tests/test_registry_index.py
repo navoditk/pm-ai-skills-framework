@@ -38,3 +38,14 @@ def test_every_entry_carries_owner_and_risk_level():
         }
         assert skill["owner"]["domain_reviewer"]
         assert skill["owner"]["domain_reviewer"] != "domain-owner-required"
+
+
+def test_utility_skills_are_indexed():
+    registry = build_registry()
+    assert "utility_skills" in registry
+    utility_by_id = {s["id"]: s for s in registry["utility_skills"]}
+    assert "pm.framework.skillevaluator-mastery" in utility_by_id
+    mastery = utility_by_id["pm.framework.skillevaluator-mastery"]
+    assert mastery["risk_level"] == "informational"
+    assert mastery["type"] == "utility"
+    assert mastery["certification_state"] == "INFORMATIONAL_UTILITY"

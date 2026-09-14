@@ -226,5 +226,22 @@
       "last_benchmark_date": null,
       "content_fingerprint": "1a92e504306676c0e3a745ac9ed6362a00a538a241402c608ab580edb7df252b"
     }
+  ],
+  "utility_skills": [
+    {
+      "id": "pm.framework.skillevaluator-mastery",
+      "name": "SkillEvaluator Mastery",
+      "version": "1.0.0",
+      "path": "skillevaluator-mastery",
+      "domain": "framework",
+      "risk_level": "informational",
+      "type": "utility",
+      "owner": {
+        "business": "pm-ai",
+        "engineering": "pm-ai",
+        "domain_reviewer": "pm-ai"
+      },
+      "certification_state": "INFORMATIONAL_UTILITY"
+    }
   ]
 }

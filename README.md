@@ -158,10 +158,17 @@ my-domain-skills/
 The day-to-day interface is a thin wrapper around the pinned `skillevaluator` CLI:
 
 ```bash
-uv run pmai-skills validate ./skills
-uv run pmai-skills similarity ./skills/my-new-skill
-uv run pmai-skills evaluate ./skills/my-new-skill --profile pr
-uv run pmai-skills certify ./skills/my-new-skill --metrics normalized-metrics.json
+# Install the framework CLI locally
+pip install -e .   # or: uv pip install -e .
+
+# 1. Zero-cost offline mode (no Docker or API keys required, completes in seconds)
+pmai-skills validate ./skills                                # Validate package structure & schema
+pmai-skills certify ./skills/performance-attribution \
+  --profile release --metrics reports/m5/.../metrics.json     # Apply certification policy to benchmark metrics
+
+# 2. Live / Credentialed mode
+pmai-skills similarity ./skills/my-new-skill                  # Check catalog duplicates (requires OPENAI_API_KEY)
+pmai-skills evaluate ./skills/my-new-skill --profile pr       # Run live Tier 3 evaluation (requires Docker & LLM API keys)
 ```
 
 **Current status:** `pmai-skills` exists for package validation, ownership

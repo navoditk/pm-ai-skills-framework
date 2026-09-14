@@ -385,6 +385,111 @@ footer {
   text-align: center;
 }
 
+/* Progress Dashboard Widget */
+.progress-dashboard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.xp-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-hover);
+  background-color: var(--bg-tertiary);
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.level-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-bar-container {
+  flex: 1;
+  min-width: 150px;
+  background-color: var(--bg-tertiary);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--accent-color);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.interactive-btn {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.interactive-btn:hover {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
+
+.interactive-btn.completed {
+  background-color: #238636;
+  color: #ffffff;
+  border-color: #2ea043;
+}
+
+/* Solution / Quiz Accordion */
+details.quiz-solution {
+  margin: 0.5rem 0 1rem 0;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+}
+
+details.quiz-solution summary {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+details.quiz-solution summary:hover {
+  color: var(--accent-hover);
+}
+
+details.quiz-solution .solution-content {
+  padding: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background-color: var(--card-bg);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   body {
@@ -403,6 +508,114 @@ footer {
 """
 
 
+MASTER_JS = """
+<script>
+(function() {
+  const LEVELS = [
+    { name: "Newcomer", minXP: 0 },
+    { name: "Apprentice", minXP: 100 },
+    { name: "Practitioner", minXP: 250 },
+    { name: "Specialist", minXP: 500 },
+    { name: "Master", minXP: 800 },
+    { name: "SkillEvaluator Architect", minXP: 1200 }
+  ];
+
+  function getState() {
+    return {
+      xp: parseInt(localStorage.getItem("skilleval_xp") || "0", 10),
+      completedModules: JSON.parse(localStorage.getItem("skilleval_completed") || "[]"),
+      revealedAnswers: JSON.parse(localStorage.getItem("skilleval_revealed") || "[]")
+    };
+  }
+
+  function saveState(state) {
+    localStorage.setItem("skilleval_xp", state.xp.toString());
+    localStorage.setItem("skilleval_completed", JSON.stringify(state.completedModules));
+    localStorage.setItem("skilleval_revealed", JSON.stringify(state.revealedAnswers));
+    updateUI();
+  }
+
+  function getLevel(xp) {
+    let current = LEVELS[0];
+    for (let l of LEVELS) {
+      if (xp >= l.minXP) current = l;
+    }
+    return current;
+  }
+
+  function updateUI() {
+    const state = getState();
+    const level = getLevel(state.xp);
+
+    const xpEl = document.getElementById("user-xp");
+    if (xpEl) xpEl.textContent = state.xp + " XP";
+
+    const lvlEl = document.getElementById("user-level");
+    if (lvlEl) lvlEl.textContent = level.name;
+
+    const modEl = document.getElementById("user-completed-count");
+    if (modEl) modEl.textContent = state.completedModules.length + " / 11 Modules";
+
+    const barEl = document.getElementById("xp-progress-bar");
+    if (barEl) {
+      const nextLevelIdx = LEVELS.findIndex(l => l.name === level.name) + 1;
+      const nextMin = LEVELS[nextLevelIdx] ? LEVELS[nextLevelIdx].minXP : 1500;
+      const prevMin = level.minXP;
+      const pct = Math.min(100, Math.max(0, ((state.xp - prevMin) / (nextMin - prevMin)) * 100));
+      barEl.style.width = pct + "%";
+    }
+
+    document.querySelectorAll("[data-module-btn]").forEach(btn => {
+      const modId = btn.getAttribute("data-module-btn");
+      if (state.completedModules.includes(modId)) {
+        btn.classList.add("completed");
+        btn.textContent = "✓ Completed (+20 XP)";
+      } else {
+        btn.classList.remove("completed");
+        btn.textContent = "Mark Module Complete (+20 XP)";
+      }
+    });
+  }
+
+  window.toggleModuleCompletion = function(modId) {
+    const state = getState();
+    const idx = state.completedModules.indexOf(modId);
+    if (idx === -1) {
+      state.completedModules.push(modId);
+      state.xp += 20;
+    } else {
+      state.completedModules.splice(idx, 1);
+      state.xp = Math.max(0, state.xp - 20);
+    }
+    saveState(state);
+  };
+
+  window.revealAnswer = function(answerId, xpReward) {
+    const state = getState();
+    if (!state.revealedAnswers.includes(answerId)) {
+      state.revealedAnswers.push(answerId);
+      state.xp += (xpReward || 15);
+      saveState(state);
+    }
+  };
+
+  window.resetProgress = function() {
+    if (confirm("Reset your SkillEvaluator Mastery progress?")) {
+      localStorage.removeItem("skilleval_xp");
+      localStorage.removeItem("skilleval_completed");
+      localStorage.removeItem("skilleval_revealed");
+      updateUI();
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function() {
+    updateUI();
+  });
+})();
+</script>
+"""
+
+
 def strip_yaml_frontmatter(content: str) -> str:
     """Remove YAML frontmatter from markdown content."""
     if content.startswith("---"):
@@ -415,35 +628,55 @@ def strip_yaml_frontmatter(content: str) -> str:
 def render_markdown_to_html(md_text: str) -> str:
     """Convert Markdown string to HTML."""
     text = strip_yaml_frontmatter(md_text)
+
+    # Transform solution / answer lines (starting with →) into interactive accordions
+    lines = []
+    ans_idx = 0
+    for line in text.splitlines():
+        if "→" in line:
+            ans_idx += 1
+            prefix, solution = line.split("→", 1)
+            line = (
+                f'{prefix}<details class="quiz-solution" onclick="revealAnswer(\'ans-{ans_idx}\', 15)">'
+                f'<summary>💡 Reveal Solution & Explanation (+15 XP)</summary>'
+                f'<div class="solution-content">{solution.strip()}</div>'
+                f'</details>'
+            )
+        lines.append(line)
+    text = "\n".join(lines)
+
     if markdown:
-        return markdown.markdown(
+        html = markdown.markdown(
             text,
             extensions=["fenced_code", "tables", "toc", "sane_lists"],
         )
-    # Simple fallback renderer if markdown library is missing
-    html_lines = []
-    in_code = False
-    for line in text.splitlines():
-        if line.startswith("```"):
+    else:
+        # Simple fallback renderer if markdown library is missing
+        html_lines = []
+        in_code = False
+        for line in text.splitlines():
+            if line.startswith("```"):
+                if in_code:
+                    html_lines.append("</code></pre>")
+                    in_code = False
+                else:
+                    html_lines.append("<pre><code>")
+                    in_code = True
+                continue
             if in_code:
-                html_lines.append("</code></pre>")
-                in_code = False
-            else:
-                html_lines.append("<pre><code>")
-                in_code = True
-            continue
-        if in_code:
-            html_lines.append(line.replace("<", "&lt;").replace(">", "&gt;"))
-            continue
-        if line.startswith("# "):
-            html_lines.append(f"<h1>{line[2:]}</h1>")
-        elif line.startswith("## "):
-            html_lines.append(f"<h2>{line[3:]}</h2>")
-        elif line.startswith("### "):
-            html_lines.append(f"<h3>{line[4:]}</h3>")
-        elif line.strip():
-            html_lines.append(f"<p>{line}</p>")
-    return "\n".join(html_lines)
+                html_lines.append(line.replace("<", "&lt;").replace(">", "&gt;"))
+                continue
+            if line.startswith("# "):
+                html_lines.append(f"<h1>{line[2:]}</h1>")
+            elif line.startswith("## "):
+                html_lines.append(f"<h2>{line[3:]}</h2>")
+            elif line.startswith("### "):
+                html_lines.append(f"<h3>{line[4:]}</h3>")
+            elif line.strip():
+                html_lines.append(f"<p>{line}</p>")
+        html = "\n".join(html_lines)
+
+    return html
 
 
 def build_sidebar_html(active_id: str, is_standalone: bool = False) -> str:
@@ -489,6 +722,14 @@ def build_page_template(
         else '<a href="skillevaluator-mastery-standalone.html" class="download-btn" download>📥 Single-File HTML Artifact</a>'
     )
 
+    module_complete_btn = ""
+    if active_id.startswith("module-") or active_id in {"scenarios", "final-exam"}:
+        module_complete_btn = (
+            f'<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end;">'
+            f'<button class="interactive-btn" data-module-btn="{active_id}" onclick="toggleModuleCompletion(\'{active_id}\')">Mark Module Complete (+20 XP)</button>'
+            f'</div>'
+        )
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -506,14 +747,29 @@ def build_page_template(
       <span class="badge">NVIDIA SkillEvaluator Framework</span>
       {download_link}
     </div>
+    <div class="progress-dashboard">
+      <div class="dashboard-stat">
+        <span class="level-title">Level: <strong id="user-level">Newcomer</strong></span>
+        <span class="xp-badge" id="user-xp">0 XP</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="xp-progress-bar"></div>
+      </div>
+      <div class="dashboard-stat">
+        <span class="level-title" id="user-completed-count">0 / 11 Modules</span>
+        <button class="interactive-btn" onclick="resetProgress()">Reset Progress</button>
+      </div>
+    </div>
     <div class="markdown-body">
 {content_html}
+{module_complete_btn}
     </div>
     <footer>
       <p>PM AI Skills Framework — NVIDIA SkillEvaluator Mastery Curriculum</p>
       <p>Automatically compiled from target repo documentation &amp; interactive skills catalog.</p>
     </footer>
   </div>
+{MASTER_JS}
 </body>
 </html>
 """

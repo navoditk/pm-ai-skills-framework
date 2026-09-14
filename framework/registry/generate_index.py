@@ -25,7 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -45,15 +45,17 @@ def _git_last_commit_date(path: Path) -> str | None:
     if date:
         return date
     if path.exists():
-        return datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat()
+        return datetime.fromtimestamp(path.stat().st_mtime, tz=UTC).isoformat()
     return None
 
 
 def build_registry() -> dict:
     catalog = json.loads((REPO_ROOT / "catalogs" / "skill-catalog.json").read_text())
 
+    cataloged_paths = set()
     entries = []
     for entry in catalog["entries"]:
+        cataloged_paths.add(entry["path"])
         skill_dir = REPO_ROOT / "skills" / entry["path"]
         skill_yaml_path = skill_dir / "skill.yaml"
         if not skill_yaml_path.exists():
@@ -92,6 +94,32 @@ def build_registry() -> dict:
 
     entries.sort(key=lambda e: e["id"])
 
+    # Scan for utility / uncataloged skills under skills/ (e.g. skillevaluator-mastery)
+    utility_entries = []
+    skills_root = REPO_ROOT / "skills"
+    if skills_root.exists():
+        for skill_dir in sorted(skills_root.glob("*/")):
+            rel_path = skill_dir.name
+            if rel_path in cataloged_paths or not (skill_dir / "skill.yaml").exists():
+                continue
+            manifest = yaml.safe_load((skill_dir / "skill.yaml").read_text())
+            utility_entries.append({
+                "id": manifest["skill"]["id"],
+                "name": manifest["skill"]["name"],
+                "version": manifest["skill"]["version"],
+                "path": rel_path,
+                "domain": manifest.get("classification", {}).get("domain"),
+                "risk_level": manifest.get("classification", {}).get("risk_level"),
+                "type": "utility",
+                "owner": {
+                    "business": manifest.get("ownership", {}).get("business"),
+                    "engineering": manifest.get("ownership", {}).get("engineering"),
+                    "domain_reviewer": manifest.get("ownership", {}).get("domain_reviewer"),
+                },
+                "certification_state": "INFORMATIONAL_UTILITY",
+            })
+    utility_entries.sort(key=lambda e: e["id"])
+
     return {
         "schema_version": 1,
         "generated_from": {
@@ -99,6 +127,7 @@ def build_registry() -> dict:
             "catalog_created_at": catalog.get("created_at"),
         },
         "skills": entries,
+        "utility_skills": utility_entries,
     }
 
 
