@@ -4,10 +4,16 @@ from graders.finance.benchmark_consistency import grade as benchmark
 from graders.finance.concentration_analysis import grade as concentration_analysis_grade
 from graders.finance.exposure_analysis import grade as exposure_analysis_grade
 from graders.finance.liquidity_analysis import grade as liquidity_analysis_grade
-from graders.finance.market_move_explanation import grade as market_move_explanation_grade
+from graders.finance.market_move_explanation import (
+    grade as market_move_explanation_grade,
+)
 from graders.finance.performance_attribution import grade as attribution_grade
-from graders.finance.pm_commentary_generation import grade as pm_commentary_generation_grade
-from graders.finance.portfolio_change_analysis import grade as portfolio_change_analysis_grade
+from graders.finance.pm_commentary_generation import (
+    grade as pm_commentary_generation_grade,
+)
+from graders.finance.portfolio_change_analysis import (
+    grade as portfolio_change_analysis_grade,
+)
 from graders.finance.portfolio_overview import grade as portfolio_overview_grade
 from graders.finance.position_investigation import grade as position_investigation_grade
 from graders.finance.risk_explanation import grade as risk_explanation_grade

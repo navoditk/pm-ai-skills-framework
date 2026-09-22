@@ -91,7 +91,7 @@ def test_load_governance_matches_real_policy_file():
 
 
 def _mock_run_writing_report(report):
-    def _run(args, capture_output, text):
+    def _run(args, capture_output=True, text=True, check=False):
         # Emulate skillevaluator writing its own report file into the -o dir.
         output_dir = Path(args[args.index("-o") + 1])
         (output_dir / "skillevaluator-similarity.json").write_text(json.dumps(report))

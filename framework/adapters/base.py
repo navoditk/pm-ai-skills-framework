@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
+
 
 @dataclass
 class ProviderResult:
-    raw: Dict[str, Any]
-    normalized: Dict[str, Any]
+    raw: dict[str, Any]
+    normalized: dict[str, Any]
 
 class EvaluationProvider(ABC):
     @abstractmethod

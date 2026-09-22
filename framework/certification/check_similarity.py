@@ -58,6 +58,7 @@ def run_similarity_check(skill_dir: Path) -> dict:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         # skillevaluator writes its own JSON report file rather than printing
         # clean JSON to stdout -- read the report back rather than parsing stdout.

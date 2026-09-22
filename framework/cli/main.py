@@ -12,7 +12,10 @@ from pathlib import Path
 
 import yaml
 
-from framework.adapters.nvidia_skillevaluator import NvidiaSkillEvaluatorProvider, parse_nvidia_report_file
+from framework.adapters.nvidia_skillevaluator import (
+    NvidiaSkillEvaluatorProvider,
+    parse_nvidia_report_file,
+)
 from framework.certification.check_ownership import check_skill
 from framework.certification.check_similarity import main as similarity_main
 from framework.certification.engine import decide
