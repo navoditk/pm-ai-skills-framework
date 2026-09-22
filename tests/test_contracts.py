@@ -42,6 +42,8 @@ def test_normalized_report_matches_framework_schema():
         skill_name="Test Skill",
         skill_version="1.0.0",
     )
-    schema = json.loads(Path("framework/schemas/evaluation-result.schema.json").read_text(encoding="utf-8"))
+    schema = json.loads(
+        Path("framework/schemas/evaluation-result.schema.json").read_text(encoding="utf-8")
+    )
     errors = list(Draft202012Validator(schema).iter_errors(report))
     assert errors == []

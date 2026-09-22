@@ -6,6 +6,7 @@ class CertificationDecision:
     status: str
     failures: list[str]
 
+
 def decide(metrics: dict, policy: dict) -> CertificationDecision:
     failures = []
 

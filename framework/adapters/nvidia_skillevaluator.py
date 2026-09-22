@@ -3,6 +3,7 @@
 Provider-specific command details stay here.  Downstream code should consume
 ``ProviderResult.normalized`` and never depend on NVIDIA report structures.
 """
+
 import os
 import shutil
 import subprocess
@@ -44,7 +45,11 @@ def parse_nvidia_report(
             if isinstance(value, dict) and isinstance(value.get("score"), (int, float))
         }
         security = next(
-            (item for item in report.get("results", []) if item.get("validator") == "Security Scan"),
+            (
+                item
+                for item in report.get("results", [])
+                if item.get("validator") == "Security Scan"
+            ),
             {},
         )
         generic_metrics["security"] = 1.0 if security.get("passed") else 0.0
@@ -133,13 +138,20 @@ class NvidiaSkillEvaluatorProvider(EvaluationProvider):
 
     def evaluate(self, skill_path: str, profile: str) -> ProviderResult:
         attempts = "3" if profile in {"certification", "release"} else "1"
-        raw = self._run([
-            "tier3", "evaluate", skill_path,
-            "--agents", "codex",
-            "--env-mode", "docker",
-            "--n-attempts", attempts,
-            "--copy-repo",
-        ])
+        raw = self._run(
+            [
+                "tier3",
+                "evaluate",
+                skill_path,
+                "--agents",
+                "codex",
+                "--env-mode",
+                "docker",
+                "--n-attempts",
+                attempts,
+                "--copy-repo",
+            ]
+        )
         normalized = {
             "framework_version": FRAMEWORK_VERSION,
             "provider": "nvidia-skillevaluator",

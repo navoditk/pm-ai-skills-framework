@@ -22,6 +22,7 @@ checked, priced in fractions of a cent, not free like Tier 1.
 
 Exits non-zero only on an EXACT_DUPLICATE finding for a checked skill.
 """
+
 from __future__ import annotations
 
 import json
@@ -50,11 +51,17 @@ def run_similarity_check(skill_dir: Path) -> dict:
     with tempfile.TemporaryDirectory(prefix="pmai-similarity-") as output_dir:
         result = subprocess.run(
             [
-                "skillevaluator", "similarity-check", str(skill_dir),
-                "--type", "skill",
-                "--catalog", str(CATALOG_PATH),
-                "-r", "json",
-                "-o", output_dir,
+                "skillevaluator",
+                "similarity-check",
+                str(skill_dir),
+                "--type",
+                "skill",
+                "--catalog",
+                str(CATALOG_PATH),
+                "-r",
+                "json",
+                "-o",
+                output_dir,
             ],
             capture_output=True,
             text=True,
@@ -76,11 +83,13 @@ def classify_findings(report: dict) -> list[dict]:
         for f in r.get("findings", []):
             classification = (f.get("metadata") or {}).get("classification")
             if classification:
-                findings.append({
-                    "classification": classification,
-                    "message": f.get("message"),
-                    "score": (f.get("metadata") or {}).get("score"),
-                })
+                findings.append(
+                    {
+                        "classification": classification,
+                        "message": f.get("message"),
+                        "score": (f.get("metadata") or {}).get("score"),
+                    }
+                )
     return findings
 
 
@@ -107,8 +116,10 @@ def main() -> int:
                 blocking = True
 
     if blocking:
-        print("\nOne or more changed skills are EXACT_DUPLICATE matches against "
-              "the catalog -- blocked per policies/similarity.yaml.")
+        print(
+            "\nOne or more changed skills are EXACT_DUPLICATE matches against "
+            "the catalog -- blocked per policies/similarity.yaml."
+        )
         return 1
 
     print("\n[OK] similarity governance check passed (no blocking findings).")

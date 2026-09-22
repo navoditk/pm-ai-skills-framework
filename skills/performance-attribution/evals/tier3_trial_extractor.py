@@ -53,6 +53,7 @@ Usage:
 `agent/trajectory.json` and `config.json` (for `trial_name`, used to
 recover the case id).
 """
+
 import json
 import sys
 from pathlib import Path
@@ -64,20 +65,36 @@ from graders.finance.performance_attribution import grade  # noqa: E402
 from synthetic_data_pipeline.tools import call_tool  # noqa: E402
 
 GRADABLE_CASES = {
-    "performance--001", "performance--002", "performance--003",
-    "performance--008", "performance--010", "performance--011",
-    "performance--012", "performance--013", "performance--014",
-    "performance--015", "performance--016", "performance--019",
-    "performance--024", "performance--025",
+    "performance--001",
+    "performance--002",
+    "performance--003",
+    "performance--008",
+    "performance--010",
+    "performance--011",
+    "performance--012",
+    "performance--013",
+    "performance--014",
+    "performance--015",
+    "performance--016",
+    "performance--019",
+    "performance--024",
+    "performance--025",
 }
 
 POSITION_REQUIRED_CASES = {"performance--008", "performance--019"}
 
 NOT_GRADABLE_CASES = {
-    "performance--004", "performance--005", "performance--006",
-    "performance--007", "performance--009", "performance--017",
-    "performance--018", "performance--020", "performance--021",
-    "performance--022", "performance--023",
+    "performance--004",
+    "performance--005",
+    "performance--006",
+    "performance--007",
+    "performance--009",
+    "performance--017",
+    "performance--018",
+    "performance--020",
+    "performance--021",
+    "performance--022",
+    "performance--023",
 }
 
 
@@ -150,9 +167,7 @@ def build_evidence(trajectory: dict, case_id: str, requested_as_of: str) -> dict
         # The agent may legitimately cite risk.factor_exposure as supporting
         # evidence; only fetch its authoritative source when actually seen,
         # so allowed_sources reflects tools this trial really touched.
-        authoritative_factor_exposure = call_tool(
-            "risk.factor_exposure", portfolio_id=portfolio_id
-        )
+        authoritative_factor_exposure = call_tool("risk.factor_exposure", portfolio_id=portfolio_id)
         allowed_sources.append(authoritative_factor_exposure.get("source"))
 
     observed_contributions = list(attribution.get("contributions", {}).values())

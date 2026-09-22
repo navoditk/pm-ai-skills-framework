@@ -14,9 +14,9 @@ def grade(evidence: dict) -> dict:
     if isinstance(contributions, dict):
         contributions = list(contributions.values())
     metrics = {
-        "reconciliation": reconciliation(
-            evidence.get("relative_return", 0.0), contributions
-        )["score"],
+        "reconciliation": reconciliation(evidence.get("relative_return", 0.0), contributions)[
+            "score"
+        ],
         "benchmark_consistency": benchmark_consistency(
             evidence.get("expected_benchmark"), evidence.get("observed_benchmark")
         )["score"],

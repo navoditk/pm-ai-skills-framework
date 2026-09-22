@@ -6,6 +6,7 @@ risk_level_profiles maps each of the five risk_level values
 in framework/schemas/skill.schema.json -- to a profile name in
 policies/certification.yaml's profiles block.
 """
+
 from __future__ import annotations
 
 

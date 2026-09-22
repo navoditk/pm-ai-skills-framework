@@ -34,7 +34,11 @@ def test_every_entry_carries_owner_and_risk_level():
     registry = build_registry()
     for skill in registry["skills"]:
         assert skill["risk_level"] in {
-            "informational", "low", "analytical", "decision-support", "action",
+            "informational",
+            "low",
+            "analytical",
+            "decision-support",
+            "action",
         }
         assert skill["owner"]["domain_reviewer"]
         assert skill["owner"]["domain_reviewer"] != "domain-owner-required"

@@ -3,6 +3,7 @@
 The CLI deliberately keeps NVIDIA-specific behavior in the adapter and makes
 the boundary between offline checks and credentialed evaluation explicit.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -65,7 +66,11 @@ def cmd_init(args: argparse.Namespace) -> int:
 def cmd_validate(args: argparse.Namespace) -> int:
     # `validate ./skills` is the documented library form; a path containing a
     # manifest is the documented single-skill form.
-    targets = sorted(args.path.glob("*/")) if args.all or not (args.path / "skill.yaml").exists() else [args.path]
+    targets = (
+        sorted(args.path.glob("*/"))
+        if args.all or not (args.path / "skill.yaml").exists()
+        else [args.path]
+    )
     if not targets:
         print(f"no skill packages found under {args.path}", file=sys.stderr)
         return 2
@@ -119,16 +124,31 @@ def cmd_certify(args: argparse.Namespace) -> int:
     manifest = yaml.safe_load((args.path / "skill.yaml").read_text(encoding="utf-8"))
     profile_name, profile = resolve_profile(policy, manifest["classification"]["risk_level"])
     if args.metrics is None:
-        print("certify requires --metrics JSON from a completed benchmark; live evaluation and policy decision are separate steps", file=sys.stderr)
+        print(
+            "certify requires --metrics JSON from a completed benchmark; live evaluation and policy decision are separate steps",
+            file=sys.stderr,
+        )
         return 2
     metrics = json.loads(args.metrics.read_text(encoding="utf-8"))
     decision = decide(metrics, profile)
-    print(json.dumps({"skill": manifest["skill"]["id"], "profile": profile_name, "status": decision.status, "failures": decision.failures}, indent=2))
+    print(
+        json.dumps(
+            {
+                "skill": manifest["skill"]["id"],
+                "profile": profile_name,
+                "status": decision.status,
+                "failures": decision.failures,
+            },
+            indent=2,
+        )
+    )
     return 0 if decision.status == "PASS" else 1
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="pmai-skills", description="PM AI skill validation and evaluation tools")
+    parser = argparse.ArgumentParser(
+        prog="pmai-skills", description="PM AI skill validation and evaluation tools"
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     init = sub.add_parser("init", help="create a skill package scaffold")
     init.add_argument("path")
@@ -156,7 +176,12 @@ def build_parser() -> argparse.ArgumentParser:
     report.set_defaults(func=cmd_report)
     certify = sub.add_parser("certify", help="apply certification policy to completed metrics")
     certify.add_argument("path", type=_skill_dir)
-    certify.add_argument("--profile", default="release", choices=["release", "certification"], help="release policy decision (risk level selects the actual policy profile)")
+    certify.add_argument(
+        "--profile",
+        default="release",
+        choices=["release", "certification"],
+        help="release policy decision (risk level selects the actual policy profile)",
+    )
     certify.add_argument("--metrics", type=Path, help="JSON object of normalized metrics")
     certify.set_defaults(func=cmd_certify)
     return parser

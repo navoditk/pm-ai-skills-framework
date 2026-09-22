@@ -18,7 +18,9 @@ def grade(case, trajectory=None, expected=None):
     # Keyword presence is a coarse proxy for "grounded, not fabricated" --
     # real grading of free-text answers belongs to the live judge model
     # (Tier 3), not this offline hook.
-    hits = sum(1 for a in assertions if any(tok.lower() in response_text.lower() for tok in a.split()[:3]))
+    hits = sum(
+        1 for a in assertions if any(tok.lower() in response_text.lower() for tok in a.split()[:3])
+    )
     score = hits / len(assertions) if assertions else 0.0
 
     return {

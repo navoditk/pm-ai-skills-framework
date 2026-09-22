@@ -8,6 +8,7 @@ governance logic (classify_findings + policies/similarity.yaml action
 mapping) directly against a wide range of report shapes. This increases
 Tier 2 breadth without spending money or requiring credentials.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -61,7 +62,11 @@ def test_classify_findings_extracts_single_finding():
 def test_classify_findings_extracts_across_multiple_results_and_findings():
     report = _report(
         [
-            {"findings": [_finding("HIGH_SIMILARITY", score=0.9468, message="near dup of skill-a")]},
+            {
+                "findings": [
+                    _finding("HIGH_SIMILARITY", score=0.9468, message="near dup of skill-a")
+                ]
+            },
             {
                 "findings": [
                     _finding("SIMILAR", score=0.7, message="overlaps skill-b"),
@@ -175,7 +180,10 @@ def test_main_passes_with_no_findings(tmp_path, capsys):
     skill_dir.mkdir(parents=True)
     with (
         patch.object(sys, "argv", ["check_similarity.py", str(skill_dir)]),
-        patch("framework.certification.check_similarity.run_similarity_check", return_value=_report([])),
+        patch(
+            "framework.certification.check_similarity.run_similarity_check",
+            return_value=_report([]),
+        ),
     ):
         exit_code = cs.main()
 
@@ -199,7 +207,9 @@ def test_main_blocks_if_any_of_multiple_skills_is_exact_duplicate(tmp_path, caps
 
     with (
         patch.object(sys, "argv", ["check_similarity.py", str(clean_dir), str(dup_dir)]),
-        patch("framework.certification.check_similarity.run_similarity_check", side_effect=fake_check),
+        patch(
+            "framework.certification.check_similarity.run_similarity_check", side_effect=fake_check
+        ),
     ):
         exit_code = cs.main()
 

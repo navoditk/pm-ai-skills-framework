@@ -11,10 +11,16 @@ FIXTURE_VERSION = "2026-08-25.v1"
 _FIXTURE_ROOT = Path(__file__).parent / "fixtures"
 
 TOOL_CONTRACTS = {
-    "portfolio.summary": {"required": ["portfolio_id"], "returns": ["as_of", "benchmark", "return"]},
+    "portfolio.summary": {
+        "required": ["portfolio_id"],
+        "returns": ["as_of", "benchmark", "return"],
+    },
     "portfolio.positions": {"required": ["portfolio_id"], "returns": ["as_of", "positions"]},
     "benchmark.positions": {"required": ["benchmark_id"], "returns": ["as_of", "positions"]},
-    "performance.attribution": {"required": ["portfolio_id"], "returns": ["as_of", "relative_return"]},
+    "performance.attribution": {
+        "required": ["portfolio_id"],
+        "returns": ["as_of", "relative_return"],
+    },
     "risk.factor_exposure": {"required": ["portfolio_id"], "returns": ["as_of", "exposures"]},
     "risk.scenario": {"required": ["portfolio_id", "scenario_id"], "returns": ["as_of", "impact"]},
     "market.price_history": {"required": ["security_id"], "returns": ["prices"]},
@@ -67,9 +73,7 @@ def portfolio_summary(portfolio_id: str, failure_mode: str | None = None) -> dic
     }
 
 
-def portfolio_positions(
-    portfolio_id: str, failure_mode: str | None = None
-) -> dict[str, Any]:
+def portfolio_positions(portfolio_id: str, failure_mode: str | None = None) -> dict[str, Any]:
     p = _portfolio(portfolio_id, failure_mode)
     positions = p["positions"]
     if failure_mode == "omit_derivatives":
@@ -78,7 +82,9 @@ def portfolio_positions(
         "portfolio_id": portfolio_id,
         "as_of": p["as_of"],
         "positions": positions,
-        "coverage": {"derivatives_included": any(item.get("type") == "future" for item in positions)},
+        "coverage": {
+            "derivatives_included": any(item.get("type") == "future" for item in positions)
+        },
         "source": "synthetic.portfolio",
         "fixture_version": FIXTURE_VERSION,
     }

@@ -12,6 +12,7 @@ Usage:
 Exits non-zero (and prints one line per violation) if any target skill's
 skill.yaml is missing an ownership field or still carries a placeholder.
 """
+
 from __future__ import annotations
 
 import sys
@@ -84,7 +85,9 @@ def main() -> int:
     if all_violations:
         for v in all_violations:
             print(f"[OWNERSHIP-FAIL] {v}")
-        print(f"\n{len(all_violations)} ownership violation(s) across {len(targets)} skill(s) checked.")
+        print(
+            f"\n{len(all_violations)} ownership violation(s) across {len(targets)} skill(s) checked."
+        )
         return 1
 
     print(f"[OK] ownership check passed for {len(targets)} skill(s).")

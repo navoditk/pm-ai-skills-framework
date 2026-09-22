@@ -6,6 +6,7 @@ def write_json(result: dict, path: str):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     Path(path).write_text(json.dumps(result, indent=2), encoding="utf-8")
 
+
 def write_markdown(result: dict, path: str):
     lines = [
         "# PM AI Skill Certification Report",
@@ -23,7 +24,9 @@ def write_markdown(result: dict, path: str):
     reliability = result.get("reliability") or {}
     # `reliability` nests pass@k separately per arm (with_skill/without_skill/
     # lift); fall back to the dict itself for providers that report pass@k flat.
-    pass_at_k = reliability.get("with_skill", reliability) if "rate" not in reliability else reliability
+    pass_at_k = (
+        reliability.get("with_skill", reliability) if "rate" not in reliability else reliability
+    )
     if skill_lift or pass_at_k:
         lines += ["", "## Incremental Value"]
         if "delta" in skill_lift:

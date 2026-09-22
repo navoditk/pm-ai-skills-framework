@@ -15,20 +15,20 @@ any new live agent or judge calls:
 Usage:
     python skills/portfolio-overview/evals/generate_benchmark.py <tier3_result_dir>
 """
+
 import importlib.util
-import json
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
+import yaml  # noqa: E402
+
 from framework.adapters.nvidia_skillevaluator import parse_nvidia_report_file  # noqa: E402
 from framework.certification.engine import decide  # noqa: E402
 from framework.certification.profile_resolver import resolve_profile  # noqa: E402
 from framework.reporting.normalized_report import write_json, write_markdown  # noqa: E402
-
-import yaml  # noqa: E402
 
 _aggregate_path = Path(__file__).resolve().parent / "aggregate_tier4.py"
 _spec = importlib.util.spec_from_file_location("aggregate_tier4", _aggregate_path)
@@ -77,9 +77,13 @@ def build_result(tier3_result_dir: Path) -> dict:
         # rather than faked with a copy of another metric.
         "temporal_consistency": tier4["metric_averages"]["temporal_consistency"],
     }
-    skill_yaml = yaml.safe_load(open(REPO_ROOT / "skills" / "portfolio-overview" / "skill.yaml"))
+    skill_yaml = yaml.safe_load(
+        Path(REPO_ROOT / "skills" / "portfolio-overview" / "skill.yaml").read_text(encoding="utf-8")
+    )
     risk_level = skill_yaml["classification"]["risk_level"]
-    policy = yaml.safe_load(open(REPO_ROOT / "policies" / "certification.yaml"))
+    policy = yaml.safe_load(
+        Path(REPO_ROOT / "policies" / "certification.yaml").read_text(encoding="utf-8")
+    )
     profile_name, profile = resolve_profile(policy, risk_level)
     decision = decide(certification_metrics, profile)
 
