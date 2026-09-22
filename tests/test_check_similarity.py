@@ -224,3 +224,67 @@ def test_main_requires_at_least_one_skill_argument(capsys):
         exit_code = cs.main()
     assert exit_code == 2
     assert "Usage" in capsys.readouterr().err
+
+
+# --- self-exclusion -----------------------------------------------------------
+#
+# An approved skill is in the catalog, so comparing it against the unfiltered
+# catalog matched it to itself at 1.000 and reported EXACT_DUPLICATE. That
+# blocked every pull request touching an approved skill -- including ones that
+# only changed an eval script -- and went unnoticed because the catalog landed
+# after the last PR that touched skills/.
+
+
+def _catalog(tmp_path, names):
+    path = tmp_path / "skill-catalog.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "provider": "openai",
+                "entries": [{"id": f"skill:{n}", "name": n} for n in names],
+            }
+        )
+    )
+    return path
+
+
+def test_catalog_excluding_drops_the_skills_own_entry(tmp_path, monkeypatch):
+    monkeypatch.setattr(cs, "CATALOG_PATH", _catalog(tmp_path, ["alpha", "beta", "gamma"]))
+    out = json.loads(Path(cs.catalog_excluding("beta", str(tmp_path))).read_text())
+    assert [e["name"] for e in out["entries"]] == ["alpha", "gamma"]
+
+
+def test_catalog_excluding_keeps_every_other_entry(tmp_path, monkeypatch):
+    """Over-filtering would silently stop the gate detecting real duplicates."""
+    monkeypatch.setattr(cs, "CATALOG_PATH", _catalog(tmp_path, ["alpha", "beta", "gamma"]))
+    out = json.loads(Path(cs.catalog_excluding("beta", str(tmp_path))).read_text())
+    assert len(out["entries"]) == 2
+
+
+def test_catalog_excluding_preserves_catalog_metadata(tmp_path, monkeypatch):
+    """The embedding provider and schema version must survive the filter."""
+    monkeypatch.setattr(cs, "CATALOG_PATH", _catalog(tmp_path, ["alpha", "beta"]))
+    out = json.loads(Path(cs.catalog_excluding("beta", str(tmp_path))).read_text())
+    assert out["provider"] == "openai"
+    assert out["schema_version"] == 1
+
+
+def test_catalog_excluding_returns_the_original_for_an_unknown_skill(tmp_path, monkeypatch):
+    """A genuinely new skill is compared against the whole catalog."""
+    catalog = _catalog(tmp_path, ["alpha", "beta"])
+    monkeypatch.setattr(cs, "CATALOG_PATH", catalog)
+    assert cs.catalog_excluding("brand-new-skill", str(tmp_path)) == catalog
+
+
+def test_a_real_catalogued_skill_is_not_compared_against_itself(tmp_path, monkeypatch):
+    """The regression, against the repository's own catalog rather than a fixture."""
+    real = json.loads(cs.CATALOG_PATH.read_text())
+    names = [e["name"] for e in real["entries"]]
+    if "performance-attribution" not in names:
+        pytest.skip("performance-attribution is not in the catalog")
+    out = json.loads(
+        Path(cs.catalog_excluding("performance-attribution", str(tmp_path))).read_text()
+    )
+    assert "performance-attribution" not in [e["name"] for e in out["entries"]]
+    assert len(out["entries"]) == len(names) - 1
