@@ -54,6 +54,7 @@ Usage:
 <trial_dir> is a with-skill trial directory, e.g.
 reports/m5/portfolio-overview-tier3-sonnet/portfolio-overview/<run_id>/claude-code/with-skill/trials/<case>__<hash>/
 """
+
 import json
 import sys
 from pathlib import Path
@@ -65,22 +66,48 @@ from graders.finance.portfolio_overview import grade  # noqa: E402
 from synthetic_data_pipeline.tools import call_tool  # noqa: E402
 
 GRADABLE_CASES = {
-    "portfolio-ov-001", "portfolio-ov-002", "portfolio-ov-003", "portfolio-ov-004",
-    "portfolio-ov-012", "portfolio-ov-013", "portfolio-ov-016", "portfolio-ov-017",
-    "portfolio-ov-018", "portfolio-ov-019", "portfolio-ov-020", "portfolio-ov-021",
-    "portfolio-ov-022", "portfolio-ov-023", "portfolio-ov-025",
+    "portfolio-ov-001",
+    "portfolio-ov-002",
+    "portfolio-ov-003",
+    "portfolio-ov-004",
+    "portfolio-ov-012",
+    "portfolio-ov-013",
+    "portfolio-ov-016",
+    "portfolio-ov-017",
+    "portfolio-ov-018",
+    "portfolio-ov-019",
+    "portfolio-ov-020",
+    "portfolio-ov-021",
+    "portfolio-ov-022",
+    "portfolio-ov-023",
+    "portfolio-ov-025",
 }
 
 POSITION_REQUIRED_CASES = {
-    "portfolio-ov-001", "portfolio-ov-004", "portfolio-ov-012", "portfolio-ov-013",
-    "portfolio-ov-016", "portfolio-ov-018", "portfolio-ov-020", "portfolio-ov-021",
-    "portfolio-ov-022", "portfolio-ov-023", "portfolio-ov-025",
+    "portfolio-ov-001",
+    "portfolio-ov-004",
+    "portfolio-ov-012",
+    "portfolio-ov-013",
+    "portfolio-ov-016",
+    "portfolio-ov-018",
+    "portfolio-ov-020",
+    "portfolio-ov-021",
+    "portfolio-ov-022",
+    "portfolio-ov-023",
+    "portfolio-ov-025",
 }
 
 NOT_GRADABLE_CASES = {
-    "portfolio-ov-005", "portfolio-ov-006", "portfolio-ov-007", "portfolio-ov-008",
-    "portfolio-ov-009", "portfolio-ov-010", "portfolio-ov-011", "portfolio-ov-014",
-    "portfolio-ov-015", "portfolio-ov-024",
+    "portfolio-ov-005",
+    "portfolio-ov-006",
+    "portfolio-ov-007",
+    "portfolio-ov-008",
+    "portfolio-ov-009",
+    "portfolio-ov-010",
+    "portfolio-ov-011",
+    "portfolio-ov-014",
+    "portfolio-ov-015",
+    "portfolio-ov-024",
 }
 
 

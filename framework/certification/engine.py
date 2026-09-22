@@ -1,12 +1,13 @@
 from dataclasses import dataclass
-from typing import Dict, List
+
 
 @dataclass
 class CertificationDecision:
     status: str
-    failures: List[str]
+    failures: list[str]
 
-def decide(metrics: Dict, policy: Dict) -> CertificationDecision:
+
+def decide(metrics: dict, policy: dict) -> CertificationDecision:
     failures = []
 
     for name, required in policy.get("hard_gates", {}).items():

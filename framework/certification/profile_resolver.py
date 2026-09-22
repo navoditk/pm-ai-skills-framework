@@ -6,12 +6,11 @@ risk_level_profiles maps each of the five risk_level values
 in framework/schemas/skill.schema.json -- to a profile name in
 policies/certification.yaml's profiles block.
 """
+
 from __future__ import annotations
 
-from typing import Tuple
 
-
-def resolve_profile(policy: dict, risk_level: str) -> Tuple[str, dict]:
+def resolve_profile(policy: dict, risk_level: str) -> tuple[str, dict]:
     """Return (profile_name, profile_dict) for the given risk_level.
 
     Raises KeyError with a clear message if risk_level or the profile it

@@ -1,6 +1,6 @@
 import textwrap
 
-from framework.certification.check_ownership import check_skill, REQUIRED_FIELDS
+from framework.certification.check_ownership import REQUIRED_FIELDS, check_skill
 
 
 def _write_skill_yaml(tmp_path, domain_reviewer):

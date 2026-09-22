@@ -20,6 +20,7 @@ uncommitted regeneration, falls back to filesystem mtime).
 Usage:
     python framework/registry/generate_index.py [-o catalogs/skill-registry.json]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -37,7 +38,10 @@ def _git_last_commit_date(path: Path) -> str | None:
     try:
         result = subprocess.run(
             ["git", "log", "-1", "--format=%aI", "--", str(path.relative_to(REPO_ROOT))],
-            cwd=REPO_ROOT, capture_output=True, text=True, check=True,
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
         )
     except subprocess.CalledProcessError:
         return None
@@ -74,23 +78,25 @@ def build_registry() -> dict:
             certification_profile = None
             last_benchmark_date = None
 
-        entries.append({
-            "id": manifest["skill"]["id"],
-            "name": manifest["skill"]["name"],
-            "version": manifest["skill"]["version"],
-            "path": entry["path"],
-            "domain": manifest.get("classification", {}).get("domain"),
-            "risk_level": manifest.get("classification", {}).get("risk_level"),
-            "owner": {
-                "business": manifest.get("ownership", {}).get("business"),
-                "engineering": manifest.get("ownership", {}).get("engineering"),
-                "domain_reviewer": manifest.get("ownership", {}).get("domain_reviewer"),
-            },
-            "certification_state": certification_state,
-            "certification_profile": certification_profile,
-            "last_benchmark_date": last_benchmark_date,
-            "content_fingerprint": entry.get("content_fingerprint"),
-        })
+        entries.append(
+            {
+                "id": manifest["skill"]["id"],
+                "name": manifest["skill"]["name"],
+                "version": manifest["skill"]["version"],
+                "path": entry["path"],
+                "domain": manifest.get("classification", {}).get("domain"),
+                "risk_level": manifest.get("classification", {}).get("risk_level"),
+                "owner": {
+                    "business": manifest.get("ownership", {}).get("business"),
+                    "engineering": manifest.get("ownership", {}).get("engineering"),
+                    "domain_reviewer": manifest.get("ownership", {}).get("domain_reviewer"),
+                },
+                "certification_state": certification_state,
+                "certification_profile": certification_profile,
+                "last_benchmark_date": last_benchmark_date,
+                "content_fingerprint": entry.get("content_fingerprint"),
+            }
+        )
 
     entries.sort(key=lambda e: e["id"])
 
@@ -103,21 +109,23 @@ def build_registry() -> dict:
             if rel_path in cataloged_paths or not (skill_dir / "skill.yaml").exists():
                 continue
             manifest = yaml.safe_load((skill_dir / "skill.yaml").read_text())
-            utility_entries.append({
-                "id": manifest["skill"]["id"],
-                "name": manifest["skill"]["name"],
-                "version": manifest["skill"]["version"],
-                "path": rel_path,
-                "domain": manifest.get("classification", {}).get("domain"),
-                "risk_level": manifest.get("classification", {}).get("risk_level"),
-                "type": "utility",
-                "owner": {
-                    "business": manifest.get("ownership", {}).get("business"),
-                    "engineering": manifest.get("ownership", {}).get("engineering"),
-                    "domain_reviewer": manifest.get("ownership", {}).get("domain_reviewer"),
-                },
-                "certification_state": "INFORMATIONAL_UTILITY",
-            })
+            utility_entries.append(
+                {
+                    "id": manifest["skill"]["id"],
+                    "name": manifest["skill"]["name"],
+                    "version": manifest["skill"]["version"],
+                    "path": rel_path,
+                    "domain": manifest.get("classification", {}).get("domain"),
+                    "risk_level": manifest.get("classification", {}).get("risk_level"),
+                    "type": "utility",
+                    "owner": {
+                        "business": manifest.get("ownership", {}).get("business"),
+                        "engineering": manifest.get("ownership", {}).get("engineering"),
+                        "domain_reviewer": manifest.get("ownership", {}).get("domain_reviewer"),
+                    },
+                    "certification_state": "INFORMATIONAL_UTILITY",
+                }
+            )
     utility_entries.sort(key=lambda e: e["id"])
 
     return {
@@ -142,9 +150,13 @@ def main() -> int:
 
     certified = sum(1 for s in registry["skills"] if s["certification_state"] == "PASS")
     failed = sum(1 for s in registry["skills"] if s["certification_state"] == "FAIL")
-    not_certified = sum(1 for s in registry["skills"] if s["certification_state"] == "NOT_CERTIFIED")
+    not_certified = sum(
+        1 for s in registry["skills"] if s["certification_state"] == "NOT_CERTIFIED"
+    )
     print(f"{len(registry['skills'])} skills indexed -> {out_path}")
-    print(f"  certified (PASS): {certified}  certified (FAIL): {failed}  not yet certified: {not_certified}")
+    print(
+        f"  certified (PASS): {certified}  certified (FAIL): {failed}  not yet certified: {not_certified}"
+    )
     return 0
 
 

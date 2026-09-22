@@ -22,6 +22,7 @@ checked, priced in fractions of a cent, not free like Tier 1.
 
 Exits non-zero only on an EXACT_DUPLICATE finding for a checked skill.
 """
+
 from __future__ import annotations
 
 import json
@@ -42,22 +43,60 @@ def load_governance() -> dict:
     return policy["governance"]
 
 
+def catalog_excluding(skill_name: str, output_dir: str) -> Path:
+    """Write a copy of the catalog with this skill's own entry removed.
+
+    A skill that is already approved is in the catalog, so comparing it
+    against the unfiltered catalog matches it to itself at score 1.000 and
+    reports EXACT_DUPLICATE -- blocking any change to an approved skill,
+    including ones that never touch its description. The gate is meant to
+    catch a skill duplicating *another* skill, so the comparison set is every
+    entry except its own.
+
+    Filtering the catalog is deliberate rather than dropping self-matches
+    from the findings afterwards: it never depends on the wording of a
+    finding message, and it keeps the embedding comparison itself honest.
+
+    Entries are matched on `name`, which is the skill's directory name and
+    the same key the catalog is built from. If nothing matches -- a genuinely
+    new skill -- the catalog is returned unchanged.
+    """
+    catalog = json.loads(CATALOG_PATH.read_text())
+    entries = catalog.get("entries", [])
+    kept = [entry for entry in entries if entry.get("name") != skill_name]
+    if len(kept) == len(entries):
+        return CATALOG_PATH
+
+    filtered = dict(catalog, entries=kept)
+    path = Path(output_dir) / "catalog-excluding-self.json"
+    path.write_text(json.dumps(filtered), encoding="utf-8")
+    return path
+
+
 def run_similarity_check(skill_dir: Path) -> dict:
     """Invoke the real CLI for one skill against the central catalog."""
     # Use an isolated directory so stale reports cannot be mistaken for a
     # successful current run and parallel invocations cannot overwrite one
     # another.
     with tempfile.TemporaryDirectory(prefix="pmai-similarity-") as output_dir:
+        catalog_path = catalog_excluding(skill_dir.name, output_dir)
         result = subprocess.run(
             [
-                "skillevaluator", "similarity-check", str(skill_dir),
-                "--type", "skill",
-                "--catalog", str(CATALOG_PATH),
-                "-r", "json",
-                "-o", output_dir,
+                "skillevaluator",
+                "similarity-check",
+                str(skill_dir),
+                "--type",
+                "skill",
+                "--catalog",
+                str(catalog_path),
+                "-r",
+                "json",
+                "-o",
+                output_dir,
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         # skillevaluator writes its own JSON report file rather than printing
         # clean JSON to stdout -- read the report back rather than parsing stdout.
@@ -75,11 +114,13 @@ def classify_findings(report: dict) -> list[dict]:
         for f in r.get("findings", []):
             classification = (f.get("metadata") or {}).get("classification")
             if classification:
-                findings.append({
-                    "classification": classification,
-                    "message": f.get("message"),
-                    "score": (f.get("metadata") or {}).get("score"),
-                })
+                findings.append(
+                    {
+                        "classification": classification,
+                        "message": f.get("message"),
+                        "score": (f.get("metadata") or {}).get("score"),
+                    }
+                )
     return findings
 
 
@@ -106,8 +147,10 @@ def main() -> int:
                 blocking = True
 
     if blocking:
-        print("\nOne or more changed skills are EXACT_DUPLICATE matches against "
-              "the catalog -- blocked per policies/similarity.yaml.")
+        print(
+            "\nOne or more changed skills are EXACT_DUPLICATE matches against "
+            "the catalog -- blocked per policies/similarity.yaml."
+        )
         return 1
 
     print("\n[OK] similarity governance check passed (no blocking findings).")

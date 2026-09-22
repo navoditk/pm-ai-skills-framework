@@ -638,9 +638,9 @@ def render_markdown_to_html(md_text: str) -> str:
             prefix, solution = line.split("→", 1)
             line = (
                 f'{prefix}<details class="quiz-solution" onclick="revealAnswer(\'ans-{ans_idx}\', 15)">'
-                f'<summary>💡 Reveal Solution & Explanation (+15 XP)</summary>'
+                f"<summary>💡 Reveal Solution & Explanation (+15 XP)</summary>"
                 f'<div class="solution-content">{solution.strip()}</div>'
-                f'</details>'
+                f"</details>"
             )
         lines.append(line)
     text = "\n".join(lines)
@@ -683,9 +683,9 @@ def build_sidebar_html(active_id: str, is_standalone: bool = False) -> str:
     """Generate sidebar navigation HTML."""
     html = ['<div class="sidebar">']
     html.append('  <div class="sidebar-header">')
-    html.append('    <h1><span>🎓</span> SkillEvaluator</h1>')
+    html.append("    <h1><span>🎓</span> SkillEvaluator</h1>")
     html.append('    <div class="subtitle">PM AI Mastery Curriculum</div>')
-    html.append('  </div>')
+    html.append("  </div>")
 
     categories: dict[str, list[dict[str, Any]]] = {}
     for item in CURRICULUM_ITEMS:
@@ -697,9 +697,9 @@ def build_sidebar_html(active_id: str, is_standalone: bool = False) -> str:
         for item in items:
             active_class = " active" if item["id"] == active_id else ""
             if is_standalone:
-                href = f'#{item["id"]}'
+                href = f"#{item['id']}"
             else:
-                href = "index.html" if item["id"] == "intro" else f'{item["id"]}.html'
+                href = "index.html" if item["id"] == "intro" else f"{item['id']}.html"
             html.append('    <li class="nav-item">')
             html.append(
                 f'      <a href="{href}" class="nav-link{active_class}">{item["title"]}</a>'
@@ -727,7 +727,7 @@ def build_page_template(
         module_complete_btn = (
             f'<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end;">'
             f'<button class="interactive-btn" data-module-btn="{active_id}" onclick="toggleModuleCompletion(\'{active_id}\')">Mark Module Complete (+20 XP)</button>'
-            f'</div>'
+            f"</div>"
         )
 
     return f"""<!DOCTYPE html>
@@ -793,7 +793,7 @@ def build_site() -> None:
         html_content = render_markdown_to_html(raw_md)
 
         # Write individual page
-        page_filename = "index.html" if item["id"] == "intro" else f'{item["id"]}.html'
+        page_filename = "index.html" if item["id"] == "intro" else f"{item['id']}.html"
         page_html = build_page_template(item["title"], html_content, active_id=item["id"])
         (OUTPUT_DIR / page_filename).write_text(page_html, encoding="utf-8")
         print(f"  ✓ Created public/{page_filename}")
@@ -802,8 +802,8 @@ def build_site() -> None:
         standalone_sections.append(
             f'<section id="{item["id"]}" class="section-card">\n'
             f'<div class="badge" style="margin-bottom:0.8rem;">{item["category"]}</div>\n'
-            f'{html_content}\n'
-            f'</section>'
+            f"{html_content}\n"
+            f"</section>"
         )
 
     # Build single-file standalone artifact

@@ -7,7 +7,9 @@ from typing import Any
 
 def benchmark_fingerprint(context: dict[str, Any]) -> str:
     """Hash the complete benchmark context using canonical JSON."""
-    payload = json.dumps(context, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+    payload = json.dumps(context, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
+        "utf-8"
+    )
     return hashlib.sha256(payload).hexdigest()
 
 

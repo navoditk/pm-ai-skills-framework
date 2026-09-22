@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 import yaml
 
@@ -8,7 +10,7 @@ from framework.certification.metric_eligibility import (
 )
 from framework.certification.profile_resolver import resolve_profile
 
-REPO_ROOT_POLICY = yaml.safe_load(open("policies/certification.yaml"))
+REPO_ROOT_POLICY = yaml.safe_load(Path("policies/certification.yaml").read_text(encoding="utf-8"))
 
 ALL_RISK_LEVELS = ["informational", "low", "analytical", "decision-support", "action"]
 

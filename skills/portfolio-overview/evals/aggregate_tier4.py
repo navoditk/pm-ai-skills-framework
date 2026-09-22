@@ -31,6 +31,7 @@ Usage:
 `claude-code/without-skill/`, e.g.
 reports/m5/portfolio-overview-tier3-sonnet/portfolio-overview/<run_id>/
 """
+
 import importlib.util
 import json
 import re
@@ -57,7 +58,10 @@ METRICS = [
 ]
 
 REGRESSION_CASES = {
-    "portfolio-ov-016", "portfolio-ov-017", "portfolio-ov-018", "portfolio-ov-025",
+    "portfolio-ov-016",
+    "portfolio-ov-017",
+    "portfolio-ov-018",
+    "portfolio-ov-025",
 }
 
 _DENIAL_RE = re.compile(r'"permission_denials":\s*(\[[^\]]*\])')
@@ -130,20 +134,15 @@ def aggregate(result_dir: Path) -> dict:
         per_case_pass.setdefault(g["case_id"], []).append(g["result"]["passed"])
 
     metric_averages = {
-        m: (statistics.mean(scores) if scores else None)
-        for m, scores in per_metric_scores.items()
+        m: (statistics.mean(scores) if scores else None) for m, scores in per_metric_scores.items()
     }
     overall_scores = [g["result"]["score"] for g in graded]
 
-    cases_all_attempts_passed = sorted(
-        cid for cid, passes in per_case_pass.items() if all(passes)
-    )
+    cases_all_attempts_passed = sorted(cid for cid, passes in per_case_pass.items() if all(passes))
     regression_cases_seen = sorted(REGRESSION_CASES & per_case_pass.keys())
     regression_cases_passed = sorted(REGRESSION_CASES & set(cases_all_attempts_passed))
     regression_pass_rate = (
-        len(regression_cases_passed) / len(regression_cases_seen)
-        if regression_cases_seen
-        else None
+        len(regression_cases_passed) / len(regression_cases_seen) if regression_cases_seen else None
     )
 
     return {

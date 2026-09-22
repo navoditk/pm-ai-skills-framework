@@ -15,11 +15,19 @@ from synthetic_data_pipeline.tools import call_tool
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Invoke a deterministic PM AI logical tool")
-    parser.add_argument("tool_name", choices=(
-        "portfolio.summary", "portfolio.positions", "benchmark.positions",
-        "performance.attribution", "risk.factor_exposure", "risk.scenario",
-        "market.price_history", "market.security_context",
-    ))
+    parser.add_argument(
+        "tool_name",
+        choices=(
+            "portfolio.summary",
+            "portfolio.positions",
+            "benchmark.positions",
+            "performance.attribution",
+            "risk.factor_exposure",
+            "risk.scenario",
+            "market.price_history",
+            "market.security_context",
+        ),
+    )
     parser.add_argument("--portfolio-id")
     parser.add_argument("--benchmark-id")
     parser.add_argument("--scenario-id")

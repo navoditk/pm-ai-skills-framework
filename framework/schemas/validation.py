@@ -21,24 +21,25 @@ def load_skill_manifest(path: str | Path) -> dict[str, Any]:
 def validate_skill_manifest(path: str | Path) -> list[str]:
     """Return deterministic, human-readable schema errors for one manifest."""
     validator = Draft202012Validator(json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
-    errors = sorted(validator.iter_errors(load_skill_manifest(path)), key=lambda error: list(error.path))
+    errors = sorted(
+        validator.iter_errors(load_skill_manifest(path)), key=lambda error: list(error.path)
+    )
     return [f"{path}: {error.message}" for error in errors]
 
 
 def validate_skill_library(skills_root: str | Path) -> dict[str, list[str]]:
     """Validate every skill.yaml directly beneath a skills directory."""
     root = Path(skills_root)
-    return {
-        str(path): validate_skill_manifest(path)
-        for path in sorted(root.glob("*/skill.yaml"))
-    }
+    return {str(path): validate_skill_manifest(path) for path in sorted(root.glob("*/skill.yaml"))}
 
 
 def validate_skill_package(skill_dir: str | Path) -> list[str]:
     """Validate the PM package contract, including required evaluator files."""
     root = Path(skill_dir)
     required = ("SKILL.md", "skill.yaml", "evals/EVAL.md", "evals/evals.json", "evals/config.yml")
-    errors = [f"{root}: missing required file {name}" for name in required if not (root / name).is_file()]
+    errors = [
+        f"{root}: missing required file {name}" for name in required if not (root / name).is_file()
+    ]
     manifest = root / "skill.yaml"
     if manifest.is_file():
         errors.extend(validate_skill_manifest(manifest))
