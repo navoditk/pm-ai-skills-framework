@@ -1,0 +1,519 @@
+# Multiple-choice questions for the curriculum site.
+#
+# The agent skill in skills/skillevaluator-mastery/ writes its own choices at
+# run time; a static page cannot, so the site asks these instead. Every
+# answer must be stated in the module, scenario, or exam source it belongs
+# to. `answer` is the zero-based index of the correct choice; the page
+# shuffles the choices, so their order here does not matter.
+#
+# scripts/build_curriculum_pages.py validates this file and fails the build
+# if a page has no questions or a question is malformed.
+
+module-1:
+  questions:
+    - q: Which tier answers "does having the skill change agent behavior for the better, and by how much"?
+      choices: [Tier 1, Tier 2, Tier 3, Tier 4]
+      answer: 2
+      why: Tier 3 runs a live agent with and without the skill and reports the difference as Skill Lift.
+    - q: What support level does NVIDIA SkillEvaluator have?
+      choices:
+        - Generally available, with a support SLA
+        - Experimental, community-supported through GitHub Issues with no SLA
+        - Beta, with vendor support on request
+        - Deprecated in favor of a hosted service
+      answer: 1
+      why: It is Experimental, which is why this repository budgeted time for finding and working around real bugs in it.
+    - q: Which of these does SkillEvaluator itself do?
+      choices:
+        - Decide certification policy for a skill catalog
+        - Run your production agent
+        - Detect near-duplicate skills with embeddings
+        - Build skills for you
+      answer: 2
+      why: Similarity detection is Tier 2. Certification policy is what this repository adds on top, in framework/certification/engine.py and policies/certification.yaml.
+    - q: Which tier is free, offline, and finishes in seconds?
+      choices: [Tier 1, Tier 2, Tier 3, Tier 4]
+      answer: 0
+      why: Tier 1 needs no API key, no Docker, and no sandbox, so it can run on every pull request.
+    - q: What does Tier 4 provide out of the box?
+      choices:
+        - A library of domain graders for finance
+        - A harness to grade against; you write the domain grader
+        - A certified pass or fail for each skill
+        - An embedding catalog of existing skills
+      answer: 1
+      why: Tier 4 is bring-your-own-grader. SkillEvaluator supplies the harness, not the domain judgment.
+
+module-2:
+  questions:
+    - q: Which of these is not part of a Tier 1 check?
+      choices:
+        - Schema validity of the SKILL.md frontmatter and body sections
+        - A quality score across advisory dimensions
+        - Security scanning with Bandit, pip-audit, gitleaks, and SkillSpector
+        - Comparing the skill against a catalog using embeddings
+      answer: 3
+      why: Embedding comparison is Tier 2. Tier 1 is schema, quality scoring, and security scanning.
+    - q: Which command runs Tier 1 only?
+      choices:
+        - "`skillevaluator validate skills/my-skill --no-dedup`"
+        - "`skillevaluator validate skills/my-skill --agent-eval`"
+        - "`skillevaluator similarity-check skills/ --type skill`"
+        - "`skillevaluator health-check`"
+      answer: 0
+      why: "`--no-dedup` skips Tier 2. `quality-check` is the other Tier 1 command, for scoring only."
+    - q: What does a Tier 1 run need beyond the install?
+      choices:
+        - A Docker sandbox
+        - An embedding provider key
+        - A judge-model credential
+        - Nothing; no API key, Docker, or sandbox
+      answer: 3
+      why: That is what makes it safe to run constantly, including on every pull request.
+    - q: Why are gitleaks and SkillSpector installed as separate tools?
+      choices:
+        - They are not open source
+        - To avoid dependency conflicts with SkillEvaluator
+        - They only run on Linux
+        - They need their own API keys
+      answer: 1
+      why: The security scanners are composed from outside the package so their dependencies cannot conflict with it.
+    - q: In this repository's CI, what happens when Tier 1 validation fails on a changed skill?
+      choices:
+        - A warning is posted and the pull request can still merge
+        - The skill is removed from the catalog
+        - The non-zero exit blocks the pull request
+        - Tier 3 runs automatically to double-check
+      answer: 2
+      why: The tier1 job in .github/workflows/skills-quality.yml runs validate --no-dedup on each changed skill; a non-zero exit blocks the merge.
+
+module-3:
+  questions:
+    - q: Why does Tier 2 need an OpenAI (or compatible) key even when the Tier 3 agent is entirely Claude?
+      choices:
+        - Anthropic does not provide an embedding provider
+        - Tier 2 runs a GPT judge model
+        - The catalog is hosted by OpenAI
+        - Claude models cannot read SKILL.md files
+      answer: 0
+      why: Tier 2 embeds skills, so it needs SKILL_EVAL_EMBEDDING_PROVIDER set to openai, nv_build, or an OpenAI-compatible endpoint.
+    - q: What happens if Tier 2's embedding provider is missing?
+      choices:
+        - The run fails with a clear error
+        - Tier 2 silently reports "skipped"
+        - It falls back to keyword matching
+        - It uses the agent's model for embeddings
+      answer: 1
+      why: A silent skip rather than an error, a real trap this project hit.
+    - q: Which environment variable selects the embedding provider?
+      choices:
+        - "`SKILL_EVAL_JUDGE_MODEL`"
+        - "`SKILL_EVAL_LLM_PROVIDER`"
+        - "`SKILL_EVAL_EMBEDDING_PROVIDER`"
+        - "`SKILL_EVAL_SCHEMA_ALLOWED_DIRS`"
+      answer: 2
+      why: Set it with that provider's key, for example SKILL_EVAL_EMBEDDING_PROVIDER=openai with OPENAI_API_KEY.
+    - q: Under this repository's similarity policy, what does a HIGH_SIMILARITY result do?
+      choices:
+        - Blocks the pull request
+        - Deletes the older skill
+        - Nothing; only exact duplicates are reported
+        - Routes to an advisory architecture review with an owner and SLA
+      answer: 3
+      why: Only EXACT_DUPLICATE blocks. HIGH_SIMILARITY goes to an advisory architecture_review.
+    - q: Where do the governance actions on top of a similarity score come from?
+      choices:
+        - SkillEvaluator's built-in Tier 2 policies
+        - This repository's check_similarity.py and policies/similarity.yaml
+        - The embedding provider's moderation API
+        - GitHub's code-owners file
+      answer: 1
+      why: Tier 2 alone gives a score; turning it into block or review actions is this repository's own addition.
+
+module-4:
+  questions:
+    - q: What is Skill Lift?
+      choices:
+        - The with-skill score minus the without-skill score
+        - The Tier 1 quality score after fixes
+        - The judge model's confidence in the answer
+        - The share of eval cases the agent passed
+      answer: 0
+      why: Tier 3 runs the same cases twice, with and without the skill, against a live agent and judge.
+    - q: Roughly what did a full 150-trial Tier 3 matrix cost per skill in this repository's runs?
+      choices:
+        - Under $1 and about two minutes
+        - About $1-3 and about 12 minutes
+        - About $15-45 and 30-55 minutes
+        - About $200 and six hours
+      answer: 2
+      why: That was 25 cases, three attempts, and two arms against claude-sonnet-5 as agent and judge. The $1-3 figure is the Haiku-tier quick pass.
+    - q: What happens if SKILL_EVAL_JUDGE_MODEL is not set?
+      choices:
+        - Tier 3 refuses to start
+        - The judge silently falls back to the agent's own model
+        - The judge step is skipped
+        - A random judge model is chosen
+      answer: 1
+      why: That couples judge cost to agent cost for no reason, so set a separate judge model and credential.
+    - q: What does the `--copy-repo` flag fix?
+      choices:
+        - It speeds up Docker image builds
+        - It caches eval results between runs
+        - It copies reports back to the host
+        - It lets the sandbox find the repository's own tool bridge
+      answer: 3
+      why: Without it the sandbox cannot see the repository's files, an operator error this project actually made.
+    - q: Why is a cheap Haiku-tier quick pass not certification evidence?
+      choices:
+        - A weaker agent compresses Skill Lift toward zero on both arms
+        - Haiku cannot run inside Docker
+        - Quick passes skip the judge model
+        - It only runs Tier 1 checks
+      answer: 0
+      why: It is useful for checking the wiring, but a low lift there says more about the agent than the skill.
+
+module-5:
+  questions:
+    - q: What does Tier 4 not supply?
+      choices:
+        - A trajectory to grade against
+        - A place to plug in a grader
+        - Domain-specific correctness judgment
+        - A way to run graders per skill
+      answer: 2
+      why: SkillEvaluator supplies the harness; you write evals/grader.py and the domain logic it calls.
+    - q: Where should real domain grading logic live, in this repository's pattern?
+      choices:
+        - Copied into each skill's evals/grader.py
+        - In shared, reusable modules under graders/finance/
+        - Inside SKILL.md, as instructions to the agent
+        - In the CI workflow file
+      answer: 1
+      why: Each skill's grader.py is a thin wrapper; reuse across skills was an explicit Milestone 8 exit criterion.
+    - q: What does this repository's post-hoc extraction pipeline do?
+      choices:
+        - Reruns Tier 3 with a cheaper model
+        - Uploads trial data to a hosted grader
+        - Generates new eval cases from production logs
+        - Mines completed Tier 3 trial data for domain metrics with no new API calls
+      answer: 3
+      why: tier3_trial_extractor, aggregate_tier4, and generate_benchmark compute correctness metrics and hard gates from trials already on disk.
+    - q: Two identical `--agent-eval` runs produced different completed-trial directory layouts. What is the right response?
+      choices:
+        - Make post-hoc scripts defend against varying layouts
+        - Treat the second run as corrupted and delete it
+        - Pin the layout with a configuration flag
+        - Report it as a failure of the skill under test
+      answer: 0
+      why: This is a real, observed quirk of the tool; analysis scripts should not assume a fixed layout.
+
+module-6:
+  questions:
+    - q: Which two commands verify an install?
+      choices:
+        - "`skillevaluator --version` and `skillevaluator health-check`"
+        - "`skillevaluator init` and `skillevaluator test`"
+        - "`uv tool list` and `skillevaluator doctor`"
+        - "`skillevaluator validate .` and `skillevaluator report`"
+      answer: 0
+      why: Both appear in the upstream install steps in Module 6 and the tutorial's Step 1.
+    - q: Why pin an exact SkillEvaluator commit instead of installing `@main`?
+      choices:
+        - "`@main` requires a paid license"
+        - Pinned installs run faster
+        - Real, breaking behavioral differences have occurred between versions
+        - "`@main` does not include Tier 1"
+      answer: 2
+      why: "@main is fine for exploring; anything you intend to certify against should be pinned."
+    - q: Which install extra adds deduplication and live-agent evaluation?
+      choices:
+        - "plain `skillevaluator`"
+        - "`[security]`"
+        - "`[tier2,tier3]`"
+        - "`[agents]`"
+      answer: 2
+      why: Plain skillevaluator is Tier 1 only, and [security] adds Bandit and pip-audit. [all] installs everything.
+    - q: When should you apply this repository's judge-max-tokens patch?
+      choices:
+        - Always, on every SkillEvaluator version
+        - Only if your pinned version predates NVIDIA's own upstream fix
+        - Only when running Tier 1
+        - Never; it is for documentation only
+      answer: 1
+      why: The patch fixes a judge token-truncation bug in the pinned 0.2.1 build.
+    - q: Which prerequisite is needed only for Tier 3?
+      choices: [Python 3.12 or 3.13, git, uv or pip, Docker]
+      answer: 3
+      why: Tier 3 runs the agent in a sandbox; the other tiers do not need Docker.
+
+module-7:
+  questions:
+    - q: Which file is required in a skill folder?
+      choices: ["`SKILL.md`", "`skill.yaml`", "`CHANGELOG.md`", "`evals/grader.py`"]
+      answer: 0
+      why: Everything else in the layout is optional or read only by this repository's governance layer.
+    - q: What must the frontmatter `name` field match?
+      choices:
+        - The author's team name
+        - The skill's directory name
+        - The first heading in SKILL.md
+        - The package name in pyproject.toml
+      answer: 1
+      why: Tier 1 checks that name matches the folder the skill lives in.
+    - q: A new skill fails the `author_format` check even though you wrote an author. What is the likely cause?
+      choices:
+        - The email address is not on an approved domain
+        - The author is in CHANGELOG.md instead of SKILL.md
+        - The author line is present but not inside a `metadata:` block
+        - Authors must be listed in skill.yaml
+      answer: 2
+      why: Several skills in this repository failed this way until the metadata block was added.
+    - q: Tier 1 flags `skill.yaml` and `CHANGELOG.md` in the skill root as unexpected. How serious is that?
+      choices:
+        - A hard failure that blocks the pull request
+        - A non-blocking advisory; move the files or set SKILL_EVAL_SCHEMA_ALLOWED_DIRS
+        - A security finding that needs review
+        - A sign the skill will be rejected by Tier 3
+      answer: 1
+      why: The schema check expects only SKILL.md plus a small set of allowed subdirectories in the root.
+    - q: What happens if SKILL.md has no `## Use when` section?
+      choices:
+        - The skill fails Tier 1 outright
+        - The agent can no longer load the skill
+        - Nothing; sections are ignored
+        - An advisory finding that lowers the quality score
+      answer: 3
+      why: Recommended sections are advisory, not hard fails, but each one moves the quality score.
+
+module-8:
+  questions:
+    - q: Which top-level key appears in a raw NVIDIA Tier 3 report?
+      choices:
+        - "`agents`, with dimensions_with_skill, lift, and pass_at_k per agent"
+        - "`quality_summary`"
+        - "`generic_metrics`"
+        - "`certification`"
+      answer: 0
+      why: quality_summary belongs to Tier 1-only reports; generic_metrics and certification belong to this repository's normalized contract.
+    - q: Why does this repository normalize NVIDIA reports through an adapter?
+      choices:
+        - To shrink the report files
+        - To hide failing results from reviewers
+        - So an evaluator version bump is a contained, testable change
+        - Because the raw reports are not valid JSON
+      answer: 2
+      why: Downstream certification logic never reads vendor-specific fields, so only parse_nvidia_report has to change.
+    - q: Which CI jobs block a pull request in this repository?
+      choices:
+        - tier1, and similarity on EXACT_DUPLICATE
+        - tier3-fast on every pull request
+        - domain-graders on every pull request
+        - None; all checks are advisory
+      answer: 0
+      why: tier3-fast and domain-graders are documented placeholders; the recommendation is to keep Tier 3 advisory on pull requests.
+    - q: Which of the four problems this repository hit was an operator error, not an evaluator bug?
+      choices:
+        - The judge token truncation at max_tokens=1024
+        - The shell tool self-reporting as `exec`
+        - API credit exhaustion mid-run
+        - The missing `--copy-repo` flag
+      answer: 3
+      why: Credit exhaustion was an operating-cost lesson, and the other two were real bugs in the evaluator.
+    - q: At an Experimental support level, what should you do when a result looks wrong?
+      choices:
+        - Assume the skill under test is broken
+        - Budget time to read the evaluator's own source
+        - Switch to a different agent model
+        - Rerun until the result changes
+      answer: 1
+      why: Two of this repository's four problems were found by reading the evaluator's vendored source.
+
+scenarios:
+  intro: >-
+    Each scenario is a problem someone reported. Pick the most likely
+    diagnosis. The modules behind each answer are named in its explanation.
+  questions:
+    - q: '"Tier 2 always says skipped, even though I set ANTHROPIC_API_KEY."'
+      choices:
+        - The Anthropic key has expired
+        - Tier 2 needs a non-Anthropic embedding provider and its key
+        - Tier 2 only runs on pull requests
+        - The skill has no description, so there is nothing to embed
+      answer: 1
+      why: Anthropic does not provide embeddings. Set SKILL_EVAL_EMBEDDING_PROVIDER=openai with OPENAI_API_KEY, or an OpenAI-compatible endpoint. (Module 3)
+    - q: '"Our Tier 3 run reports the agent never used any tools, but I watched it call the shell tool repeatedly."'
+      choices:
+        - The skill is broken and should be rewritten
+        - The judge model is too weak
+        - A gap in the evaluator's tool-recognition heuristic; read its source first
+        - Docker is blocking tool calls
+      answer: 2
+      why: This repository hit exactly this with a shell tool that reports itself as exec. (Module 8)
+    - q: '"A brand-new skill fails Tier 1 with an author_format error, and I did write an author."'
+      choices:
+        - The `metadata:` block is missing from the frontmatter
+        - The author must be a GitHub username
+        - The skill needs a CHANGELOG.md
+        - Tier 1 requires a version field
+      answer: 0
+      why: The author line is usually there, just not inside metadata. (Module 7)
+    - q: '"Tier 1 flags skill.yaml and CHANGELOG.md as unexpected files."'
+      choices:
+        - Delete both files; they are not allowed
+        - The skill fails certification until they are removed
+        - Rename them to SKILL.yaml and SKILL.md
+        - A non-blocking advisory; move them into an allowed subdirectory or set SKILL_EVAL_SCHEMA_ALLOWED_DIRS
+      answer: 3
+      why: The schema check expects a fixed set of subdirectories in the skill root. (Module 7)
+    - q: '"Our judge model quietly matches whichever model the agent uses, and we never configured that."'
+      choices:
+        - SKILL_EVAL_JUDGE_MODEL was never set, so the judge fell back to the agent's model
+        - SkillEvaluator always uses the same model for both roles
+        - The agent overrides the judge at run time
+        - The judge credential is shared with the agent by design
+      answer: 0
+      why: Set a separate judge model and credential; otherwise judge cost is coupled to agent cost. (Module 4)
+    - q: '"A Tier 3 sandbox run cannot find our repository''s own tool bridge script."'
+      choices:
+        - The bridge script needs to be listed in SKILL.md
+        - The `--copy-repo` flag is missing
+        - Docker images cannot run Python
+        - The evaluator does not support custom tools
+      answer: 1
+      why: An easy-to-forget operator error, not an evaluator bug. (Module 4)
+    - q: '"We want a cheap way to validate Tier 3 wiring without spending $15-45 per skill."'
+      choices:
+        - Run Tier 1 instead; it measures the same thing
+        - Run a Haiku-tier quick pass and treat its Skill Lift as certification evidence
+        - Skip the without-skill arm to halve the cost
+        - Run a Haiku-tier quick pass to check the wiring, but not as certification evidence
+      answer: 3
+      why: A weaker agent compresses Skill Lift toward zero on both arms, so the number says little about the skill. (Module 4)
+    - q: '"Our Tier 4 script mines completed Tier 3 trials, but a rerun of the identical command produced a different directory structure."'
+      choices:
+        - A real, observed quirk; make the script handle both layouts
+        - The second run is corrupted and should be discarded
+        - The pinned evaluator version changed between runs
+        - The grader wrote into the trial directory
+      answer: 0
+      why: Directory layouts can differ between runs of the same tool. (Module 5)
+
+final-exam:
+  intro: >-
+    Fifteen questions across all eight modules. Score 80% (12 of 15) or more
+    to pass. Answer every question, then check your answers.
+  pass_mark: 0.8
+  questions:
+    - q: What does Skill Lift measure?
+      choices:
+        - With-skill score minus without-skill score in Tier 3
+        - The improvement in Tier 1 quality score after fixes
+        - How many more tools the agent calls with the skill
+        - The judge's agreement with a human grader
+      answer: 0
+      why: Module 4.
+    - q: Which tier is free and offline by default?
+      choices: [Tier 1, Tier 2, Tier 3, Tier 4]
+      answer: 0
+      why: Module 2.
+    - q: Why does Tier 2 need an OpenAI (or compatible) key even for an all-Claude Tier 3 run?
+      choices:
+        - Tier 2 uses GPT as its judge
+        - Anthropic does not provide an embedding provider
+        - The skill catalog is stored with OpenAI
+        - SkillEvaluator is built on the OpenAI SDK
+      answer: 1
+      why: Module 3.
+    - q: What does Tier 4 not supply?
+      choices:
+        - A harness to grade against
+        - A trajectory from Tier 3
+        - Domain-specific correctness judgment
+        - A hook for a custom grader
+      answer: 2
+      why: Module 5.
+    - q: Which environment variable sets a separate judge model?
+      choices:
+        - "`SKILL_EVAL_LLM_PROVIDER`"
+        - "`SKILL_EVAL_EMBEDDING_PROVIDER`"
+        - "`ANTHROPIC_MODEL`"
+        - "`SKILL_EVAL_JUDGE_MODEL`"
+      answer: 3
+      why: Module 4.
+    - q: Which easy-to-forget flag leaves the sandbox unable to find the repository's own tool bridge?
+      choices: ["`--no-dedup`", "`--copy-repo`", "`--env-mode docker`", "`--results-dir`"]
+      answer: 1
+      why: Module 4.
+    - q: Why pin an exact SkillEvaluator commit rather than install `@main`?
+      choices:
+        - Real, breaking behavioral differences have occurred between versions
+        - "`@main` is not publicly available"
+        - Pinned commits include extra tiers
+        - Pinning avoids the need for Docker
+      answer: 0
+      why: Module 6.
+    - q: What happens if Tier 2's embedding provider is missing?
+      choices:
+        - The run fails loudly
+        - It silently reports "skipped" rather than erroring
+        - It falls back to Tier 1
+        - It uses cached embeddings
+      answer: 1
+      why: Module 3.
+    - q: What does `framework/adapters/nvidia_skillevaluator.py` do?
+      choices:
+        - Installs the pinned evaluator
+        - Runs Tier 3 in Docker
+        - Normalizes raw NVIDIA report JSON into a stable internal schema
+        - Uploads reports to GitHub Pages
+      answer: 2
+      why: Downstream logic never parses vendor-specific fields directly. (Module 8)
+    - q: What support level should you expect from SkillEvaluator?
+      choices:
+        - Enterprise, with an SLA
+        - Experimental, community-supported with no SLA
+        - Beta, with vendor support
+        - Long-term support
+      answer: 1
+      why: Module 1.
+    - q: Which frontmatter field does the `author_format` check need?
+      choices:
+        - "`author:` at the top level"
+        - "`metadata: author: ...`"
+        - "`owner:` in skill.yaml"
+        - "`maintainers:` in CHANGELOG.md"
+      answer: 1
+      why: Module 7.
+    - q: In this repository's CI, which jobs block a pull request?
+      choices:
+        - tier3-fast and domain-graders
+        - Every job, including placeholders
+        - tier1, and similarity on EXACT_DUPLICATE
+        - None; CI is advisory only
+      answer: 2
+      why: tier3-fast and domain-graders are advisory placeholders. (Module 8)
+    - q: Roughly what did a full 150-trial Tier 3 matrix cost per skill in this repository's runs?
+      choices:
+        - Under $1 and two minutes
+        - $1-3 and 12 minutes
+        - $15-45 and 30-55 minutes
+        - $500 and a full day
+      answer: 2
+      why: Module 4.
+    - q: What bug did this repository patch locally in the pinned evaluator?
+      choices:
+        - A judge token-truncation bug (max_tokens=1024, no retry)
+        - A Docker networking bug
+        - A missing embedding provider
+        - A YAML parsing bug in SKILL.md
+      answer: 0
+      why: The patch lives in patches/. (Modules 6 and 8)
+    - q: Why is a Haiku-tier quick pass not certification evidence?
+      choices:
+        - It skips the judge
+        - Haiku cannot use tools
+        - It only covers five eval cases
+        - A weaker agent compresses Skill Lift toward zero on both arms
+      answer: 3
+      why: The low lift reflects the agent, not the skill. (Module 4)
