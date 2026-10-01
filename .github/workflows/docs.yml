@@ -1,0 +1,31 @@
+name: Docs
+
+# Fails a pull request that links to a file Git does not track, such as a raw
+# report under the git-ignored reports/ directory.
+
+on:
+  pull_request:
+    paths:
+      - "**.md"
+      - "tests/test_docs_links.py"
+      - ".github/workflows/docs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install locked dependencies
+        run: uv sync --locked --extra dev
+
+      - name: Check Markdown links
+        run: uv run pytest -q tests/test_docs_links.py

@@ -97,7 +97,7 @@ uv run pmai-skills validate ./skills/my-new-skill
 Tier 1 checks package structure, metadata, instruction quality, and security
 signals. A failure here is fixed before spending time on live-agent evaluation.
 The repository's real Tier 1 evidence is in
-[`reports/m1/tier1-v296/`](../reports/m1/tier1-v296/) and
+`reports/m1/tier1-v296/` (kept locally; raw reports are not committed) and
 [`docs/MILESTONE_1_SETUP.md`](MILESTONE_1_SETUP.md).
 
 ## Step 4 — Check catalog similarity

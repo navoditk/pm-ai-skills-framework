@@ -7,20 +7,16 @@ progressive, hands-on exercise to actually build the muscle memory —
 scaffold a toy skill, watch each tier fire, break it on purpose, and read a
 real report. It assumes zero prior SkillEvaluator experience.
 
-An interactive, gamified version of this same material (lessons, quizzes,
-scenario challenges, a final exam) is published publicly and updated automatically on every push:
-- 🌐 **GitHub Pages Web Site**: [https://navoditk.github.io/pm-ai-skills-framework/](https://navoditk.github.io/pm-ai-skills-framework/)
-- 📄 **Standalone Single-File HTML Artifact**: [skillevaluator-mastery-standalone.html](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html)
-
-It also lives as an agent skill at
-[`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/). If
-you're using GitHub Copilot CLI (or another Copilot surface) inside a
-checkout of this repository, it's auto-discovered via the project-skill
-loader at `.github/skills/skillevaluator-mastery/SKILL.md` — just say
-**"skillevalexpert"**. To use it elsewhere, copy the
-`skills/skillevaluator-mastery/` folder to `.github/skills/`,
-`.claude/skills/`, `.agents/skills/`, or `~/.copilot/skills/` in the target
-location. This document is the self-paced, read-it-yourself version.
+The same material is also a course with quizzes, troubleshooting scenarios,
+and a scored final exam, on the
+[course site](https://navoditk.github.io/pm-ai-skills-framework/) or as
+[one downloadable file](https://navoditk.github.io/pm-ai-skills-framework/skillevaluator-mastery-standalone.html).
+It is also an agent skill,
+[`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/), that
+teaches it as a conversation: in a checkout of this repository, say
+**"skillevalexpert"** to GitHub Copilot CLI. To use the skill elsewhere, copy
+that folder to `.github/skills/`, `.claude/skills/`, `.agents/skills/`, or
+`~/.copilot/skills/`. This document is the read-it-yourself version.
 
 ---
 
@@ -193,6 +189,6 @@ to answer, without looking anything up:
 - [ ] Where does SkillEvaluator's job end and this repository's own
       certification logic begin?
 
-For the gamified version of this same checklist (with quizzes, scenario
-challenges, and a scored final exam), use
-[`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/).
+To test yourself on the same material with marked quizzes, scenarios, and a
+scored final exam, take the
+[course](https://navoditk.github.io/pm-ai-skills-framework/).
