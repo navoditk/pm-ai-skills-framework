@@ -7,6 +7,15 @@ on:
       - "framework/**"
       - "graders/**"
       - "policies/**"
+      - "catalogs/**"
+      - "synthetic_data_pipeline/**"
+      - "scripts/**"
+      - "tests/**"
+      - ".claude/skills/**"
+      - ".agents/skills/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/skills-quality.yml"
 
 jobs:
   schema-and-unit:
@@ -14,28 +23,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
 
-      - name: Install local test dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest jsonschema pyyaml ruff
+      # From uv.lock, so CI tests and lints with the same versions as a
+      # local `uv sync --extra dev`.
+      - name: Install locked dependencies
+        run: uv sync --locked --extra dev
 
       - name: Lint (ruff)
-        run: ruff check .
+        run: uv run ruff check .
 
       # Markdown is excluded deliberately. Ruff formats Python inside fenced
       # code blocks, and the reference docs under docs/ and skills/*/references/
       # carry authored examples -- reflowing them is a content decision, not a
       # CI gate.
       - name: Format (ruff)
-        run: ruff format --check . --exclude "*.md"
+        run: uv run ruff format --check . --exclude "*.md"
 
       - name: Unit tests
-        run: pytest -q
+        run: uv run pytest -q
 
   # Milestone 9 (right-sized 2026-08-30): a single real PR gate demonstrating
   # the mechanism -- a skill that fails Tier 1 cannot merge. Tier 1 is

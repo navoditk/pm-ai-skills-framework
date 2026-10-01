@@ -41,4 +41,5 @@ anywhere.
 - **With a coding agent.** The same material is an agent skill,
   [`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/), that
   teaches it as a conversation and writes fresh questions each time. In a
-  checkout of this repository, say `skillevalexpert` to GitHub Copilot CLI.
+  checkout of this repository, say `skillevalexpert` to Claude Code, Codex,
+  or GitHub Copilot.

@@ -21,9 +21,11 @@ finding is the seed entry in the compatibility log at 13.6.
 - Exactly one NVIDIA SkillEvaluator version is pinned at a time, recorded as
   both a semantic version and a commit hash (currently `0.2.1` at
   `009aa300be7925c7ba75760592baeb941cc29ba8` — see `docs/MILESTONE_1_SETUP.md`).
-- The pin lives in one place (`framework/version.py` plus the developer
-  install instructions in `docs/MILESTONE_1_SETUP.md`); nothing else in the
-  repository should hardcode a version number.
+- The pin is installed in two places: the CI install steps in
+  `.github/workflows/skills-quality.yml` and the developer install
+  instructions in `docs/MILESTONE_1_SETUP.md`. Change both together.
+  (`framework/version.py` versions this framework's own contract, not the
+  evaluator.)
 - The evaluator version is part of the benchmark identity tuple
   (`docs/02_TARGET_ARCHITECTURE.md` §2.5). Upgrading it invalidates prior
   benchmark evidence for re-certification purposes, even if nothing else
