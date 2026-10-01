@@ -14,9 +14,10 @@ and a scored final exam, on the
 It is also an agent skill,
 [`skills/skillevaluator-mastery/`](../skills/skillevaluator-mastery/), that
 teaches it as a conversation: in a checkout of this repository, say
-**"skillevalexpert"** to GitHub Copilot CLI. To use the skill elsewhere, copy
-that folder to `.github/skills/`, `.claude/skills/`, `.agents/skills/`, or
-`~/.copilot/skills/`. This document is the read-it-yourself version.
+**"skillevalexpert"** to Claude Code, Codex, or GitHub Copilot. To use the
+skill elsewhere, copy that folder to `.github/skills/`, `.claude/skills/`,
+`.agents/skills/`, or `~/.copilot/skills/`. This document is the
+read-it-yourself version.
 
 ---
 

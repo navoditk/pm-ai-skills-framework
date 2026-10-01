@@ -6,3 +6,6 @@ reports/
 public/
 *.pyc
 .DS_Store
+*.egg-info/
+build/
+dist/

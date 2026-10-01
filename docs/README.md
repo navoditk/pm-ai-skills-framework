@@ -16,7 +16,7 @@ them.
 | [SkillEvaluator Mastery course](https://navoditk.github.io/pm-ai-skills-framework/) | Eight modules with quizzes, troubleshooting scenarios, and a final exam, in the browser |
 | [16. Mastery tutorial](16_SKILLEVALUATOR_MASTERY.md) | Scaffold a toy skill, run each tier, break it on purpose, and read a real report |
 | [15. Skills and SkillEvaluator reference](15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md) | Every command, setting, cost, and finding in one place |
-| [`skillevaluator-mastery` skill](../skills/skillevaluator-mastery/) | The same course as an agent skill; say `skillevalexpert` to GitHub Copilot CLI in this checkout |
+| [`skillevaluator-mastery` skill](../skills/skillevaluator-mastery/) | The same course as an agent skill; say `skillevalexpert` to Claude Code, Codex, or GitHub Copilot in this checkout |
 
 ## Try the framework
 

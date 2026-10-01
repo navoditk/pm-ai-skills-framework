@@ -9,10 +9,11 @@ metadata:
 # SkillEvaluator Mastery
 
 **How this skill is loaded:** this file is the canonical copy (also the one
-this repository's own NVIDIA SkillEvaluator Tier 1 checks validate). GitHub
-Copilot auto-discovers it in this repository via the thin loader at
-`.github/skills/skillevaluator-mastery/SKILL.md`. To use it in another repo
-or globally, copy (not symlink, for cross-platform reliability) this whole
+this repository's own NVIDIA SkillEvaluator Tier 1 checks validate). In this
+repository, Claude Code discovers it through the thin loader in
+`.claude/skills/skillevaluator-mastery/`, Codex through the one in
+`.agents/skills/skillevaluator-mastery/`, and GitHub Copilot through either.
+To use it in another repo or globally, copy (not symlink, for cross-platform reliability) this whole
 `skills/skillevaluator-mastery/` folder to that repo's `.github/skills/`,
 `.claude/skills/`, or `.agents/skills/` (project-level), or to
 `~/.copilot/skills/` (personal, works across all your repos). See

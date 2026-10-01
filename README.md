@@ -126,4 +126,9 @@ To adopt it in another repository, start with the
 
 The [documentation index](docs/README.md) groups every document by what you
 are trying to do. [CONTRIBUTING](CONTRIBUTING.md) covers adding skills,
-graders, and docs.
+graders, and docs, and [AGENTS.md](AGENTS.md) holds the rules for coding
+agents working here.
+
+## License
+
+[MIT](LICENSE).
