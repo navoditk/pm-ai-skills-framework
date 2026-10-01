@@ -1,62 +1,86 @@
-name: Deploy Curriculum to GitHub Pages & Artifacts
+name: Course site
+
+# Builds the SkillEvaluator Mastery site from skills/skillevaluator-mastery/,
+# docs 15 and 16, and site/. Pull requests build and test it; pushes to main
+# also publish it to GitHub Pages. Dependencies come from uv.lock, so the
+# build cannot silently pick up a different Markdown renderer.
 
 on:
+  pull_request:
+    paths:
+      - "skills/skillevaluator-mastery/**"
+      - "docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md"
+      - "docs/16_SKILLEVALUATOR_MASTERY.md"
+      - "site/**"
+      - "scripts/build_curriculum_pages.py"
+      - "tests/test_build_curriculum_pages.py"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/deploy-pages.yml"
   push:
     branches: [main]
     paths:
       - "skills/skillevaluator-mastery/**"
       - "docs/15_SKILLS_AND_SKILLEVALUATOR_REFERENCE.md"
       - "docs/16_SKILLEVALUATOR_MASTERY.md"
+      - "site/**"
       - "scripts/build_curriculum_pages.py"
+      - "tests/test_build_curriculum_pages.py"
+      - "pyproject.toml"
+      - "uv.lock"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install markdown pyyaml
+      - name: Install locked dependencies
+        run: uv sync --locked --extra dev
 
-      - name: Build Curriculum HTML Pages & Standalone Artifact
-        run: python scripts/build_curriculum_pages.py
+      - name: Test the site build
+        run: uv run pytest -q tests/test_build_curriculum_pages.py
 
-      - name: Upload Single-File Standalone Artifact
+      - name: Build the site
+        run: uv run python scripts/build_curriculum_pages.py --out public
+
+      - name: Upload the single-file course
         uses: actions/upload-artifact@v4
         with:
           name: skillevaluator-mastery-standalone-html
           path: public/skillevaluator-mastery-standalone.html
           if-no-files-found: error
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages Artifact
+      - name: Upload the Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public/
 
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
