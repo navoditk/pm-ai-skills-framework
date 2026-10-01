@@ -1,5 +1,10 @@
 # 8. Demonstration & Acceptance Plan
 
+> **History.** This is the acceptance plan written for the original
+> blueprint, kept for the record. The defect demonstration was carried out as
+> [Milestone 6](MILESTONE_6_DELIBERATE_DEFECTS.md); current status is in the
+> [roadmap](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md).
+
 ## 8.1 Demonstrate good skills and deliberately bad skills
 
 The POC should include controlled defects.

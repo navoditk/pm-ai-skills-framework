@@ -58,8 +58,9 @@ Run from the repository root:
 ```
 
 Result: **11/11 checks passed**. The raw JSON, Markdown, HTML, and generated
-benchmark output are retained in
-[`reports/m4/performance-attribution-tier1/`](../reports/m4/performance-attribution-tier1/).
+benchmark output are retained locally (raw reports under `reports/` are not
+committed; the tracked record is [`BENCHMARK.md`](../skills/performance-attribution/BENCHMARK.md)) in
+`reports/m4/performance-attribution-tier1/`.
 
 ### Tier 2
 
@@ -72,7 +73,7 @@ Run with an embedding provider configured:
 ```
 
 Result: **3 checks passed**. The similarity report is retained in
-[`reports/m4/performance-attribution-tier2/`](../reports/m4/performance-attribution-tier2/).
+`reports/m4/performance-attribution-tier2/`.
 
 ### Tier 3 live matrix
 
@@ -80,7 +81,7 @@ The synthetic pipeline is now exposed to the Harbor sandbox through the staged
 CLI adapter at [`synthetic_data_pipeline/tool_cli.py`](../synthetic_data_pipeline/tool_cli.py).
 The full 25-case with-skill/baseline matrix completed with Docker and credential
 validation successful. Reproducible artifacts are retained under
-[`reports/m4/performance-attribution-tier3-normal-timeout/`](../reports/m4/performance-attribution-tier3-normal-timeout/).
+`reports/m4/performance-attribution-tier3-normal-timeout/`.
 
 The evaluator produced these headline results:
 
@@ -100,13 +101,13 @@ therefore a valid diagnostic Tier 3 run, not a certified benchmark.
 
 An explicit-injection rerun using `--include-skills` and group workspace mode
 completed successfully under
-[`reports/m4/performance-attribution-tier3-explicit-skill-group/`](../reports/m4/performance-attribution-tier3-explicit-skill-group/),
+`reports/m4/performance-attribution-tier3-explicit-skill-group/`,
 but produced the same execution signal. The runtime fix then added a
 with-skill-only `/workspace/AGENTS.md` bootstrap through Harbor's pre-agent
 setup healthcheck, while the baseline removes that file.
 
 The bootstrap matrix completed end to end under
-[`reports/m4/performance-attribution-tier3-bootstrap-concurrent/`](../reports/m4/performance-attribution-tier3-bootstrap-concurrent/).
+`reports/m4/performance-attribution-tier3-bootstrap-concurrent/`.
 Its detailed trajectory evidence confirms that the agent read the skill first
 and used the attribution tools. However, the pinned evaluator's generic
 execution/efficiency summary still reports no skill read and scores efficiency
@@ -289,7 +290,7 @@ A complete, uncontaminated 150-trial matrix (25 cases x 3 attempts x 2 arms)
 finished with `execution_status: "succeeded"` on both arms and 75/75 scored
 attempts on each -- the first time this milestone has produced a fully
 covered result. Evidence retained under
-[`reports/m4/performance-attribution-tier3-sonnet-agent/`](../reports/m4/performance-attribution-tier3-sonnet-agent/).
+`reports/m4/performance-attribution-tier3-sonnet-agent/`.
 
 | Measure | With skill | Baseline | Lift |
 | --- | ---: | ---: | ---: |
@@ -471,7 +472,7 @@ Before certification, the skill activation/execution contract needs to be
 strengthened and rerun. The remaining required evidence is a passing repeated
 Tier 3 matrix, normalized PM AI output, `BENCHMARK.md`, and a certification
 verdict. The earlier stalled diagnostic artifacts remain under
-[`reports/m4/performance-attribution-tier3/`](../reports/m4/performance-attribution-tier3/).
+`reports/m4/performance-attribution-tier3/`.
 
 With the execution-heuristic blocker resolved by switching to `claude-code`
 (see above), the remaining work to close out Milestone 4 is: let the running

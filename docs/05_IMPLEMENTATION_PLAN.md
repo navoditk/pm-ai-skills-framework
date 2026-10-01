@@ -1,5 +1,9 @@
 # 5. Detailed Implementation Plan
 
+> **History.** This is the plan written for the original blueprint, kept for
+> the record. What was actually built, and in what order, is in the
+> [roadmap](10_DEVELOPMENT_ROADMAP_AND_PROGRESS.md).
+
 ## Phase 0 — Repository bootstrap
 
 1. Create the repository from this blueprint.

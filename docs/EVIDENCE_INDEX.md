@@ -20,6 +20,7 @@ finalized Tier 3 evidence. The first capped run reached 100 observed arms out
 of 162 and was stopped at an estimated $30; its interrupted per-trial
 artifacts were not finalized. A fresh one-attempt pass then stopped during
 Claude Code runtime preflight after 71.843 seconds. The retained failure
-record is [`result.json`](../reports/m5/risk-explanation-tier3-additional30/risk-explanation/20260904_020127_36122_6b9e96234e14/result.json).
+record is `reports/m5/risk-explanation-tier3-additional30/risk-explanation/20260904_020127_36122_6b9e96234e14/result.json`,
+kept locally (raw reports are not committed).
 The pinned evaluator exposes neither reliable cost telemetry nor case-level
 resume; do not infer certification from either attempt.

@@ -1,5 +1,11 @@
 # 7. GitHub Implementation & Publishing Guide
 
+> **History.** These steps published the original blueprint, then named
+> `pm-ai-skills-framework-blueprint`. The repository now lives at
+> [navoditk/pm-ai-skills-framework](https://github.com/navoditk/pm-ai-skills-framework);
+> to use the framework in your own repository, see the
+> [consumer quickstart](11_QUICKSTART_FOR_CONSUMERS.md).
+
 ## 7.1 Create the repository locally
 
 From the generated blueprint directory:
