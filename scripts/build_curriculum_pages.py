@@ -422,6 +422,9 @@ def page_body(page: Page, bank: dict[str, Any], linker: Linker, standalone: bool
         body = body.replace("<!-- modules -->", module_list(linker))
     if standalone:
         body = shift_headings(body)
+        if page.kind == "landing":
+            # The single file's own h1 is the course title; don't repeat it.
+            body = re.sub(r"\A\s*<h2[^>]*>[^<]*</h2>\s*", "", body, count=1)
     if page.tracked:
         body += "\n" + render_quiz(page, bank[page.id], 3 if standalone else 2)
     if page.kind == "module":
@@ -674,6 +677,7 @@ cursor:pointer}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn[aria-pressed=true]{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 .quiz{margin-top:2.5rem;padding-top:.5rem;border-top:1px solid var(--line)}
+.page-quiz .quiz{margin-top:0;padding-top:0;border-top:0}
 .quiz-intro{color:var(--muted)}
 .questions{padding:0;list-style:none;counter-reset:q;display:grid;
 grid-template-columns:minmax(0,1fr);gap:1rem}
