@@ -36,6 +36,9 @@ anywhere.
 
 ## Other ways to take it
 
+- **As a ten-slide overview.** [The Skills Ledger](skills-ledger.html) is a
+  crash course on why skill governance matters and what this repository's
+  real runs found.
 - **As one file.** [Download the course](skillevaluator-mastery-standalone.html)
   as a single HTML page that works offline.
 - **With a coding agent.** The same material is an agent skill,

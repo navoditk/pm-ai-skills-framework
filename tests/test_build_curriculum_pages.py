@@ -32,7 +32,10 @@ def _ids(text):
 
 def test_build_writes_every_page_and_the_single_file(site):
     names = {path.name for path in site.glob("*.html")}
-    expected = {page.filename for page in build_pages.PAGES} | {build_pages.STANDALONE_NAME}
+    expected = {page.filename for page in build_pages.PAGES} | {
+        build_pages.STANDALONE_NAME,
+        "skills-ledger.html",
+    }
     assert names == expected
 
 
@@ -128,3 +131,11 @@ def test_the_single_file_does_not_repeat_its_title(site):
     text = (site / build_pages.STANDALONE_NAME).read_text(encoding="utf-8")
     headings = re.findall(r"<h[12][^>]*>([^<]*)</h[12]>", text)
     assert headings.count(build_pages.COURSE_TITLE) == 1
+
+
+def test_hand_written_site_pages_are_published_and_mobile_ready(site):
+    for source in sorted(build_pages.SITE_DIR.glob("*.html")):
+        text = (site / source.name).read_text(encoding="utf-8")
+        assert text.startswith("<!DOCTYPE html>"), source.name
+        assert 'name="viewport"' in text, source.name
+        assert text.count("<h1") == 1, source.name
