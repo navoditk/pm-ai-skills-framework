@@ -6,7 +6,8 @@ from docs 15 and 16. The skill's module files are written for an agent to
 teach from, so the build turns them into learner pages: the line telling the
 tutor what to teach becomes a source note, and the section telling it how to
 quiz is replaced with the multiple-choice questions in site/quizzes.yaml.
-The landing page is site/index.md.
+The landing page is site/index.md; any finished HTML page in site/, such as
+the Skills Ledger slide deck, is copied to the output unchanged.
 
 Output goes to public/ by default:
 
@@ -25,6 +26,7 @@ import json
 import math
 import posixpath
 import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -47,6 +49,7 @@ DEFAULT_OUT = REPO_ROOT / "public"
 SITE_DIR = REPO_ROOT / "site"
 QUIZ_BANK = SITE_DIR / "quizzes.yaml"
 REPO_URL = "https://github.com/navoditk/pm-ai-skills-framework"
+SITE_URL = "https://navoditk.github.io/pm-ai-skills-framework/"
 STANDALONE_NAME = "skillevaluator-mastery-standalone.html"
 COURSE_TITLE = "SkillEvaluator Mastery"
 DEFAULT_PASS_MARK = 0.8
@@ -252,8 +255,14 @@ class Linker:
         path, _, fragment = href.partition("#")
         if source.startswith("site/") and path in PAGE_BY_FILENAME:
             return self.page_href(PAGE_BY_FILENAME[path], fragment)
-        if path == STANDALONE_NAME and source.startswith("site/"):
-            return STANDALONE_NAME
+        if source.startswith("site/") and (
+            path == STANDALONE_NAME or (path.endswith(".html") and (SITE_DIR / path).is_file())
+        ):
+            # A published page that is not built from Markdown. The single file
+            # is opened offline, so it links to the live copy.
+            return (SITE_URL + path if self.standalone else path) + (
+                f"#{fragment}" if fragment else ""
+            )
         target = posixpath.normpath(posixpath.join(posixpath.dirname(source), path))
         if target in PAGE_BY_SOURCE:
             return self.page_href(PAGE_BY_SOURCE[target], fragment)
@@ -566,6 +575,10 @@ def build(out_dir: Path) -> list[Path]:
         encoding="utf-8",
     )
     written.append(path)
+
+    # Standalone pages kept in site/ (the Skills Ledger deck) are published as is.
+    for extra in sorted(SITE_DIR.glob("*.html")):
+        written.append(Path(shutil.copy(extra, out_dir / extra.name)))
     return written
 
 
