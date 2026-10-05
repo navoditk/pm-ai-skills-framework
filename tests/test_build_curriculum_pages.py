@@ -122,3 +122,9 @@ def test_an_answer_index_out_of_range_fails_the_build(tmp_path, monkeypatch):
     monkeypatch.setattr(build_pages, "QUIZ_BANK", bank)
     with pytest.raises(build_pages.BuildError, match="module-1 question 1 has an answer index"):
         build_pages.load_quiz_bank()
+
+
+def test_the_single_file_does_not_repeat_its_title(site):
+    text = (site / build_pages.STANDALONE_NAME).read_text(encoding="utf-8")
+    headings = re.findall(r"<h[12][^>]*>([^<]*)</h[12]>", text)
+    assert headings.count(build_pages.COURSE_TITLE) == 1
